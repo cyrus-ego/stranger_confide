@@ -15,13 +15,29 @@
     "gender": "Giới tính",
     "age": "Tuổi",
     "chat_with": "Muốn chat với",
+    "chat_preference": "Kiểu chat",
     "role": "Vai trò",
     "bio": "Giới thiệu",
     "vip": "VIP",
     "yes": "Có",
     "no": "Không",
     "male": "Nam",
-    "female": "Nữ"
+    "female": "Nữ",
+    "display_name": "Tên hiển thị",
+    "email": "Email",
+    "email_verified": "Email đã xác thực",
+    "created_at": "Ngày tạo",
+    "updated_at": "Cập nhật lần cuối",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu",
+    "cancel": "Huỷ",
+    "edit_title": "Chỉnh sửa hồ sơ",
+    "update_success": "Cập nhật thành công",
+    "logout": "Đăng xuất",
+    "logout_confirm": "Bạn có chắc muốn đăng xuất?",
+    "opposite": "Khác giới",
+    "same": "Cùng giới",
+    "any": "Tất cả"
   },
   "common": {
     "error_title": "Lỗi",
@@ -31,6 +47,7 @@
     "language": "Ngôn ngữ",
     "theme": "Giao diện",
     "dark_mode": "Chế độ tối",
-    "light_mode": "Chế độ sáng"
+    "light_mode": "Chế độ sáng",
+    "confirm": "Xác nhận"
   }
 }

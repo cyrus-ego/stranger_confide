@@ -26,7 +26,7 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
         ))
             .orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
 
-        _tokenStorage.save(
+        await _tokenStorage.save(
           accessToken: tokens.accessToken,
           refreshToken: tokens.refreshToken,
         );

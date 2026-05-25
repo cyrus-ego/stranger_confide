@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stranger_confide/data/models/response/profile_response.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../router/app_router.dart';
 import '../../shared/widgets/app_shimmer.dart';
+import '../../shared/widgets/app_snack_bar.dart';
 import '../../shared/widgets/gradient_avatar.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
@@ -28,21 +31,43 @@ class _ProfilePageState extends BlocHostPageState<ProfilePage> {
 
   @override
   Widget buildPage(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(tr(LocaleKeys.profileTitle))),
-      body: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          return switch (state.status) {
-            ProfileStatus.initial ||
-            ProfileStatus.loading =>
-              const _ProfileShimmer(),
-            ProfileStatus.failure => _ProfileError(
-                onRetry: () =>
-                    context.read<ProfileBloc>().add(const ProfileLoad()),
-              ),
-            ProfileStatus.loaded => _ProfileContent(data: state.data!),
-          };
-        },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ProfileBloc, ProfileState>(
+          listenWhen: (prev, curr) => curr.loggedOut && !prev.loggedOut,
+          listener: (context, state) => context.go(AppRoutes.login),
+        ),
+        BlocListener<ProfileBloc, ProfileState>(
+          listenWhen: (prev, curr) => curr.updateSuccess && !prev.updateSuccess,
+          listener: (context, state) {
+            AppSnackBar.show(
+              context,
+              message: tr(LocaleKeys.profileUpdateSuccess),
+            );
+          },
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(title: Text(tr(LocaleKeys.profileTitle))),
+        body: BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
+            return switch (state.status) {
+              ProfileStatus.initial ||
+              ProfileStatus.loading =>
+                const _ProfileShimmer(),
+              ProfileStatus.failure => _ProfileError(
+                  onRetry: () =>
+                      context.read<ProfileBloc>().add(const ProfileLoad()),
+                ),
+              ProfileStatus.loaded ||
+              ProfileStatus.updating =>
+                _ProfileContent(
+                  data: state.data!,
+                  isUpdating: state.status == ProfileStatus.updating,
+                ),
+            };
+          },
+        ),
       ),
     );
   }
@@ -67,7 +92,7 @@ class _ProfileShimmer extends StatelessWidget {
             const Gap(AppSpacing.xl),
             ShimmerBox(
               width: double.infinity,
-              height: 280,
+              height: 360,
               radius: AppSpacing.radiusLg,
             ),
           ],
@@ -117,9 +142,10 @@ class _ProfileError extends StatelessWidget {
 }
 
 class _ProfileContent extends StatelessWidget {
-  const _ProfileContent({required this.data});
+  const _ProfileContent({required this.data, required this.isUpdating});
 
   final ProfileResponse data;
+  final bool isUpdating;
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +176,14 @@ class _ProfileContent extends StatelessWidget {
               color: theme.colorScheme.onSurface.withAlpha(153),
             ),
           ),
+          if (isUpdating) ...[
+            const Gap(AppSpacing.sm),
+            const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ],
           const Gap(AppSpacing.xl),
           Card(
             child: Padding(
@@ -165,31 +199,35 @@ class _ProfileContent extends StatelessWidget {
                     value: _genderLabel(profile.gender),
                   ),
                   const Divider(),
-                  _InfoRow(
+                  _EditableInfoRow(
                     icon: Icons.cake_outlined,
                     label: tr(LocaleKeys.profileAge),
                     value: '${profile.age}',
+                    onTap: () => _editAge(context, profile.age),
                   ),
                   const Divider(),
-                  _InfoRow(
+                  _EditableInfoRow(
+                    icon: Icons.info_outline,
+                    label: tr(LocaleKeys.profileBio),
+                    value: profile.bio.isEmpty ? '—' : profile.bio,
+                    onTap: () => _editBio(context, profile.bio),
+                  ),
+                  const Divider(),
+                  _EditableInfoRow(
                     icon: Icons.chat_bubble_outline,
                     label: tr(LocaleKeys.profileChatWith),
                     value: _genderLabel(profile.preferredGender),
+                    onTap: () => _editPreferredGender(
+                        context, profile.preferredGender),
                   ),
                   const Divider(),
-                  _InfoRow(
-                    icon: Icons.verified_outlined,
-                    label: tr(LocaleKeys.profileRole),
-                    value: user.role,
+                  _EditableInfoRow(
+                    icon: Icons.swap_horiz,
+                    label: tr(LocaleKeys.profileChatPreference),
+                    value: _chatPrefLabel(profile.chatPreference),
+                    onTap: () => _editChatPreference(
+                        context, profile.chatPreference),
                   ),
-                  if (profile.bio.isNotEmpty) ...[
-                    const Divider(),
-                    _InfoRow(
-                      icon: Icons.info_outline,
-                      label: tr(LocaleKeys.profileBio),
-                      value: profile.bio,
-                    ),
-                  ],
                   const Divider(),
                   _InfoRow(
                     icon: Icons.star_outline,
@@ -204,20 +242,218 @@ class _ProfileContent extends StatelessWidget {
               ),
             ),
           ),
+          const Gap(AppSpacing.xxl),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _confirmLogout(context),
+              icon: const Icon(Icons.logout, color: AppColors.error),
+              label: Text(
+                tr(LocaleKeys.profileLogout),
+                style: const TextStyle(color: AppColors.error),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.error),
+              ),
+            ),
+          ),
+          const Gap(AppSpacing.xl),
         ]
-            .animate(interval: 100.ms)
+            .animate(interval: 80.ms)
             .fadeIn(duration: 400.ms)
             .slideY(begin: 0.05),
       ),
     );
   }
 
+  // ── Edit dialogs ──
+
+  static void _editAge(BuildContext context, int currentAge) {
+    final ctrl = TextEditingController(text: '$currentAge');
+    _showFieldDialog(
+      context: context,
+      title: tr(LocaleKeys.profileAge),
+      child: TextField(
+        controller: ctrl,
+        keyboardType: TextInputType.number,
+        autofocus: true,
+        decoration: InputDecoration(
+          labelText: tr(LocaleKeys.profileAge),
+          prefixIcon: const Icon(Icons.cake_outlined),
+        ),
+      ),
+      onSave: () {
+        final age = int.tryParse(ctrl.text);
+        if (age == null || age < 1) return;
+        Navigator.of(context).pop();
+        context
+            .read<ProfileBloc>()
+            .add(ProfilePatchField({'age': age}));
+      },
+    );
+  }
+
+  static void _editBio(BuildContext context, String currentBio) {
+    final ctrl = TextEditingController(text: currentBio);
+    _showFieldDialog(
+      context: context,
+      title: tr(LocaleKeys.profileBio),
+      child: TextField(
+        controller: ctrl,
+        maxLines: 3,
+        autofocus: true,
+        decoration: InputDecoration(
+          labelText: tr(LocaleKeys.profileBio),
+          prefixIcon: const Icon(Icons.info_outline),
+          alignLabelWithHint: true,
+        ),
+      ),
+      onSave: () {
+        Navigator.of(context).pop();
+        context
+            .read<ProfileBloc>()
+            .add(ProfilePatchField({'bio': ctrl.text.trim()}));
+      },
+    );
+  }
+
+  static void _editPreferredGender(
+      BuildContext context, String current) {
+    _showOptionsDialog(
+      context: context,
+      title: tr(LocaleKeys.profileChatWith),
+      options: {
+        'male': tr(LocaleKeys.profileMale),
+        'female': tr(LocaleKeys.profileFemale),
+      },
+      current: current,
+      onSelect: (v) {
+        Navigator.of(context).pop();
+        context
+            .read<ProfileBloc>()
+            .add(ProfilePatchField({'preferredGender': v}));
+      },
+    );
+  }
+
+  static void _editChatPreference(
+      BuildContext context, String current) {
+    _showOptionsDialog(
+      context: context,
+      title: tr(LocaleKeys.profileChatPreference),
+      options: {
+        'opposite': tr(LocaleKeys.profileOpposite),
+        'same': tr(LocaleKeys.profileSame),
+        'any': tr(LocaleKeys.profileAny),
+      },
+      current: current,
+      onSelect: (v) {
+        Navigator.of(context).pop();
+        context
+            .read<ProfileBloc>()
+            .add(ProfilePatchField({'chatPreference': v}));
+      },
+    );
+  }
+
+  // ── Shared dialog helpers ──
+
+  static void _showFieldDialog({
+    required BuildContext context,
+    required String title,
+    required Widget child,
+    required VoidCallback onSave,
+  }) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: child,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(tr(LocaleKeys.profileCancel)),
+          ),
+          FilledButton(
+            onPressed: onSave,
+            child: Text(tr(LocaleKeys.profileSave)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void _showOptionsDialog({
+    required BuildContext context,
+    required String title,
+    required Map<String, String> options,
+    required String current,
+    required ValueChanged<String> onSelect,
+  }) {
+    showDialog(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text(title),
+        children: options.entries.map((e) {
+          final isSelected = e.key == current;
+          return SimpleDialogOption(
+            onPressed: () => onSelect(e.key),
+            child: Row(
+              children: [
+                Expanded(child: Text(e.value)),
+                if (isSelected)
+                  const Icon(Icons.check, color: AppColors.primary, size: 20),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  // ── Logout ──
+
+  static void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr(LocaleKeys.profileLogout)),
+        content: Text(tr(LocaleKeys.profileLogoutConfirm)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(tr(LocaleKeys.profileCancel)),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.read<ProfileBloc>().add(const ProfileLogout());
+            },
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            child: Text(tr(LocaleKeys.commonConfirm)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Label helpers ──
+
   static String _genderLabel(String gender) => switch (gender) {
         'male' => tr(LocaleKeys.profileMale),
         'female' => tr(LocaleKeys.profileFemale),
         _ => gender,
       };
+
+  static String _chatPrefLabel(String value) => switch (value) {
+        'opposite' => tr(LocaleKeys.profileOpposite),
+        'same' => tr(LocaleKeys.profileSame),
+        'any' => tr(LocaleKeys.profileAny),
+        _ => value,
+      };
 }
+
+// ── Row không edit được (Gender, VIP) ──
 
 class _InfoRow extends StatelessWidget {
   const _InfoRow({
@@ -241,21 +477,84 @@ class _InfoRow extends StatelessWidget {
         children: [
           Icon(icon, size: 20, color: theme.colorScheme.onSurface.withAlpha(100)),
           const Gap(AppSpacing.md),
-          Text(
-            label,
-            style: TextStyle(
-              color: theme.colorScheme.onSurface.withAlpha(153),
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: theme.colorScheme.onSurface.withAlpha(153),
+              ),
             ),
           ),
-          const Spacer(),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: valueColor ?? theme.colorScheme.onSurface,
+          const Gap(AppSpacing.md),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: valueColor ?? theme.colorScheme.onSurface,
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ── Row có thể tap để edit ──
+
+class _EditableInfoRow extends StatelessWidget {
+  const _EditableInfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: theme.colorScheme.onSurface.withAlpha(100)),
+            const Gap(AppSpacing.md),
+            SizedBox(
+              width: 120,
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface.withAlpha(153),
+                ),
+              ),
+            ),
+            const Gap(AppSpacing.md),
+            Expanded(
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: theme.colorScheme.onSurface.withAlpha(80),
+            ),
+          ],
+        ),
       ),
     );
   }

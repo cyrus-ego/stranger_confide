@@ -15,13 +15,29 @@
     "gender": "Gender",
     "age": "Age",
     "chat_with": "Want to chat with",
+    "chat_preference": "Chat preference",
     "role": "Role",
     "bio": "Bio",
     "vip": "VIP",
     "yes": "Yes",
     "no": "No",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "display_name": "Display name",
+    "email": "Email",
+    "email_verified": "Email verified",
+    "created_at": "Created at",
+    "updated_at": "Last updated",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit_title": "Edit profile",
+    "update_success": "Updated successfully",
+    "logout": "Sign out",
+    "logout_confirm": "Are you sure you want to sign out?",
+    "opposite": "Opposite",
+    "same": "Same",
+    "any": "Any"
   },
   "common": {
     "error_title": "Error",
@@ -31,6 +47,7 @@
     "language": "Language",
     "theme": "Theme",
     "dark_mode": "Dark mode",
-    "light_mode": "Light mode"
+    "light_mode": "Light mode",
+    "confirm": "Confirm"
   }
 }

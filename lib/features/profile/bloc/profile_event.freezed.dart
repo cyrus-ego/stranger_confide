@@ -55,11 +55,14 @@ extension ProfileEventPatterns on ProfileEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProfileLoad value)?  load,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProfileLoad value)?  load,TResult Function( ProfileUpdate value)?  update,TResult Function( ProfilePatchField value)?  patchField,TResult Function( ProfileLogout value)?  logout,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ProfileLoad() when load != null:
-return load(_that);case _:
+return load(_that);case ProfileUpdate() when update != null:
+return update(_that);case ProfilePatchField() when patchField != null:
+return patchField(_that);case ProfileLogout() when logout != null:
+return logout(_that);case _:
   return orElse();
 
 }
@@ -77,11 +80,14 @@ return load(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProfileLoad value)  load,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProfileLoad value)  load,required TResult Function( ProfileUpdate value)  update,required TResult Function( ProfilePatchField value)  patchField,required TResult Function( ProfileLogout value)  logout,}){
 final _that = this;
 switch (_that) {
 case ProfileLoad():
-return load(_that);}
+return load(_that);case ProfileUpdate():
+return update(_that);case ProfilePatchField():
+return patchField(_that);case ProfileLogout():
+return logout(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -95,11 +101,14 @@ return load(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProfileLoad value)?  load,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProfileLoad value)?  load,TResult? Function( ProfileUpdate value)?  update,TResult? Function( ProfilePatchField value)?  patchField,TResult? Function( ProfileLogout value)?  logout,}){
 final _that = this;
 switch (_that) {
 case ProfileLoad() when load != null:
-return load(_that);case _:
+return load(_that);case ProfileUpdate() when update != null:
+return update(_that);case ProfilePatchField() when patchField != null:
+return patchField(_that);case ProfileLogout() when logout != null:
+return logout(_that);case _:
   return null;
 
 }
@@ -116,10 +125,13 @@ return load(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  load,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  load,TResult Function( UpdateProfileRequest request)?  update,TResult Function( Map<String, dynamic> fields)?  patchField,TResult Function()?  logout,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ProfileLoad() when load != null:
-return load();case _:
+return load();case ProfileUpdate() when update != null:
+return update(_that.request);case ProfilePatchField() when patchField != null:
+return patchField(_that.fields);case ProfileLogout() when logout != null:
+return logout();case _:
   return orElse();
 
 }
@@ -137,10 +149,13 @@ return load();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  load,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  load,required TResult Function( UpdateProfileRequest request)  update,required TResult Function( Map<String, dynamic> fields)  patchField,required TResult Function()  logout,}) {final _that = this;
 switch (_that) {
 case ProfileLoad():
-return load();}
+return load();case ProfileUpdate():
+return update(_that.request);case ProfilePatchField():
+return patchField(_that.fields);case ProfileLogout():
+return logout();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -154,10 +169,13 @@ return load();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  load,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  load,TResult? Function( UpdateProfileRequest request)?  update,TResult? Function( Map<String, dynamic> fields)?  patchField,TResult? Function()?  logout,}) {final _that = this;
 switch (_that) {
 case ProfileLoad() when load != null:
-return load();case _:
+return load();case ProfileUpdate() when update != null:
+return update(_that.request);case ProfilePatchField() when patchField != null:
+return patchField(_that.fields);case ProfileLogout() when logout != null:
+return logout();case _:
   return null;
 
 }
@@ -189,6 +207,185 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'ProfileEvent.load()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class ProfileUpdate extends ProfileEvent {
+  const ProfileUpdate(this.request): super._();
+  
+
+ final  UpdateProfileRequest request;
+
+/// Create a copy of ProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ProfileUpdateCopyWith<ProfileUpdate> get copyWith => _$ProfileUpdateCopyWithImpl<ProfileUpdate>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileUpdate&&(identical(other.request, request) || other.request == request));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,request);
+
+@override
+String toString() {
+  return 'ProfileEvent.update(request: $request)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ProfileUpdateCopyWith<$Res> implements $ProfileEventCopyWith<$Res> {
+  factory $ProfileUpdateCopyWith(ProfileUpdate value, $Res Function(ProfileUpdate) _then) = _$ProfileUpdateCopyWithImpl;
+@useResult
+$Res call({
+ UpdateProfileRequest request
+});
+
+
+$UpdateProfileRequestCopyWith<$Res> get request;
+
+}
+/// @nodoc
+class _$ProfileUpdateCopyWithImpl<$Res>
+    implements $ProfileUpdateCopyWith<$Res> {
+  _$ProfileUpdateCopyWithImpl(this._self, this._then);
+
+  final ProfileUpdate _self;
+  final $Res Function(ProfileUpdate) _then;
+
+/// Create a copy of ProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? request = null,}) {
+  return _then(ProfileUpdate(
+null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
+as UpdateProfileRequest,
+  ));
+}
+
+/// Create a copy of ProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UpdateProfileRequestCopyWith<$Res> get request {
+  
+  return $UpdateProfileRequestCopyWith<$Res>(_self.request, (value) {
+    return _then(_self.copyWith(request: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class ProfilePatchField extends ProfileEvent {
+  const ProfilePatchField(final  Map<String, dynamic> fields): _fields = fields,super._();
+  
+
+ final  Map<String, dynamic> _fields;
+ Map<String, dynamic> get fields {
+  if (_fields is EqualUnmodifiableMapView) return _fields;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_fields);
+}
+
+
+/// Create a copy of ProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ProfilePatchFieldCopyWith<ProfilePatchField> get copyWith => _$ProfilePatchFieldCopyWithImpl<ProfilePatchField>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfilePatchField&&const DeepCollectionEquality().equals(other._fields, _fields));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_fields));
+
+@override
+String toString() {
+  return 'ProfileEvent.patchField(fields: $fields)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ProfilePatchFieldCopyWith<$Res> implements $ProfileEventCopyWith<$Res> {
+  factory $ProfilePatchFieldCopyWith(ProfilePatchField value, $Res Function(ProfilePatchField) _then) = _$ProfilePatchFieldCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, dynamic> fields
+});
+
+
+
+
+}
+/// @nodoc
+class _$ProfilePatchFieldCopyWithImpl<$Res>
+    implements $ProfilePatchFieldCopyWith<$Res> {
+  _$ProfilePatchFieldCopyWithImpl(this._self, this._then);
+
+  final ProfilePatchField _self;
+  final $Res Function(ProfilePatchField) _then;
+
+/// Create a copy of ProfileEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? fields = null,}) {
+  return _then(ProfilePatchField(
+null == fields ? _self._fields : fields // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ProfileLogout extends ProfileEvent {
+  const ProfileLogout(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileLogout);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ProfileEvent.logout()';
 }
 
 

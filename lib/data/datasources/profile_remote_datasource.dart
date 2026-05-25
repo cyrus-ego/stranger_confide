@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:stranger_confide/data/models/request/update_profile_request.dart';
 import 'package:stranger_confide/data/models/response/profile_response.dart';
-
-
 
 part 'profile_remote_datasource.g.dart';
 
@@ -13,4 +12,10 @@ abstract class ProfileRemoteDatasource {
 
   @GET('/profile')
   Future<ProfileResponse> getProfile();
+
+  @PUT('/profile')
+  Future<ProfileResponse> updateProfile(@Body() UpdateProfileRequest body);
+
+  @PATCH('/profile')
+  Future<ProfileResponse> patchProfile(@Body() Map<String, dynamic> body);
 }

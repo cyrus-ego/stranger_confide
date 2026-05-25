@@ -10,8 +10,9 @@ const _defaultApiBaseUrl =
 
 late final TokenStorage _tokenStorage;
 
-void bootstrapAppCore() {
+Future<void> bootstrapAppCore() async {
   _tokenStorage = TokenStorage();
+  await _tokenStorage.load();
 
   final config = CoreConfig(
     network: NetworkConfig(

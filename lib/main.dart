@@ -15,7 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await dotenv.load();
-  bootstrapAppCore();
+  await bootstrapAppCore();
   configureDependencies();
 
   runApp(

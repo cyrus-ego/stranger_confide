@@ -18,6 +18,7 @@ abstract final class LocaleKeys {
   static const profileGender = 'profile.gender';
   static const profileAge = 'profile.age';
   static const profileChatWith = 'profile.chat_with';
+  static const profileChatPreference = 'profile.chat_preference';
   static const profileRole = 'profile.role';
   static const profileBio = 'profile.bio';
   static const profileVip = 'profile.vip';
@@ -25,6 +26,21 @@ abstract final class LocaleKeys {
   static const profileNo = 'profile.no';
   static const profileMale = 'profile.male';
   static const profileFemale = 'profile.female';
+  static const profileDisplayName = 'profile.display_name';
+  static const profileEmail = 'profile.email';
+  static const profileEmailVerified = 'profile.email_verified';
+  static const profileCreatedAt = 'profile.created_at';
+  static const profileUpdatedAt = 'profile.updated_at';
+  static const profileEdit = 'profile.edit';
+  static const profileSave = 'profile.save';
+  static const profileCancel = 'profile.cancel';
+  static const profileEditTitle = 'profile.edit_title';
+  static const profileUpdateSuccess = 'profile.update_success';
+  static const profileLogout = 'profile.logout';
+  static const profileLogoutConfirm = 'profile.logout_confirm';
+  static const profileOpposite = 'profile.opposite';
+  static const profileSame = 'profile.same';
+  static const profileAny = 'profile.any';
 
   // Common
   static const commonErrorTitle = 'common.error_title';
@@ -35,4 +51,5 @@ abstract final class LocaleKeys {
   static const commonTheme = 'common.theme';
   static const commonDarkMode = 'common.dark_mode';
   static const commonLightMode = 'common.light_mode';
+  static const commonConfirm = 'common.confirm';
 }

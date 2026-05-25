@@ -29,6 +29,10 @@ import 'package:stranger_confide/domain/repositories/profile_repository.dart'
 import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
     as _i669;
 import 'package:stranger_confide/domain/usecases/login_usecase.dart' as _i878;
+import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart'
+    as _i247;
+import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
+    as _i853;
 import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
 import 'package:stranger_confide/features/profile/bloc/profile_bloc.dart'
     as _i162;
@@ -56,14 +60,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i669.GetProfileUseCase>(
       () => _i669.GetProfileUseCase(gh<_i34.ProfileRepository>()),
     );
+    gh.factory<_i247.PatchProfileUseCase>(
+      () => _i247.PatchProfileUseCase(gh<_i34.ProfileRepository>()),
+    );
+    gh.factory<_i853.UpdateProfileUseCase>(
+      () => _i853.UpdateProfileUseCase(gh<_i34.ProfileRepository>()),
+    );
     gh.factory<_i878.LoginUseCase>(
       () => _i878.LoginUseCase(gh<_i982.AuthRepository>()),
     );
+    gh.factory<_i162.ProfileBloc>(
+      () => _i162.ProfileBloc(
+        gh<_i669.GetProfileUseCase>(),
+        gh<_i853.UpdateProfileUseCase>(),
+        gh<_i247.PatchProfileUseCase>(),
+        gh<_i670.TokenStorage>(),
+      ),
+    );
     gh.factory<_i209.LoginBloc>(
       () => _i209.LoginBloc(gh<_i878.LoginUseCase>(), gh<_i670.TokenStorage>()),
-    );
-    gh.factory<_i162.ProfileBloc>(
-      () => _i162.ProfileBloc(gh<_i669.GetProfileUseCase>()),
     );
     return this;
   }
