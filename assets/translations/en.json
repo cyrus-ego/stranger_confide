@@ -39,6 +39,25 @@
     "same": "Same",
     "any": "Any"
   },
+  "matchmaking": {
+    "title": "Find Someone",
+    "subtitle": "Find a stranger to chat anonymously",
+    "preference_title": "Matching preferences",
+    "find": "Find now",
+    "cancel": "Cancel search",
+    "searching": "Searching...",
+    "searching_hint": "Looking for the right match for you",
+    "queue_size": "In queue",
+    "position": "Your position",
+    "wait_time": "Waited",
+    "time_left": "Time remaining",
+    "match_found": "Match found!",
+    "match_hint": "You've been matched successfully",
+    "start_chat": "Start chatting",
+    "timeout": "Time's up",
+    "timeout_hint": "No match found. Try again or change your preferences.",
+    "retry": "Try again"
+  },
   "common": {
     "error_title": "Error",
     "close": "Close",

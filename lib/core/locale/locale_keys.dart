@@ -42,6 +42,25 @@ abstract final class LocaleKeys {
   static const profileSame = 'profile.same';
   static const profileAny = 'profile.any';
 
+  // Matchmaking
+  static const matchmakingTitle = 'matchmaking.title';
+  static const matchmakingSubtitle = 'matchmaking.subtitle';
+  static const matchmakingPreferenceTitle = 'matchmaking.preference_title';
+  static const matchmakingFind = 'matchmaking.find';
+  static const matchmakingCancel = 'matchmaking.cancel';
+  static const matchmakingSearching = 'matchmaking.searching';
+  static const matchmakingSearchingHint = 'matchmaking.searching_hint';
+  static const matchmakingQueueSize = 'matchmaking.queue_size';
+  static const matchmakingPosition = 'matchmaking.position';
+  static const matchmakingWaitTime = 'matchmaking.wait_time';
+  static const matchmakingTimeLeft = 'matchmaking.time_left';
+  static const matchmakingMatchFound = 'matchmaking.match_found';
+  static const matchmakingMatchHint = 'matchmaking.match_hint';
+  static const matchmakingStartChat = 'matchmaking.start_chat';
+  static const matchmakingTimeout = 'matchmaking.timeout';
+  static const matchmakingTimeoutHint = 'matchmaking.timeout_hint';
+  static const matchmakingRetry = 'matchmaking.retry';
+
   // Common
   static const commonErrorTitle = 'common.error_title';
   static const commonClose = 'common.close';

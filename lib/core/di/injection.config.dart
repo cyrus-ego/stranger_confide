@@ -16,24 +16,38 @@ import 'package:stranger_confide/core/di/register_module.dart' as _i661;
 import 'package:stranger_confide/core/token_storage.dart' as _i670;
 import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
+import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart'
+    as _i854;
 import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart'
     as _i962;
 import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
     as _i1019;
+import 'package:stranger_confide/data/repositories/matchmaking_repository_impl.dart'
+    as _i433;
 import 'package:stranger_confide/data/repositories/profile_repository_impl.dart'
     as _i412;
 import 'package:stranger_confide/domain/repositories/auth_repository.dart'
     as _i982;
+import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart'
+    as _i304;
 import 'package:stranger_confide/domain/repositories/profile_repository.dart'
     as _i34;
 import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
     as _i669;
+import 'package:stranger_confide/domain/usecases/get_queue_status_usecase.dart'
+    as _i438;
+import 'package:stranger_confide/domain/usecases/join_queue_usecase.dart'
+    as _i443;
+import 'package:stranger_confide/domain/usecases/leave_queue_usecase.dart'
+    as _i569;
 import 'package:stranger_confide/domain/usecases/login_usecase.dart' as _i878;
 import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart'
     as _i247;
 import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
     as _i853;
 import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
+import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_bloc.dart'
+    as _i987;
 import 'package:stranger_confide/features/profile/bloc/profile_bloc.dart'
     as _i162;
 
@@ -51,11 +65,28 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i962.ProfileRemoteDatasource>(
       () => registerModule.profileRemoteDatasource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i854.MatchmakingRemoteDatasource>(
+      () => registerModule.matchmakingRemoteDatasource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i304.MatchmakingRepository>(
+      () => _i433.MatchmakingRepositoryImpl(
+        gh<_i854.MatchmakingRemoteDatasource>(),
+      ),
+    );
     gh.lazySingleton<_i34.ProfileRepository>(
       () => _i412.ProfileRepositoryImpl(gh<_i962.ProfileRemoteDatasource>()),
     );
     gh.lazySingleton<_i982.AuthRepository>(
       () => _i1019.AuthRepositoryImpl(gh<_i999.AuthRemoteDatasource>()),
+    );
+    gh.factory<_i438.GetQueueStatusUseCase>(
+      () => _i438.GetQueueStatusUseCase(gh<_i304.MatchmakingRepository>()),
+    );
+    gh.factory<_i443.JoinQueueUseCase>(
+      () => _i443.JoinQueueUseCase(gh<_i304.MatchmakingRepository>()),
+    );
+    gh.factory<_i569.LeaveQueueUseCase>(
+      () => _i569.LeaveQueueUseCase(gh<_i304.MatchmakingRepository>()),
     );
     gh.factory<_i669.GetProfileUseCase>(
       () => _i669.GetProfileUseCase(gh<_i34.ProfileRepository>()),
@@ -79,6 +110,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i209.LoginBloc>(
       () => _i209.LoginBloc(gh<_i878.LoginUseCase>(), gh<_i670.TokenStorage>()),
+    );
+    gh.factory<_i987.MatchmakingBloc>(
+      () => _i987.MatchmakingBloc(
+        gh<_i443.JoinQueueUseCase>(),
+        gh<_i569.LeaveQueueUseCase>(),
+        gh<_i438.GetQueueStatusUseCase>(),
+        gh<_i669.GetProfileUseCase>(),
+      ),
     );
     return this;
   }

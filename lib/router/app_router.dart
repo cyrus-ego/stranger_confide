@@ -8,6 +8,9 @@ import '../features/auth/bloc/login_bloc.dart';
 import '../features/auth/bloc/login_state.dart';
 import '../features/auth/login_page.dart';
 import '../features/home/home_page.dart';
+import '../features/matchmaking/bloc/matchmaking_bloc.dart';
+import '../features/matchmaking/bloc/matchmaking_event.dart';
+import '../features/matchmaking/matchmaking_page.dart';
 import '../features/profile/bloc/profile_bloc.dart';
 import '../features/profile/bloc/profile_event.dart';
 import '../features/profile/profile_page.dart';
@@ -18,6 +21,7 @@ abstract final class AppRoutes {
   static const login = '/login';
   static const home = '/home';
   static const profile = '/profile';
+  static const matchmaking = '/matchmaking';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -45,6 +49,14 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => BlocProvider(
         create: (_) => getIt<ProfileBloc>()..add(const ProfileLoad()),
         child: const ProfilePage(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.matchmaking,
+      builder: (context, state) => BlocProvider(
+        create: (_) =>
+            getIt<MatchmakingBloc>()..add(const MatchmakingStarted()),
+        child: const MatchmakingPage(),
       ),
     ),
   ],
