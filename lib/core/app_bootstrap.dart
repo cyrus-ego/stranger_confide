@@ -1,6 +1,7 @@
 import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'token_storage.dart';
 
@@ -14,10 +15,7 @@ void bootstrapAppCore() {
 
   final config = CoreConfig(
     network: NetworkConfig(
-      baseUrl: const String.fromEnvironment(
-        'API_BASE_URL',
-        defaultValue: _defaultApiBaseUrl,
-      ),
+      baseUrl: dotenv.env['API_BASE_URL'] ?? _defaultApiBaseUrl,
       enableLogging: false,
       defaultHeaders: const {
         'Accept': 'application/json',

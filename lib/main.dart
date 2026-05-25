@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/app_bootstrap.dart';
 import 'core/di/injection.dart';
@@ -7,6 +8,7 @@ import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   bootstrapAppCore();
   configureDependencies();
   runApp(const MyApp());

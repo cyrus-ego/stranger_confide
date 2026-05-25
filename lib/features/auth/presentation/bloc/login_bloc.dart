@@ -16,28 +16,19 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   final AuthRepository _repo;
   final TokenStorage _tokenStorage;
 
-  Future<void> _onSubmitted(
-    LoginSubmitted event,
-    Emitter<LoginState> emit,
-  ) =>
+  Future<void> _onSubmitted(LoginSubmitted event, Emitter<LoginState> emit) =>
       guard(() async {
         emit(state.copyWith(status: LoginStatus.loading));
 
-        final result = await _repo.login(
+        final tokens = (await _repo.login(
           email: event.email,
           password: event.password,
-        );
+        )).orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
 
-        switch (result) {
-          case AppSuccess(:final value):
-            _tokenStorage.save(
-              accessToken: value.accessToken,
-              refreshToken: value.refreshToken,
-            );
-            emit(state.copyWith(status: LoginStatus.success, tokens: value));
-          case AppFailure(:final error):
-            emit(state.copyWith(status: LoginStatus.failure));
-            throw error;
-        }
+        _tokenStorage.save(
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+        );
+        emit(state.copyWith(status: LoginStatus.success, tokens: tokens));
       });
 }

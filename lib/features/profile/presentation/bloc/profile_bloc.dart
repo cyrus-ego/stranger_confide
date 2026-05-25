@@ -21,14 +21,9 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
       guard(() async {
         emit(state.copyWith(status: ProfileStatus.loading));
 
-        final result = await _repo.getProfile();
+        final data = (await _repo.getProfile())
+            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
 
-        switch (result) {
-          case AppSuccess(:final value):
-            emit(state.copyWith(status: ProfileStatus.loaded, data: value));
-          case AppFailure(:final error):
-            emit(state.copyWith(status: ProfileStatus.failure));
-            throw error;
-        }
+        emit(state.copyWith(status: ProfileStatus.loaded, data: data));
       });
 }
