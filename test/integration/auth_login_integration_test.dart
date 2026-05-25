@@ -5,8 +5,8 @@ import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stranger_confide/features/auth/data/auth_api.dart';
-import 'package:stranger_confide/features/auth/data/auth_repository.dart';
+import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart';
+import 'package:stranger_confide/data/repositories/auth_repository_impl.dart';
 
 /// Integration test gọi API login thật qua Retrofit + envelope interceptor.
 ///
@@ -33,8 +33,8 @@ void main() {
 
     dio.interceptors.add(const ApiEnvelopeInterceptor());
 
-    final api = AuthApi(dio);
-    final repo = AuthRepository(api);
+    final api = AuthRemoteDatasource(dio);
+    final repo = AuthRepositoryImpl(api);
 
     final result = await repo.login(
       email: 'boy1@gmail.com',

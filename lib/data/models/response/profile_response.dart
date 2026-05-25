@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stranger_confide/data/models/response/user_dto.dart';
 
-import '../../../auth/data/models/user_dto.dart';
 import 'profile_dto.dart';
 
 part 'profile_response.freezed.dart';

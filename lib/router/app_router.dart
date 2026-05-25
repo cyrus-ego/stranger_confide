@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/di/injection.dart';
-import '../features/auth/presentation/bloc/login_bloc.dart';
-import '../features/auth/presentation/bloc/login_state.dart';
-import '../features/auth/presentation/login_page.dart';
-import '../features/profile/presentation/bloc/profile_bloc.dart';
-import '../features/profile/presentation/bloc/profile_event.dart';
-import '../features/profile/presentation/profile_page.dart';
+import '../features/auth/bloc/login_bloc.dart';
+import '../features/auth/bloc/login_state.dart';
+import '../features/auth/login_page.dart';
+import '../features/profile/bloc/profile_bloc.dart';
+import '../features/profile/bloc/profile_event.dart';
+import '../features/profile/profile_page.dart';
 
 abstract final class AppRoutes {
   static const login = '/login';

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginState {
 
- LoginStatus get status; AuthTokens? get tokens;
+ LoginStatus get status;
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $LoginStateCopyWith<LoginState> get copyWith => _$LoginStateCopyWithImpl<LoginSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginState&&(identical(other.status, status) || other.status == status)&&(identical(other.tokens, tokens) || other.tokens == tokens));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginState&&(identical(other.status, status) || other.status == status));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,tokens);
+int get hashCode => Object.hash(runtimeType,status);
 
 @override
 String toString() {
-  return 'LoginState(status: $status, tokens: $tokens)';
+  return 'LoginState(status: $status)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $LoginStateCopyWith<$Res>  {
   factory $LoginStateCopyWith(LoginState value, $Res Function(LoginState) _then) = _$LoginStateCopyWithImpl;
 @useResult
 $Res call({
- LoginStatus status, AuthTokens? tokens
+ LoginStatus status
 });
 
 
-$AuthTokensCopyWith<$Res>? get tokens;
+
 
 }
 /// @nodoc
@@ -62,26 +62,13 @@ class _$LoginStateCopyWithImpl<$Res>
 
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? tokens = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as LoginStatus,tokens: freezed == tokens ? _self.tokens : tokens // ignore: cast_nullable_to_non_nullable
-as AuthTokens?,
+as LoginStatus,
   ));
 }
-/// Create a copy of LoginState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$AuthTokensCopyWith<$Res>? get tokens {
-    if (_self.tokens == null) {
-    return null;
-  }
 
-  return $AuthTokensCopyWith<$Res>(_self.tokens!, (value) {
-    return _then(_self.copyWith(tokens: value));
-  });
-}
 }
 
 
@@ -160,10 +147,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LoginStatus status,  AuthTokens? tokens)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LoginStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginState() when $default != null:
-return $default(_that.status,_that.tokens);case _:
+return $default(_that.status);case _:
   return orElse();
 
 }
@@ -181,10 +168,10 @@ return $default(_that.status,_that.tokens);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LoginStatus status,  AuthTokens? tokens)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LoginStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _LoginState():
-return $default(_that.status,_that.tokens);}
+return $default(_that.status);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -198,10 +185,10 @@ return $default(_that.status,_that.tokens);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LoginStatus status,  AuthTokens? tokens)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LoginStatus status)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginState() when $default != null:
-return $default(_that.status,_that.tokens);case _:
+return $default(_that.status);case _:
   return null;
 
 }
@@ -213,11 +200,10 @@ return $default(_that.status,_that.tokens);case _:
 
 
 class _LoginState implements LoginState {
-  const _LoginState({this.status = LoginStatus.initial, this.tokens});
+  const _LoginState({this.status = LoginStatus.initial});
   
 
 @override@JsonKey() final  LoginStatus status;
-@override final  AuthTokens? tokens;
 
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +215,16 @@ _$LoginStateCopyWith<_LoginState> get copyWith => __$LoginStateCopyWithImpl<_Log
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginState&&(identical(other.status, status) || other.status == status)&&(identical(other.tokens, tokens) || other.tokens == tokens));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginState&&(identical(other.status, status) || other.status == status));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,tokens);
+int get hashCode => Object.hash(runtimeType,status);
 
 @override
 String toString() {
-  return 'LoginState(status: $status, tokens: $tokens)';
+  return 'LoginState(status: $status)';
 }
 
 
@@ -249,11 +235,11 @@ abstract mixin class _$LoginStateCopyWith<$Res> implements $LoginStateCopyWith<$
   factory _$LoginStateCopyWith(_LoginState value, $Res Function(_LoginState) _then) = __$LoginStateCopyWithImpl;
 @override @useResult
 $Res call({
- LoginStatus status, AuthTokens? tokens
+ LoginStatus status
 });
 
 
-@override $AuthTokensCopyWith<$Res>? get tokens;
+
 
 }
 /// @nodoc
@@ -266,27 +252,14 @@ class __$LoginStateCopyWithImpl<$Res>
 
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? tokens = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,}) {
   return _then(_LoginState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as LoginStatus,tokens: freezed == tokens ? _self.tokens : tokens // ignore: cast_nullable_to_non_nullable
-as AuthTokens?,
+as LoginStatus,
   ));
 }
 
-/// Create a copy of LoginState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$AuthTokensCopyWith<$Res>? get tokens {
-    if (_self.tokens == null) {
-    return null;
-  }
 
-  return $AuthTokensCopyWith<$Res>(_self.tokens!, (value) {
-    return _then(_self.copyWith(tokens: value));
-  });
-}
 }
 
 // dart format on

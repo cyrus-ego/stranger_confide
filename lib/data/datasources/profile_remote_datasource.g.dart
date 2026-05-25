@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_api.dart';
+part of 'profile_remote_datasource.dart';
 
 // dart format off
 
@@ -10,8 +10,8 @@ part of 'auth_api.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main,avoid_redundant_argument_values
 
-class _AuthApi implements AuthApi {
-  _AuthApi(this._dio, {this.baseUrl, this.errorLogger});
+class _ProfileRemoteDatasource implements ProfileRemoteDatasource {
+  _ProfileRemoteDatasource(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -20,25 +20,25 @@ class _AuthApi implements AuthApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<AuthTokens> login(LoginRequest body) async {
+  Future<ProfileResponse> getProfile() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = body;
-    final _options = _setStreamType<AuthTokens>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ProfileResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/auth/login',
+            '/profile',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AuthTokens _value;
+    late ProfileResponse _value;
     try {
-      _value = AuthTokens.fromJson(_result.data!);
+      _value = ProfileResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

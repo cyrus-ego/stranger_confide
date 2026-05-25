@@ -1,8 +1,8 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stranger_confide/data/models/response/profile_response.dart';
 
-import '../data/models/profile_response.dart';
 import 'bloc/profile_bloc.dart';
 import 'bloc/profile_state.dart';
 

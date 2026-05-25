@@ -1,0 +1,19 @@
+import 'package:cyr_flutter_core/cyr_flutter_core.dart';
+import 'package:injectable/injectable.dart';
+import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart';
+import 'package:stranger_confide/data/models/response/profile_response.dart';
+
+import '../../domain/repositories/profile_repository.dart';
+import 'base_repository.dart';
+
+@LazySingleton(as: ProfileRepository)
+class ProfileRepositoryImpl extends BaseRepository
+    implements ProfileRepository {
+  ProfileRepositoryImpl(this._remoteDatasource);
+
+  final ProfileRemoteDatasource _remoteDatasource;
+
+  @override
+  Future<AppResult<ProfileResponse>> getProfile() =>
+      safeApiCall(() => _remoteDatasource.getProfile());
+}

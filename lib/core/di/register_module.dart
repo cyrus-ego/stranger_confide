@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart';
 
-import '../../features/auth/data/auth_api.dart';
-import '../../features/profile/data/profile_api.dart';
+import '../../data/datasources/auth_remote_datasource.dart';
 
 @module
 abstract class RegisterModule {
   @lazySingleton
-  AuthApi authApi(Dio dio) => AuthApi(dio);
+  AuthRemoteDatasource authRemoteDatasource(Dio dio) =>
+      AuthRemoteDatasource(dio);
 
   @lazySingleton
-  ProfileApi profileApi(Dio dio) => ProfileApi(dio);
+  ProfileRemoteDatasource profileRemoteDatasource(Dio dio) =>
+      ProfileRemoteDatasource(dio);
 }

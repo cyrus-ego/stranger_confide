@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stranger_confide/data/models/response/user_dto.dart';
 
-import 'user_dto.dart';
 
 part 'auth_tokens.freezed.dart';
 part 'auth_tokens.g.dart';
