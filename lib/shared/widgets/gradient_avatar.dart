@@ -33,7 +33,7 @@ class GradientAvatar extends StatelessWidget {
       ),
       child: CircleAvatar(
         radius: radius,
-        backgroundColor: AppColors.surfaceVariant,
+        backgroundColor: theme.colorScheme.surfaceContainerHighest,
         child: hasImage
             ? ClipOval(
                 child: CachedNetworkImage(
@@ -47,7 +47,7 @@ class GradientAvatar extends StatelessWidget {
                   errorWidget: (_, __, ___) => Text(
                     initial,
                     style: theme.textTheme.headlineLarge?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurface.withAlpha(153),
                     ),
                   ),
                 ),
@@ -55,7 +55,7 @@ class GradientAvatar extends StatelessWidget {
             : Text(
                 initial,
                 style: theme.textTheme.headlineLarge?.copyWith(
-                  color: AppColors.textPrimary,
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),

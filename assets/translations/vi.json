@@ -1,0 +1,36 @@
+{
+  "app_name": "Chat với người lạ",
+  "login": {
+    "subtitle": "Đăng nhập để tiếp tục",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "email_required": "Nhập email",
+    "password_required": "Nhập mật khẩu"
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "load_error": "Không tải được hồ sơ",
+    "retry": "Thử lại",
+    "gender": "Giới tính",
+    "age": "Tuổi",
+    "chat_with": "Muốn chat với",
+    "role": "Vai trò",
+    "bio": "Giới thiệu",
+    "vip": "VIP",
+    "yes": "Có",
+    "no": "Không",
+    "male": "Nam",
+    "female": "Nữ"
+  },
+  "common": {
+    "error_title": "Lỗi",
+    "close": "Đóng",
+    "connection_error": "Không kết nối được. Thử lại.",
+    "settings": "Cài đặt",
+    "language": "Ngôn ngữ",
+    "theme": "Giao diện",
+    "dark_mode": "Chế độ tối",
+    "light_mode": "Chế độ sáng"
+  }
+}

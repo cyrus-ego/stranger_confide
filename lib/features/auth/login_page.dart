@@ -1,11 +1,14 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
+import '../../core/locale/locale_keys.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_cubit.dart';
 import 'bloc/login_bloc.dart';
 import 'bloc/login_event.dart';
 import 'bloc/login_state.dart';
@@ -45,14 +48,21 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
   @override
   Widget buildPage(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+    final gradient = isDark
+        ? AppColors.darkGradientBackground
+        : AppColors.lightGradientBackground;
 
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(gradient: AppColors.gradientBackground),
+        decoration: BoxDecoration(gradient: gradient),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xxl,
+              ),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -61,14 +71,14 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                     Icon(
                       Icons.chat_bubble_rounded,
                       size: 56,
-                      color: AppColors.primary,
+                      color: colors.primary,
                     )
                         .animate()
                         .fadeIn(duration: 600.ms)
                         .scale(begin: const Offset(0.5, 0.5)),
                     const Gap(AppSpacing.lg),
                     Text(
-                      'Stranger Confide',
+                      tr(LocaleKeys.appName),
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.5,
@@ -79,9 +89,9 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                         .slideY(begin: 0.3),
                     const Gap(AppSpacing.sm),
                     Text(
-                      'Đăng nhập để tiếp tục',
+                      tr(LocaleKeys.loginSubtitle),
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textSecondary,
+                        color: colors.onSurface.withAlpha(153),
                       ),
                     )
                         .animate()
@@ -92,13 +102,13 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      style: const TextStyle(color: AppColors.textPrimary),
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        labelText: tr(LocaleKeys.loginEmail),
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Nhập email' : null,
+                      validator: (v) => (v == null || v.isEmpty)
+                          ? tr(LocaleKeys.loginEmailRequired)
+                          : null,
                     )
                         .animate()
                         .fadeIn(duration: 500.ms, delay: 400.ms)
@@ -109,13 +119,13 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                       obscureText: true,
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) => _submit(),
-                      style: const TextStyle(color: AppColors.textPrimary),
-                      decoration: const InputDecoration(
-                        labelText: 'Mật khẩu',
-                        prefixIcon: Icon(Icons.lock_outlined),
+                      decoration: InputDecoration(
+                        labelText: tr(LocaleKeys.loginPassword),
+                        prefixIcon: const Icon(Icons.lock_outlined),
                       ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Nhập mật khẩu' : null,
+                      validator: (v) => (v == null || v.isEmpty)
+                          ? tr(LocaleKeys.loginPasswordRequired)
+                          : null,
                     )
                         .animate()
                         .fadeIn(duration: 500.ms, delay: 500.ms)
@@ -135,8 +145,7 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                             return AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
-                              width:
-                                  isLoading ? 52 : constraints.maxWidth,
+                              width: isLoading ? 52 : constraints.maxWidth,
                               height: 52,
                               child: FilledButton(
                                 onPressed: isLoading ? null : _submit,
@@ -149,7 +158,7 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                                           color: Colors.white,
                                         ),
                                       )
-                                    : const Text('Đăng nhập'),
+                                    : Text(tr(LocaleKeys.loginSubmit)),
                               ),
                             );
                           },
@@ -159,6 +168,60 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                         .animate()
                         .fadeIn(duration: 500.ms, delay: 600.ms)
                         .slideY(begin: 0.2),
+                    const Gap(AppSpacing.xxl),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BlocBuilder<ThemeCubit, ThemeMode>(
+                          builder: (context, mode) {
+                            final isDarkMode = mode == ThemeMode.dark;
+                            return TextButton.icon(
+                              onPressed: () =>
+                                  context.read<ThemeCubit>().toggle(),
+                              icon: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder: (child, anim) =>
+                                    RotationTransition(
+                                  turns: anim,
+                                  child: FadeTransition(
+                                    opacity: anim,
+                                    child: child,
+                                  ),
+                                ),
+                                child: Icon(
+                                  isDarkMode
+                                      ? Icons.dark_mode_rounded
+                                      : Icons.light_mode_rounded,
+                                  key: ValueKey(isDarkMode),
+                                  size: 20,
+                                ),
+                              ),
+                              label: Text(tr(LocaleKeys.commonTheme)),
+                            );
+                          },
+                        ),
+                        Container(
+                          width: 1,
+                          height: 20,
+                          color: colors.outline,
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            final next =
+                                context.locale.languageCode == 'vi'
+                                    ? const Locale('en')
+                                    : const Locale('vi');
+                            context.setLocale(next);
+                          },
+                          icon: const Icon(Icons.language, size: 20),
+                          label: Text(
+                            context.locale.languageCode.toUpperCase(),
+                          ),
+                        ),
+                      ],
+                    )
+                        .animate()
+                        .fadeIn(duration: 500.ms, delay: 700.ms),
                   ],
                 ),
               ),

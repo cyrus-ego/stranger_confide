@@ -1,0 +1,36 @@
+{
+  "app_name": "Stranger Confide",
+  "login": {
+    "subtitle": "Sign in to continue",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "email_required": "Enter email",
+    "password_required": "Enter password"
+  },
+  "profile": {
+    "title": "Profile",
+    "load_error": "Failed to load profile",
+    "retry": "Retry",
+    "gender": "Gender",
+    "age": "Age",
+    "chat_with": "Want to chat with",
+    "role": "Role",
+    "bio": "Bio",
+    "vip": "VIP",
+    "yes": "Yes",
+    "no": "No",
+    "male": "Male",
+    "female": "Female"
+  },
+  "common": {
+    "error_title": "Error",
+    "close": "Close",
+    "connection_error": "Connection failed. Please retry.",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "dark_mode": "Dark mode",
+    "light_mode": "Light mode"
+  }
+}

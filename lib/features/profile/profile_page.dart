@@ -1,10 +1,12 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:stranger_confide/data/models/response/profile_response.dart';
 
+import '../../core/locale/locale_keys.dart';
 import '../../shared/widgets/app_shimmer.dart';
 import '../../shared/widgets/gradient_avatar.dart';
 import '../../theme/app_colors.dart';
@@ -27,7 +29,7 @@ class _ProfilePageState extends BlocHostPageState<ProfilePage> {
   @override
   Widget buildPage(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: Text(tr(LocaleKeys.profileTitle))),
       body: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           return switch (state.status) {
@@ -92,20 +94,20 @@ class _ProfileError extends StatelessWidget {
             Icon(
               Icons.cloud_off_rounded,
               size: 64,
-              color: AppColors.textMuted,
+              color: theme.colorScheme.onSurface.withAlpha(100),
             ),
             const Gap(AppSpacing.lg),
             Text(
-              'Không tải được profile',
+              tr(LocaleKeys.profileLoadError),
               style: theme.textTheme.titleMedium?.copyWith(
-                color: AppColors.textSecondary,
+                color: theme.colorScheme.onSurface.withAlpha(153),
               ),
             ),
             const Gap(AppSpacing.xl),
             OutlinedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Thử lại'),
+              label: Text(tr(LocaleKeys.profileRetry)),
             ),
           ],
         ),
@@ -145,7 +147,7 @@ class _ProfileContent extends StatelessWidget {
           Text(
             user.email,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurface.withAlpha(153),
             ),
           ),
           const Gap(AppSpacing.xl),
@@ -159,40 +161,42 @@ class _ProfileContent extends StatelessWidget {
                 children: [
                   _InfoRow(
                     icon: Icons.person_outline,
-                    label: 'Giới tính',
+                    label: tr(LocaleKeys.profileGender),
                     value: _genderLabel(profile.gender),
                   ),
                   const Divider(),
                   _InfoRow(
                     icon: Icons.cake_outlined,
-                    label: 'Tuổi',
+                    label: tr(LocaleKeys.profileAge),
                     value: '${profile.age}',
                   ),
                   const Divider(),
                   _InfoRow(
                     icon: Icons.chat_bubble_outline,
-                    label: 'Muốn chat với',
+                    label: tr(LocaleKeys.profileChatWith),
                     value: _genderLabel(profile.preferredGender),
                   ),
                   const Divider(),
                   _InfoRow(
                     icon: Icons.verified_outlined,
-                    label: 'Role',
+                    label: tr(LocaleKeys.profileRole),
                     value: user.role,
                   ),
                   if (profile.bio.isNotEmpty) ...[
                     const Divider(),
                     _InfoRow(
                       icon: Icons.info_outline,
-                      label: 'Bio',
+                      label: tr(LocaleKeys.profileBio),
                       value: profile.bio,
                     ),
                   ],
                   const Divider(),
                   _InfoRow(
                     icon: Icons.star_outline,
-                    label: 'VIP',
-                    value: profile.isVip ? 'Có' : 'Không',
+                    label: tr(LocaleKeys.profileVip),
+                    value: profile.isVip
+                        ? tr(LocaleKeys.profileYes)
+                        : tr(LocaleKeys.profileNo),
                     valueColor:
                         profile.isVip ? AppColors.secondary : null,
                   ),
@@ -209,8 +213,8 @@ class _ProfileContent extends StatelessWidget {
   }
 
   static String _genderLabel(String gender) => switch (gender) {
-        'male' => 'Nam',
-        'female' => 'Nữ',
+        'male' => tr(LocaleKeys.profileMale),
+        'female' => tr(LocaleKeys.profileFemale),
         _ => gender,
       };
 }
@@ -230,22 +234,25 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.textMuted),
+          Icon(icon, size: 20, color: theme.colorScheme.onSurface.withAlpha(100)),
           const Gap(AppSpacing.md),
           Text(
             label,
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(
+              color: theme.colorScheme.onSurface.withAlpha(153),
+            ),
           ),
           const Spacer(),
           Text(
             value,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: valueColor ?? AppColors.textPrimary,
+              color: valueColor ?? theme.colorScheme.onSurface,
             ),
           ),
         ],
