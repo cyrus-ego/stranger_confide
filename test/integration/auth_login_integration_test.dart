@@ -45,9 +45,9 @@ void main() {
       case AppSuccess(:final value):
         expect(value.accessToken, isNotEmpty);
         expect(value.refreshToken, isNotEmpty);
-        expect(value.user.email, 'boy1@gmail.com');
+        expect(value.user?.email, 'boy1@gmail.com');
 
-        print('PASS — accessToken: ${value.accessToken.substring(0, 20)}...');
+        print('PASS — accessToken: ${value.accessToken?.substring(0, 20)}...');
         print('PASS — user: ${value.user}');
 
       case AppFailure(:final error):

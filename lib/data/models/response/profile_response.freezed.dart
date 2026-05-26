@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileResponse {
 
- UserDto get user; ProfileDto get profile; bool get isComplete;
+ UserDto? get user; ProfileDto? get profile; bool? get isComplete;
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $ProfileResponseCopyWith<$Res>  {
   factory $ProfileResponseCopyWith(ProfileResponse value, $Res Function(ProfileResponse) _then) = _$ProfileResponseCopyWithImpl;
 @useResult
 $Res call({
- UserDto user, ProfileDto profile, bool isComplete
+ UserDto? user, ProfileDto? profile, bool? isComplete
 });
 
 
-$UserDtoCopyWith<$Res> get user;$ProfileDtoCopyWith<$Res> get profile;
+$UserDtoCopyWith<$Res>? get user;$ProfileDtoCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -65,30 +65,36 @@ class _$ProfileResponseCopyWithImpl<$Res>
 
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? user = null,Object? profile = null,Object? isComplete = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? user = freezed,Object? profile = freezed,Object? isComplete = freezed,}) {
   return _then(_self.copyWith(
-user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as UserDto,profile: null == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
-as ProfileDto,isComplete: null == isComplete ? _self.isComplete : isComplete // ignore: cast_nullable_to_non_nullable
-as bool,
+user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as UserDto?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as ProfileDto?,isComplete: freezed == isComplete ? _self.isComplete : isComplete // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserDtoCopyWith<$Res> get user {
-  
-  return $UserDtoCopyWith<$Res>(_self.user, (value) {
+$UserDtoCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserDtoCopyWith<$Res>(_self.user!, (value) {
     return _then(_self.copyWith(user: value));
   });
 }/// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileDtoCopyWith<$Res> get profile {
-  
-  return $ProfileDtoCopyWith<$Res>(_self.profile, (value) {
+$ProfileDtoCopyWith<$Res>? get profile {
+    if (_self.profile == null) {
+    return null;
+  }
+
+  return $ProfileDtoCopyWith<$Res>(_self.profile!, (value) {
     return _then(_self.copyWith(profile: value));
   });
 }
@@ -170,7 +176,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserDto user,  ProfileDto profile,  bool isComplete)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserDto? user,  ProfileDto? profile,  bool? isComplete)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfileResponse() when $default != null:
 return $default(_that.user,_that.profile,_that.isComplete);case _:
@@ -191,7 +197,7 @@ return $default(_that.user,_that.profile,_that.isComplete);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserDto user,  ProfileDto profile,  bool isComplete)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserDto? user,  ProfileDto? profile,  bool? isComplete)  $default,) {final _that = this;
 switch (_that) {
 case _ProfileResponse():
 return $default(_that.user,_that.profile,_that.isComplete);}
@@ -208,7 +214,7 @@ return $default(_that.user,_that.profile,_that.isComplete);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserDto user,  ProfileDto profile,  bool isComplete)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserDto? user,  ProfileDto? profile,  bool? isComplete)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfileResponse() when $default != null:
 return $default(_that.user,_that.profile,_that.isComplete);case _:
@@ -223,12 +229,12 @@ return $default(_that.user,_that.profile,_that.isComplete);case _:
 @JsonSerializable()
 
 class _ProfileResponse implements ProfileResponse {
-  const _ProfileResponse({required this.user, required this.profile, this.isComplete = false});
+  const _ProfileResponse({this.user, this.profile, this.isComplete});
   factory _ProfileResponse.fromJson(Map<String, dynamic> json) => _$ProfileResponseFromJson(json);
 
-@override final  UserDto user;
-@override final  ProfileDto profile;
-@override@JsonKey() final  bool isComplete;
+@override final  UserDto? user;
+@override final  ProfileDto? profile;
+@override final  bool? isComplete;
 
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -263,11 +269,11 @@ abstract mixin class _$ProfileResponseCopyWith<$Res> implements $ProfileResponse
   factory _$ProfileResponseCopyWith(_ProfileResponse value, $Res Function(_ProfileResponse) _then) = __$ProfileResponseCopyWithImpl;
 @override @useResult
 $Res call({
- UserDto user, ProfileDto profile, bool isComplete
+ UserDto? user, ProfileDto? profile, bool? isComplete
 });
 
 
-@override $UserDtoCopyWith<$Res> get user;@override $ProfileDtoCopyWith<$Res> get profile;
+@override $UserDtoCopyWith<$Res>? get user;@override $ProfileDtoCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -280,12 +286,12 @@ class __$ProfileResponseCopyWithImpl<$Res>
 
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? user = null,Object? profile = null,Object? isComplete = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? user = freezed,Object? profile = freezed,Object? isComplete = freezed,}) {
   return _then(_ProfileResponse(
-user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as UserDto,profile: null == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
-as ProfileDto,isComplete: null == isComplete ? _self.isComplete : isComplete // ignore: cast_nullable_to_non_nullable
-as bool,
+user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as UserDto?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as ProfileDto?,isComplete: freezed == isComplete ? _self.isComplete : isComplete // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -293,18 +299,24 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserDtoCopyWith<$Res> get user {
-  
-  return $UserDtoCopyWith<$Res>(_self.user, (value) {
+$UserDtoCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserDtoCopyWith<$Res>(_self.user!, (value) {
     return _then(_self.copyWith(user: value));
   });
 }/// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileDtoCopyWith<$Res> get profile {
-  
-  return $ProfileDtoCopyWith<$Res>(_self.profile, (value) {
+$ProfileDtoCopyWith<$Res>? get profile {
+    if (_self.profile == null) {
+    return null;
+  }
+
+  return $ProfileDtoCopyWith<$Res>(_self.profile!, (value) {
     return _then(_self.copyWith(profile: value));
   });
 }

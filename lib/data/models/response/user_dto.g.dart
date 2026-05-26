@@ -7,12 +7,12 @@ part of 'user_dto.dart';
 // **************************************************************************
 
 _UserDto _$UserDtoFromJson(Map<String, dynamic> json) => _UserDto(
-  id: json['id'] as String,
-  email: json['email'] as String,
-  displayName: json['displayName'] as String,
-  avatar: json['avatar'] as String? ?? '',
-  role: json['role'] as String? ?? 'user',
-  isEmailVerified: json['isEmailVerified'] as bool? ?? false,
+  id: json['id'] as String?,
+  email: json['email'] as String?,
+  displayName: json['displayName'] as String?,
+  avatar: json['avatar'] as String?,
+  role: json['role'] as String?,
+  isEmailVerified: json['isEmailVerified'] as bool?,
 );
 
 Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{

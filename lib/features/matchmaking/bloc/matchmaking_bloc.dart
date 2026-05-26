@@ -46,8 +46,8 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
           (_) => emit(state.copyWith(status: MatchmakingStatus.error)),
         );
 
-        final pref = profile.profile.chatPreference;
-        final gender = profile.profile.preferredGender;
+        final pref = profile.profile?.chatPreference ?? '';
+        final gender = profile.profile?.preferredGender ?? '';
 
         emit(state.copyWith(
           status: MatchmakingStatus.idle,
@@ -74,7 +74,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
           (_) => emit(state.copyWith(status: MatchmakingStatus.idle)),
         );
 
-        if (data.timedOut) {
+        if (data.timedOut == true) {
           emit(state.copyWith(
             status: MatchmakingStatus.timedOut,
             queueData: data,
@@ -111,7 +111,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
         final result = await _getQueueStatusUseCase();
 
         if (result case AppSuccess(:final value)) {
-          if (value.timedOut) {
+          if (value.timedOut == true) {
             _stopPolling();
             emit(state.copyWith(
               status: MatchmakingStatus.timedOut,
@@ -120,7 +120,8 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
             return;
           }
 
-          if (!value.inQueue && state.status == MatchmakingStatus.searching) {
+          if (value.inQueue == false &&
+              state.status == MatchmakingStatus.searching) {
             _stopPolling();
             emit(state.copyWith(
               status: MatchmakingStatus.matched,

@@ -159,19 +159,19 @@ class _ProfileContent extends StatelessWidget {
         children: [
           GradientAvatar(
             radius: 48,
-            imageUrl: user.avatar,
-            fallbackText: user.displayName,
+            imageUrl: user?.avatar,
+            fallbackText: user?.displayName,
           ),
           const Gap(AppSpacing.lg),
           Text(
-            user.displayName,
+            user?.displayName ?? '',
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const Gap(AppSpacing.xs),
           Text(
-            user.email,
+            user?.email ?? '',
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurface.withAlpha(153),
             ),
@@ -196,47 +196,49 @@ class _ProfileContent extends StatelessWidget {
                   _InfoRow(
                     icon: Icons.person_outline,
                     label: tr(LocaleKeys.profileGender),
-                    value: _genderLabel(profile.gender),
+                    value: _genderLabel(profile?.gender ?? ''),
                   ),
                   const Divider(),
                   _EditableInfoRow(
                     icon: Icons.cake_outlined,
                     label: tr(LocaleKeys.profileAge),
-                    value: '${profile.age}',
-                    onTap: () => _editAge(context, profile.age),
+                    value: '${profile?.age ?? 0}',
+                    onTap: () => _editAge(context, profile?.age ?? 0),
                   ),
                   const Divider(),
                   _EditableInfoRow(
                     icon: Icons.info_outline,
                     label: tr(LocaleKeys.profileBio),
-                    value: profile.bio.isEmpty ? '—' : profile.bio,
-                    onTap: () => _editBio(context, profile.bio),
+                    value: (profile?.bio?.isEmpty ?? true)
+                        ? '—'
+                        : profile!.bio!,
+                    onTap: () => _editBio(context, profile?.bio ?? ''),
                   ),
                   const Divider(),
                   _EditableInfoRow(
                     icon: Icons.chat_bubble_outline,
                     label: tr(LocaleKeys.profileChatWith),
-                    value: _genderLabel(profile.preferredGender),
+                    value: _genderLabel(profile?.preferredGender ?? ''),
                     onTap: () => _editPreferredGender(
-                        context, profile.preferredGender),
+                        context, profile?.preferredGender ?? ''),
                   ),
                   const Divider(),
                   _EditableInfoRow(
                     icon: Icons.swap_horiz,
                     label: tr(LocaleKeys.profileChatPreference),
-                    value: _chatPrefLabel(profile.chatPreference),
+                    value: _chatPrefLabel(profile?.chatPreference ?? ''),
                     onTap: () => _editChatPreference(
-                        context, profile.chatPreference),
+                        context, profile?.chatPreference ?? ''),
                   ),
                   const Divider(),
                   _InfoRow(
                     icon: Icons.star_outline,
                     label: tr(LocaleKeys.profileVip),
-                    value: profile.isVip
+                    value: (profile?.isVip == true)
                         ? tr(LocaleKeys.profileYes)
                         : tr(LocaleKeys.profileNo),
                     valueColor:
-                        profile.isVip ? AppColors.secondary : null,
+                        (profile?.isVip == true) ? AppColors.secondary : null,
                   ),
                 ],
               ),

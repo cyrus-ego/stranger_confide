@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthTokens {
 
- String get accessToken; String get refreshToken; UserDto get user;
+ String? get accessToken; String? get refreshToken; UserDto? get user;
 /// Create a copy of AuthTokens
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $AuthTokensCopyWith<$Res>  {
   factory $AuthTokensCopyWith(AuthTokens value, $Res Function(AuthTokens) _then) = _$AuthTokensCopyWithImpl;
 @useResult
 $Res call({
- String accessToken, String refreshToken, UserDto user
+ String? accessToken, String? refreshToken, UserDto? user
 });
 
 
-$UserDtoCopyWith<$Res> get user;
+$UserDtoCopyWith<$Res>? get user;
 
 }
 /// @nodoc
@@ -65,21 +65,24 @@ class _$AuthTokensCopyWithImpl<$Res>
 
 /// Create a copy of AuthTokens
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = null,Object? user = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = freezed,Object? refreshToken = freezed,Object? user = freezed,}) {
   return _then(_self.copyWith(
-accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
-as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as UserDto,
+accessToken: freezed == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as String?,refreshToken: freezed == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+as String?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as UserDto?,
   ));
 }
 /// Create a copy of AuthTokens
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserDtoCopyWith<$Res> get user {
-  
-  return $UserDtoCopyWith<$Res>(_self.user, (value) {
+$UserDtoCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserDtoCopyWith<$Res>(_self.user!, (value) {
     return _then(_self.copyWith(user: value));
   });
 }
@@ -161,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken,  UserDto user)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? accessToken,  String? refreshToken,  UserDto? user)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AuthTokens() when $default != null:
 return $default(_that.accessToken,_that.refreshToken,_that.user);case _:
@@ -182,7 +185,7 @@ return $default(_that.accessToken,_that.refreshToken,_that.user);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken,  UserDto user)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? accessToken,  String? refreshToken,  UserDto? user)  $default,) {final _that = this;
 switch (_that) {
 case _AuthTokens():
 return $default(_that.accessToken,_that.refreshToken,_that.user);}
@@ -199,7 +202,7 @@ return $default(_that.accessToken,_that.refreshToken,_that.user);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accessToken,  String refreshToken,  UserDto user)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? accessToken,  String? refreshToken,  UserDto? user)?  $default,) {final _that = this;
 switch (_that) {
 case _AuthTokens() when $default != null:
 return $default(_that.accessToken,_that.refreshToken,_that.user);case _:
@@ -214,12 +217,12 @@ return $default(_that.accessToken,_that.refreshToken,_that.user);case _:
 @JsonSerializable()
 
 class _AuthTokens implements AuthTokens {
-  const _AuthTokens({required this.accessToken, required this.refreshToken, required this.user});
+  const _AuthTokens({this.accessToken, this.refreshToken, this.user});
   factory _AuthTokens.fromJson(Map<String, dynamic> json) => _$AuthTokensFromJson(json);
 
-@override final  String accessToken;
-@override final  String refreshToken;
-@override final  UserDto user;
+@override final  String? accessToken;
+@override final  String? refreshToken;
+@override final  UserDto? user;
 
 /// Create a copy of AuthTokens
 /// with the given fields replaced by the non-null parameter values.
@@ -254,11 +257,11 @@ abstract mixin class _$AuthTokensCopyWith<$Res> implements $AuthTokensCopyWith<$
   factory _$AuthTokensCopyWith(_AuthTokens value, $Res Function(_AuthTokens) _then) = __$AuthTokensCopyWithImpl;
 @override @useResult
 $Res call({
- String accessToken, String refreshToken, UserDto user
+ String? accessToken, String? refreshToken, UserDto? user
 });
 
 
-@override $UserDtoCopyWith<$Res> get user;
+@override $UserDtoCopyWith<$Res>? get user;
 
 }
 /// @nodoc
@@ -271,12 +274,12 @@ class __$AuthTokensCopyWithImpl<$Res>
 
 /// Create a copy of AuthTokens
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,Object? user = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = freezed,Object? refreshToken = freezed,Object? user = freezed,}) {
   return _then(_AuthTokens(
-accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
-as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as UserDto,
+accessToken: freezed == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as String?,refreshToken: freezed == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+as String?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as UserDto?,
   ));
 }
 
@@ -284,9 +287,12 @@ as UserDto,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserDtoCopyWith<$Res> get user {
-  
-  return $UserDtoCopyWith<$Res>(_self.user, (value) {
+$UserDtoCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserDtoCopyWith<$Res>(_self.user!, (value) {
     return _then(_self.copyWith(user: value));
   });
 }

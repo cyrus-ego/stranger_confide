@@ -6,12 +6,12 @@ part 'user_dto.g.dart';
 @freezed
 sealed class UserDto with _$UserDto {
   const factory UserDto({
-    required String id,
-    required String email,
-    required String displayName,
-    @Default('') String avatar,
-    @Default('user') String role,
-    @Default(false) bool isEmailVerified,
+    String? id,
+    String? email,
+    String? displayName,
+    String? avatar,
+    String? role,
+    bool? isEmailVerified,
   }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>

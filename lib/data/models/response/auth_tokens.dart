@@ -8,9 +8,9 @@ part 'auth_tokens.g.dart';
 @freezed
 sealed class AuthTokens with _$AuthTokens {
   const factory AuthTokens({
-    required String accessToken,
-    required String refreshToken,
-    required UserDto user,
+    String? accessToken,
+    String? refreshToken,
+    UserDto? user,
   }) = _AuthTokens;
 
   factory AuthTokens.fromJson(Map<String, dynamic> json) =>

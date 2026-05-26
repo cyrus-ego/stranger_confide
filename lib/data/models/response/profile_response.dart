@@ -9,9 +9,9 @@ part 'profile_response.g.dart';
 @freezed
 sealed class ProfileResponse with _$ProfileResponse {
   const factory ProfileResponse({
-    required UserDto user,
-    required ProfileDto profile,
-    @Default(false) bool isComplete,
+    UserDto? user,
+    ProfileDto? profile,
+    bool? isComplete,
   }) = _ProfileResponse;
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) =>

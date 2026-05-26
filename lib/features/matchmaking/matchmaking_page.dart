@@ -295,14 +295,14 @@ class _SearchingView extends StatelessWidget {
                     _QueueInfoRow(
                       icon: Icons.timer_outlined,
                       label: tr(LocaleKeys.matchmakingWaitTime),
-                      value: _formatDuration(queue.waitSeconds),
+                      value: _formatDuration(queue.waitSeconds ?? 0),
                     ),
                     const Divider(),
                     _QueueInfoRow(
                       icon: Icons.hourglass_bottom_rounded,
                       label: tr(LocaleKeys.matchmakingTimeLeft),
-                      value: _formatDuration(queue.expiresInSeconds),
-                      valueColor: queue.expiresInSeconds < 60
+                      value: _formatDuration(queue.expiresInSeconds ?? 0),
+                      valueColor: (queue.expiresInSeconds ?? 0) < 60
                           ? AppColors.error
                           : null,
                     ),

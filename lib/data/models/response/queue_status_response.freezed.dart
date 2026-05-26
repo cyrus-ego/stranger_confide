@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$QueueStatusResponse {
 
- bool get inQueue; int get position; int get queueSize; int get waitSeconds; int get expiresInSeconds; String get preference; String get preferredGender; bool get timedOut; String? get roomId; String? get partnerId;
+ bool? get inQueue; int? get position; int? get queueSize; int? get waitSeconds; int? get expiresInSeconds; String? get preference; String? get preferredGender; bool? get timedOut; String? get roomId; String? get partnerId;
 /// Create a copy of QueueStatusResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $QueueStatusResponseCopyWith<$Res>  {
   factory $QueueStatusResponseCopyWith(QueueStatusResponse value, $Res Function(QueueStatusResponse) _then) = _$QueueStatusResponseCopyWithImpl;
 @useResult
 $Res call({
- bool inQueue, int position, int queueSize, int waitSeconds, int expiresInSeconds, String preference, String preferredGender, bool timedOut, String? roomId, String? partnerId
+ bool? inQueue, int? position, int? queueSize, int? waitSeconds, int? expiresInSeconds, String? preference, String? preferredGender, bool? timedOut, String? roomId, String? partnerId
 });
 
 
@@ -65,17 +65,17 @@ class _$QueueStatusResponseCopyWithImpl<$Res>
 
 /// Create a copy of QueueStatusResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? inQueue = null,Object? position = null,Object? queueSize = null,Object? waitSeconds = null,Object? expiresInSeconds = null,Object? preference = null,Object? preferredGender = null,Object? timedOut = null,Object? roomId = freezed,Object? partnerId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? inQueue = freezed,Object? position = freezed,Object? queueSize = freezed,Object? waitSeconds = freezed,Object? expiresInSeconds = freezed,Object? preference = freezed,Object? preferredGender = freezed,Object? timedOut = freezed,Object? roomId = freezed,Object? partnerId = freezed,}) {
   return _then(_self.copyWith(
-inQueue: null == inQueue ? _self.inQueue : inQueue // ignore: cast_nullable_to_non_nullable
-as bool,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
-as int,queueSize: null == queueSize ? _self.queueSize : queueSize // ignore: cast_nullable_to_non_nullable
-as int,waitSeconds: null == waitSeconds ? _self.waitSeconds : waitSeconds // ignore: cast_nullable_to_non_nullable
-as int,expiresInSeconds: null == expiresInSeconds ? _self.expiresInSeconds : expiresInSeconds // ignore: cast_nullable_to_non_nullable
-as int,preference: null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
-as String,preferredGender: null == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
-as String,timedOut: null == timedOut ? _self.timedOut : timedOut // ignore: cast_nullable_to_non_nullable
-as bool,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
+inQueue: freezed == inQueue ? _self.inQueue : inQueue // ignore: cast_nullable_to_non_nullable
+as bool?,position: freezed == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as int?,queueSize: freezed == queueSize ? _self.queueSize : queueSize // ignore: cast_nullable_to_non_nullable
+as int?,waitSeconds: freezed == waitSeconds ? _self.waitSeconds : waitSeconds // ignore: cast_nullable_to_non_nullable
+as int?,expiresInSeconds: freezed == expiresInSeconds ? _self.expiresInSeconds : expiresInSeconds // ignore: cast_nullable_to_non_nullable
+as int?,preference: freezed == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
+as String?,preferredGender: freezed == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
+as String?,timedOut: freezed == timedOut ? _self.timedOut : timedOut // ignore: cast_nullable_to_non_nullable
+as bool?,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
 as String?,partnerId: freezed == partnerId ? _self.partnerId : partnerId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool inQueue,  int position,  int queueSize,  int waitSeconds,  int expiresInSeconds,  String preference,  String preferredGender,  bool timedOut,  String? roomId,  String? partnerId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool? inQueue,  int? position,  int? queueSize,  int? waitSeconds,  int? expiresInSeconds,  String? preference,  String? preferredGender,  bool? timedOut,  String? roomId,  String? partnerId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _QueueStatusResponse() when $default != null:
 return $default(_that.inQueue,_that.position,_that.queueSize,_that.waitSeconds,_that.expiresInSeconds,_that.preference,_that.preferredGender,_that.timedOut,_that.roomId,_that.partnerId);case _:
@@ -180,7 +180,7 @@ return $default(_that.inQueue,_that.position,_that.queueSize,_that.waitSeconds,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool inQueue,  int position,  int queueSize,  int waitSeconds,  int expiresInSeconds,  String preference,  String preferredGender,  bool timedOut,  String? roomId,  String? partnerId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool? inQueue,  int? position,  int? queueSize,  int? waitSeconds,  int? expiresInSeconds,  String? preference,  String? preferredGender,  bool? timedOut,  String? roomId,  String? partnerId)  $default,) {final _that = this;
 switch (_that) {
 case _QueueStatusResponse():
 return $default(_that.inQueue,_that.position,_that.queueSize,_that.waitSeconds,_that.expiresInSeconds,_that.preference,_that.preferredGender,_that.timedOut,_that.roomId,_that.partnerId);}
@@ -197,7 +197,7 @@ return $default(_that.inQueue,_that.position,_that.queueSize,_that.waitSeconds,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool inQueue,  int position,  int queueSize,  int waitSeconds,  int expiresInSeconds,  String preference,  String preferredGender,  bool timedOut,  String? roomId,  String? partnerId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool? inQueue,  int? position,  int? queueSize,  int? waitSeconds,  int? expiresInSeconds,  String? preference,  String? preferredGender,  bool? timedOut,  String? roomId,  String? partnerId)?  $default,) {final _that = this;
 switch (_that) {
 case _QueueStatusResponse() when $default != null:
 return $default(_that.inQueue,_that.position,_that.queueSize,_that.waitSeconds,_that.expiresInSeconds,_that.preference,_that.preferredGender,_that.timedOut,_that.roomId,_that.partnerId);case _:
@@ -212,17 +212,17 @@ return $default(_that.inQueue,_that.position,_that.queueSize,_that.waitSeconds,_
 @JsonSerializable()
 
 class _QueueStatusResponse implements QueueStatusResponse {
-  const _QueueStatusResponse({this.inQueue = false, this.position = 0, this.queueSize = 0, this.waitSeconds = 0, this.expiresInSeconds = 0, this.preference = '', this.preferredGender = '', this.timedOut = false, this.roomId, this.partnerId});
+  const _QueueStatusResponse({this.inQueue, this.position, this.queueSize, this.waitSeconds, this.expiresInSeconds, this.preference, this.preferredGender, this.timedOut, this.roomId, this.partnerId});
   factory _QueueStatusResponse.fromJson(Map<String, dynamic> json) => _$QueueStatusResponseFromJson(json);
 
-@override@JsonKey() final  bool inQueue;
-@override@JsonKey() final  int position;
-@override@JsonKey() final  int queueSize;
-@override@JsonKey() final  int waitSeconds;
-@override@JsonKey() final  int expiresInSeconds;
-@override@JsonKey() final  String preference;
-@override@JsonKey() final  String preferredGender;
-@override@JsonKey() final  bool timedOut;
+@override final  bool? inQueue;
+@override final  int? position;
+@override final  int? queueSize;
+@override final  int? waitSeconds;
+@override final  int? expiresInSeconds;
+@override final  String? preference;
+@override final  String? preferredGender;
+@override final  bool? timedOut;
 @override final  String? roomId;
 @override final  String? partnerId;
 
@@ -259,7 +259,7 @@ abstract mixin class _$QueueStatusResponseCopyWith<$Res> implements $QueueStatus
   factory _$QueueStatusResponseCopyWith(_QueueStatusResponse value, $Res Function(_QueueStatusResponse) _then) = __$QueueStatusResponseCopyWithImpl;
 @override @useResult
 $Res call({
- bool inQueue, int position, int queueSize, int waitSeconds, int expiresInSeconds, String preference, String preferredGender, bool timedOut, String? roomId, String? partnerId
+ bool? inQueue, int? position, int? queueSize, int? waitSeconds, int? expiresInSeconds, String? preference, String? preferredGender, bool? timedOut, String? roomId, String? partnerId
 });
 
 
@@ -276,17 +276,17 @@ class __$QueueStatusResponseCopyWithImpl<$Res>
 
 /// Create a copy of QueueStatusResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? inQueue = null,Object? position = null,Object? queueSize = null,Object? waitSeconds = null,Object? expiresInSeconds = null,Object? preference = null,Object? preferredGender = null,Object? timedOut = null,Object? roomId = freezed,Object? partnerId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? inQueue = freezed,Object? position = freezed,Object? queueSize = freezed,Object? waitSeconds = freezed,Object? expiresInSeconds = freezed,Object? preference = freezed,Object? preferredGender = freezed,Object? timedOut = freezed,Object? roomId = freezed,Object? partnerId = freezed,}) {
   return _then(_QueueStatusResponse(
-inQueue: null == inQueue ? _self.inQueue : inQueue // ignore: cast_nullable_to_non_nullable
-as bool,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
-as int,queueSize: null == queueSize ? _self.queueSize : queueSize // ignore: cast_nullable_to_non_nullable
-as int,waitSeconds: null == waitSeconds ? _self.waitSeconds : waitSeconds // ignore: cast_nullable_to_non_nullable
-as int,expiresInSeconds: null == expiresInSeconds ? _self.expiresInSeconds : expiresInSeconds // ignore: cast_nullable_to_non_nullable
-as int,preference: null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
-as String,preferredGender: null == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
-as String,timedOut: null == timedOut ? _self.timedOut : timedOut // ignore: cast_nullable_to_non_nullable
-as bool,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
+inQueue: freezed == inQueue ? _self.inQueue : inQueue // ignore: cast_nullable_to_non_nullable
+as bool?,position: freezed == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as int?,queueSize: freezed == queueSize ? _self.queueSize : queueSize // ignore: cast_nullable_to_non_nullable
+as int?,waitSeconds: freezed == waitSeconds ? _self.waitSeconds : waitSeconds // ignore: cast_nullable_to_non_nullable
+as int?,expiresInSeconds: freezed == expiresInSeconds ? _self.expiresInSeconds : expiresInSeconds // ignore: cast_nullable_to_non_nullable
+as int?,preference: freezed == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
+as String?,preferredGender: freezed == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
+as String?,timedOut: freezed == timedOut ? _self.timedOut : timedOut // ignore: cast_nullable_to_non_nullable
+as bool?,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
 as String?,partnerId: freezed == partnerId ? _self.partnerId : partnerId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

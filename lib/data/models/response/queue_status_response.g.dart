@@ -8,14 +8,14 @@ part of 'queue_status_response.dart';
 
 _QueueStatusResponse _$QueueStatusResponseFromJson(Map<String, dynamic> json) =>
     _QueueStatusResponse(
-      inQueue: json['inQueue'] as bool? ?? false,
-      position: (json['position'] as num?)?.toInt() ?? 0,
-      queueSize: (json['queueSize'] as num?)?.toInt() ?? 0,
-      waitSeconds: (json['waitSeconds'] as num?)?.toInt() ?? 0,
-      expiresInSeconds: (json['expiresInSeconds'] as num?)?.toInt() ?? 0,
-      preference: json['preference'] as String? ?? '',
-      preferredGender: json['preferredGender'] as String? ?? '',
-      timedOut: json['timedOut'] as bool? ?? false,
+      inQueue: json['inQueue'] as bool?,
+      position: (json['position'] as num?)?.toInt(),
+      queueSize: (json['queueSize'] as num?)?.toInt(),
+      waitSeconds: (json['waitSeconds'] as num?)?.toInt(),
+      expiresInSeconds: (json['expiresInSeconds'] as num?)?.toInt(),
+      preference: json['preference'] as String?,
+      preferredGender: json['preferredGender'] as String?,
+      timedOut: json['timedOut'] as bool?,
       roomId: json['roomId'] as String?,
       partnerId: json['partnerId'] as String?,
     );

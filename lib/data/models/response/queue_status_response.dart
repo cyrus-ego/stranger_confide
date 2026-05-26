@@ -6,14 +6,14 @@ part 'queue_status_response.g.dart';
 @freezed
 sealed class QueueStatusResponse with _$QueueStatusResponse {
   const factory QueueStatusResponse({
-    @Default(false) bool inQueue,
-    @Default(0) int position,
-    @Default(0) int queueSize,
-    @Default(0) int waitSeconds,
-    @Default(0) int expiresInSeconds,
-    @Default('') String preference,
-    @Default('') String preferredGender,
-    @Default(false) bool timedOut,
+    bool? inQueue,
+    int? position,
+    int? queueSize,
+    int? waitSeconds,
+    int? expiresInSeconds,
+    String? preference,
+    String? preferredGender,
+    bool? timedOut,
     String? roomId,
     String? partnerId,
   }) = _QueueStatusResponse;

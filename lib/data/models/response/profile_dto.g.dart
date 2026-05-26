@@ -7,14 +7,14 @@ part of 'profile_dto.dart';
 // **************************************************************************
 
 _ProfileDto _$ProfileDtoFromJson(Map<String, dynamic> json) => _ProfileDto(
-  id: json['id'] as String,
-  gender: json['gender'] as String? ?? '',
-  age: (json['age'] as num?)?.toInt() ?? 0,
-  bio: json['bio'] as String? ?? '',
-  avatar: json['avatar'] as String? ?? '',
-  chatPreference: json['chatPreference'] as String? ?? '',
-  preferredGender: json['preferredGender'] as String? ?? '',
-  isVip: json['isVip'] as bool? ?? false,
+  id: json['id'] as String?,
+  gender: json['gender'] as String?,
+  age: (json['age'] as num?)?.toInt(),
+  bio: json['bio'] as String?,
+  avatar: json['avatar'] as String?,
+  chatPreference: json['chatPreference'] as String?,
+  preferredGender: json['preferredGender'] as String?,
+  isVip: json['isVip'] as bool?,
   vipExpiresAt: json['vipExpiresAt'] as String?,
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
