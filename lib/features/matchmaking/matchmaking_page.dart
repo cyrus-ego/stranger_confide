@@ -129,13 +129,13 @@ class _IdleView extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       child: Column(
         children: [
-          const Gap(AppSpacing.xxxl),
+          const SizedBox(height: AppSpacing.xxxl),
           Icon(
             Icons.people_outline_rounded,
             size: 80,
             color: theme.colorScheme.primary.withAlpha(180),
           ),
-          const Gap(AppSpacing.lg),
+          const SizedBox(height: AppSpacing.lg),
           Text(
             tr(LocaleKeys.matchmakingSubtitle),
             style: theme.textTheme.titleMedium?.copyWith(
@@ -143,7 +143,7 @@ class _IdleView extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const Gap(AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.xxl),
 
           // Preference card
           Card(
@@ -204,7 +204,7 @@ class _IdleView extends StatelessWidget {
               ),
             ),
           ),
-          const Gap(AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.xxl),
 
           // Find button
           SizedBox(
@@ -540,7 +540,7 @@ class _MatchedView extends StatelessWidget {
               color: AppColors.success,
             ),
           ),
-          const Gap(AppSpacing.xl),
+          const SizedBox(height: AppSpacing.xl),
           Text(
             tr(LocaleKeys.matchmakingMatchFound),
             style: theme.textTheme.headlineSmall?.copyWith(
@@ -548,7 +548,7 @@ class _MatchedView extends StatelessWidget {
               color: AppColors.success,
             ),
           ),
-          const Gap(AppSpacing.md),
+          const SizedBox(height: AppSpacing.md),
           Text(
             tr(LocaleKeys.matchmakingMatchHint),
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -556,7 +556,7 @@ class _MatchedView extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const Gap(AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.xxl),
           FilledButton.icon(
             onPressed: () {
               final roomId = state.roomId;
@@ -609,14 +609,14 @@ class _TimedOutView extends StatelessWidget {
               size: 72,
               color: theme.colorScheme.onSurface.withAlpha(120),
             ),
-            const Gap(AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               tr(LocaleKeys.matchmakingTimeout),
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Gap(AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             Text(
               tr(LocaleKeys.matchmakingTimeoutHint),
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -624,7 +624,7 @@ class _TimedOutView extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const Gap(AppSpacing.xxl),
+            const SizedBox(height: AppSpacing.xxl),
             SizedBox(
               width: double.infinity,
               height: 48,

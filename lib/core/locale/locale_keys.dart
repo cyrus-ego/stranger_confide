@@ -62,6 +62,34 @@ abstract final class LocaleKeys {
   static const matchmakingRetry = 'matchmaking.retry';
   static const matchmakingProfileRequired = 'matchmaking.profile_required';
 
+  // Chat
+  static const chatTitle = 'chat.title';
+  static const chatInputHint = 'chat.input_hint';
+  static const chatTyping = 'chat.typing';
+  static const chatReport = 'chat.report';
+  static const chatBlock = 'chat.block';
+  static const chatLeave = 'chat.leave';
+  static const chatBlockConfirmTitle = 'chat.block_confirm_title';
+  static const chatBlockConfirmBody = 'chat.block_confirm_body';
+  static const chatBlockConfirmAction = 'chat.block_confirm_action';
+  static const chatReportTitle = 'chat.report_title';
+  static const chatReportSpam = 'chat.report_spam';
+  static const chatReportHarassment = 'chat.report_harassment';
+  static const chatReportAdultContent = 'chat.report_adult_content';
+  static const chatReportPrivacy = 'chat.report_privacy';
+  static const chatReportOther = 'chat.report_other';
+  static const chatReportDescription = 'chat.report_description';
+  static const chatReportSubmit = 'chat.report_submit';
+  static const chatReportSuccess = 'chat.report_success';
+  static const chatRoomClosedTitle = 'chat.room_closed_title';
+  static const chatRoomClosedPartnerLeft = 'chat.room_closed_partner_left';
+  static const chatRoomClosedBlocked = 'chat.room_closed_blocked';
+  static const chatFindNew = 'chat.find_new';
+  static const chatGoHome = 'chat.go_home';
+  static const chatConnecting = 'chat.connecting';
+  static const chatOnline = 'chat.online';
+  static const chatOffline = 'chat.offline';
+
   // Common
   static const commonErrorTitle = 'common.error_title';
   static const commonClose = 'common.close';

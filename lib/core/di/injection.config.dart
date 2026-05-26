@@ -22,18 +22,26 @@ import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dar
     as _i910;
 import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart'
     as _i962;
+import 'package:stranger_confide/data/datasources/room_remote_datasource.dart'
+    as _i916;
 import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
     as _i1019;
 import 'package:stranger_confide/data/repositories/matchmaking_repository_impl.dart'
     as _i433;
 import 'package:stranger_confide/data/repositories/profile_repository_impl.dart'
     as _i412;
+import 'package:stranger_confide/data/repositories/room_repository_impl.dart'
+    as _i836;
 import 'package:stranger_confide/domain/repositories/auth_repository.dart'
     as _i982;
 import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart'
     as _i304;
 import 'package:stranger_confide/domain/repositories/profile_repository.dart'
     as _i34;
+import 'package:stranger_confide/domain/repositories/room_repository.dart'
+    as _i133;
+import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
+    as _i990;
 import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
     as _i669;
 import 'package:stranger_confide/domain/usecases/get_queue_status_usecase.dart'
@@ -42,12 +50,15 @@ import 'package:stranger_confide/domain/usecases/join_queue_usecase.dart'
     as _i443;
 import 'package:stranger_confide/domain/usecases/leave_queue_usecase.dart'
     as _i569;
+import 'package:stranger_confide/domain/usecases/leave_room_usecase.dart'
+    as _i212;
 import 'package:stranger_confide/domain/usecases/login_usecase.dart' as _i878;
 import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart'
     as _i247;
 import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
     as _i853;
 import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
+import 'package:stranger_confide/features/chat/bloc/chat_bloc.dart' as _i460;
 import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_bloc.dart'
     as _i987;
 import 'package:stranger_confide/features/profile/bloc/profile_bloc.dart'
@@ -74,6 +85,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i854.MatchmakingRemoteDatasource>(
       () => registerModule.matchmakingRemoteDatasource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i916.RoomRemoteDatasource>(
+      () => registerModule.roomRemoteDatasource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i133.RoomRepository>(
+      () => _i836.RoomRepositoryImpl(gh<_i916.RoomRemoteDatasource>()),
+    );
     gh.lazySingleton<_i304.MatchmakingRepository>(
       () => _i433.MatchmakingRepositoryImpl(
         gh<_i854.MatchmakingRemoteDatasource>(),
@@ -84,6 +101,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i982.AuthRepository>(
       () => _i1019.AuthRepositoryImpl(gh<_i999.AuthRemoteDatasource>()),
+    );
+    gh.factory<_i990.GetActiveRoomUseCase>(
+      () => _i990.GetActiveRoomUseCase(gh<_i133.RoomRepository>()),
+    );
+    gh.factory<_i212.LeaveRoomUseCase>(
+      () => _i212.LeaveRoomUseCase(gh<_i133.RoomRepository>()),
     );
     gh.factory<_i438.GetQueueStatusUseCase>(
       () => _i438.GetQueueStatusUseCase(gh<_i304.MatchmakingRepository>()),
@@ -105,6 +128,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i878.LoginUseCase>(
       () => _i878.LoginUseCase(gh<_i982.AuthRepository>()),
+    );
+    gh.factory<_i460.ChatBloc>(
+      () => _i460.ChatBloc(
+        gh<_i670.TokenStorage>(),
+        gh<_i212.LeaveRoomUseCase>(),
+      ),
     );
     gh.factory<_i162.ProfileBloc>(
       () => _i162.ProfileBloc(
