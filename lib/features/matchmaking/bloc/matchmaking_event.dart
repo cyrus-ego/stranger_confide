@@ -16,6 +16,7 @@ sealed class MatchmakingEvent extends BlocEvent with _$MatchmakingEvent {
       MatchmakingUpdatePreference;
   const factory MatchmakingEvent.updatePreferredGender(String gender) =
       MatchmakingUpdatePreferredGender;
+  const factory MatchmakingEvent.restartSearch() = MatchmakingRestartSearch;
 
   // Socket events
   const factory MatchmakingEvent.socketConnected() = MatchmakingSocketConnected;

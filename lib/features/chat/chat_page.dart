@@ -191,6 +191,13 @@ class _ChatScaffold extends StatelessWidget {
         },
       ),
       actions: [
+        IconButton(
+          onPressed: () => context.push(AppRoutes.profile),
+          icon: Icon(
+            Icons.settings_outlined,
+            color: theme.colorScheme.onSurface.withAlpha(180),
+          ),
+        ),
         BlocBuilder<ChatBloc, ChatState>(
           buildWhen: (p, c) => p.status != c.status,
           builder: (context, state) {

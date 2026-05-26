@@ -25,6 +25,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
     on<MatchmakingLeaveQueue>(_onLeaveQueue);
     on<MatchmakingUpdatePreference>(_onUpdatePreference);
     on<MatchmakingUpdatePreferredGender>(_onUpdatePreferredGender);
+    on<MatchmakingRestartSearch>(_onRestartSearch);
 
     on<MatchmakingSocketConnected>(_onSocketConnected);
     on<MatchmakingQueueJoined>(_onQueueJoined);
@@ -57,10 +58,11 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
         final gender = profile.profile?.preferredGender ?? '';
 
         emit(state.copyWith(
-          status: MatchmakingStatus.idle,
           selectedPreference: pref.isEmpty ? 'any' : pref,
           selectedPreferredGender: gender,
         ));
+
+        add(const MatchmakingJoinQueue());
       });
 
   Future<void> _onJoinQueue(
@@ -144,6 +146,18 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
   ) {
     emit(state.copyWith(selectedPreferredGender: event.gender));
   }
+
+  Future<void> _onRestartSearch(
+    MatchmakingRestartSearch event,
+    Emitter<MatchmakingState> emit,
+  ) =>
+      guard(() async {
+        _socketService.emitQueueLeave();
+        _disconnectSocket();
+        await _leaveQueueUseCase();
+        emit(state.copyWith(queueData: null, roomId: null, partnerId: null));
+        add(const MatchmakingJoinQueue());
+      });
 
   // ── Socket event handlers ──
 

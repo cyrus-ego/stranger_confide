@@ -69,12 +69,12 @@ class _ReportSheetState extends State<_ReportSheet> {
   ];
 
   String _reasonLabel(String key) => switch (key) {
-        'spam' => tr(LocaleKeys.chatReportSpam),
-        'harassment' => tr(LocaleKeys.chatReportHarassment),
-        'adult_content' => tr(LocaleKeys.chatReportAdultContent),
-        'privacy' => tr(LocaleKeys.chatReportPrivacy),
-        _ => tr(LocaleKeys.chatReportOther),
-      };
+    'spam' => tr(LocaleKeys.chatReportSpam),
+    'harassment' => tr(LocaleKeys.chatReportHarassment),
+    'adult_content' => tr(LocaleKeys.chatReportAdultContent),
+    'privacy' => tr(LocaleKeys.chatReportPrivacy),
+    _ => tr(LocaleKeys.chatReportOther),
+  };
 
   @override
   void dispose() {
@@ -121,13 +121,15 @@ class _ReportSheetState extends State<_ReportSheet> {
             onChanged: (v) => setState(() => _selectedReason = v),
             child: Column(
               children: _reasons
-                  .map((r) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        leading: Radio<String>(value: r),
-                        title: Text(_reasonLabel(r)),
-                        onTap: () => setState(() => _selectedReason = r),
-                      ))
+                  .map(
+                    (r) => ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      leading: Radio<String>(value: r),
+                      title: Text(_reasonLabel(r)),
+                      onTap: () => setState(() => _selectedReason = r),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -147,11 +149,11 @@ class _ReportSheetState extends State<_ReportSheet> {
               onPressed: _selectedReason == null
                   ? null
                   : () => Navigator.pop(context, (
-                        reason: _selectedReason!,
-                        description: _descController.text.trim().isEmpty
-                            ? null
-                            : _descController.text.trim(),
-                      )),
+                      reason: _selectedReason!,
+                      description: _descController.text.trim().isEmpty
+                          ? null
+                          : _descController.text.trim(),
+                    )),
               child: Text(tr(LocaleKeys.chatReportSubmit)),
             ),
           ),
@@ -182,8 +184,10 @@ Future<void> showRoomClosedDialog(
       return AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.meeting_room_outlined,
-                color: theme.colorScheme.onSurface.withAlpha(150)),
+            Icon(
+              Icons.meeting_room_outlined,
+              color: theme.colorScheme.onSurface.withAlpha(150),
+            ),
             const Gap(AppSpacing.sm),
             Text(tr(LocaleKeys.chatRoomClosedTitle)),
           ],
@@ -199,6 +203,7 @@ Future<void> showRoomClosedDialog(
             icon: const Icon(Icons.home_outlined, size: 18),
             label: Text(tr(LocaleKeys.chatGoHome)),
           ),
+          const SizedBox(height: AppSpacing.md),
           FilledButton.icon(
             onPressed: () {
               Navigator.pop(ctx);

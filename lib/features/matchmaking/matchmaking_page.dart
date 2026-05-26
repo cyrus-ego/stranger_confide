@@ -24,8 +24,7 @@ class MatchmakingPage extends BlocHostPage {
 
 class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
   @override
-  Stream<String> get errorStream =>
-      context.read<MatchmakingBloc>().errorStream;
+  Stream<String> get errorStream => context.read<MatchmakingBloc>().errorStream;
 
   @override
   Widget buildPage(BuildContext context) {
@@ -69,10 +68,19 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
           listener: (context, state) {
             AppSnackBar.show(
               context,
-              message: state.errorMessage ??
+              message:
+                  state.errorMessage ??
                   tr(LocaleKeys.matchmakingProfileRequired),
             );
             context.go(AppRoutes.profile);
+          },
+        ),
+        BlocListener<MatchmakingBloc, MatchmakingState>(
+          listenWhen: (prev, curr) =>
+              curr.status == MatchmakingStatus.idle &&
+              prev.status == MatchmakingStatus.searching,
+          listener: (context, state) {
+            context.go(AppRoutes.home);
           },
         ),
       ],
@@ -90,151 +98,23 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
               builder: (context, state) {
                 return switch (state.status) {
                   MatchmakingStatus.initial ||
-                  MatchmakingStatus.loadingProfile =>
-                    const Center(child: CircularProgressIndicator()),
-                  MatchmakingStatus.idle => _IdleView(state: state),
+                  MatchmakingStatus.loadingProfile ||
+                  MatchmakingStatus.idle ||
                   MatchmakingStatus.joining => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  MatchmakingStatus.searching =>
-                    _SearchingView(state: state),
+                    child: CircularProgressIndicator(),
+                  ),
+                  MatchmakingStatus.searching => _SearchingView(state: state),
                   MatchmakingStatus.matched => _MatchedView(state: state),
-                  MatchmakingStatus.timedOut =>
-                    _TimedOutView(state: state),
+                  MatchmakingStatus.timedOut => _TimedOutView(state: state),
                   MatchmakingStatus.error => _ErrorView(state: state),
-                  MatchmakingStatus.profileRequired =>
-                    const Center(child: CircularProgressIndicator()),
+                  MatchmakingStatus.profileRequired => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 };
               },
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ── Idle — preference form + find button ──
-
-class _IdleView extends StatelessWidget {
-  const _IdleView({required this.state});
-
-  final MatchmakingState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      child: Column(
-        children: [
-          const SizedBox(height: AppSpacing.xxxl),
-          Icon(
-            Icons.people_outline_rounded,
-            size: 80,
-            color: theme.colorScheme.primary.withAlpha(180),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            tr(LocaleKeys.matchmakingSubtitle),
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withAlpha(180),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.xxl),
-
-          // Preference card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    tr(LocaleKeys.matchmakingPreferenceTitle),
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Gap(AppSpacing.lg),
-
-                  // Chat preference
-                  Text(
-                    tr(LocaleKeys.profileChatPreference),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withAlpha(153),
-                    ),
-                  ),
-                  const Gap(AppSpacing.sm),
-                  _PreferenceChips(
-                    selected: state.selectedPreference,
-                    options: {
-                      'any': tr(LocaleKeys.profileAny),
-                      'opposite': tr(LocaleKeys.profileOpposite),
-                      'same': tr(LocaleKeys.profileSame),
-                    },
-                    onChanged: (v) => context
-                        .read<MatchmakingBloc>()
-                        .add(MatchmakingUpdatePreference(v)),
-                  ),
-                  const Gap(AppSpacing.lg),
-
-                  // Preferred gender
-                  Text(
-                    tr(LocaleKeys.profileChatWith),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withAlpha(153),
-                    ),
-                  ),
-                  const Gap(AppSpacing.sm),
-                  _PreferenceChips(
-                    selected: state.selectedPreferredGender,
-                    options: {
-                      '': tr(LocaleKeys.profileAny),
-                      'male': tr(LocaleKeys.profileMale),
-                      'female': tr(LocaleKeys.profileFemale),
-                    },
-                    onChanged: (v) => context
-                        .read<MatchmakingBloc>()
-                        .add(MatchmakingUpdatePreferredGender(v)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xxl),
-
-          // Find button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: FilledButton.icon(
-              onPressed: () => context
-                  .read<MatchmakingBloc>()
-                  .add(const MatchmakingJoinQueue()),
-              icon: const Icon(Icons.search_rounded, size: 24),
-              label: Text(
-                tr(LocaleKeys.matchmakingFind),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusLg),
-                ),
-              ),
-            ),
-          ),
-        ]
-            .animate(interval: 80.ms)
-            .fadeIn(duration: 400.ms)
-            .slideY(begin: 0.05),
       ),
     );
   }
@@ -300,6 +180,19 @@ class _SearchingView extends StatelessWidget {
             ),
           ),
           const Gap(AppSpacing.md),
+          FilledButton.tonalIcon(
+            onPressed: () => _showPreferenceSheet(context),
+            icon: const Icon(Icons.tune_rounded, size: 18),
+            label: Text(tr(LocaleKeys.matchmakingPreferenceTitle)),
+            style: FilledButton.styleFrom(
+              backgroundColor: theme.colorScheme.primaryContainer,
+              foregroundColor: theme.colorScheme.onPrimaryContainer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+              ),
+            ),
+          ),
+          const Gap(AppSpacing.md),
           Text(
             tr(LocaleKeys.matchmakingSearchingHint),
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -347,15 +240,15 @@ class _SearchingView extends StatelessWidget {
             ),
           ],
 
-          const Gap(AppSpacing.xxl),
+          const Gap(AppSpacing.xl),
 
           SizedBox(
             width: double.infinity,
             height: 48,
             child: OutlinedButton.icon(
-              onPressed: () => context
-                  .read<MatchmakingBloc>()
-                  .add(const MatchmakingLeaveQueue()),
+              onPressed: () => context.read<MatchmakingBloc>().add(
+                const MatchmakingLeaveQueue(),
+              ),
               icon: const Icon(Icons.close_rounded, color: AppColors.error),
               label: Text(
                 tr(LocaleKeys.matchmakingCancel),
@@ -364,14 +257,28 @@ class _SearchingView extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.error),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusLg),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showPreferenceSheet(BuildContext context) {
+    final bloc = context.read<MatchmakingBloc>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl),
+        ),
+      ),
+      builder: (_) =>
+          BlocProvider.value(value: bloc, child: const _PreferenceSheet()),
     );
   }
 
@@ -404,9 +311,11 @@ class _QueueInfoRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: Row(
         children: [
-          Icon(icon,
-              size: 20,
-              color: theme.colorScheme.onSurface.withAlpha(100)),
+          Icon(
+            icon,
+            size: 20,
+            color: theme.colorScheme.onSurface.withAlpha(100),
+          ),
           const Gap(AppSpacing.md),
           Expanded(
             child: Text(
@@ -476,23 +385,26 @@ class _PulsingRadarState extends State<_PulsingRadar>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          ..._controllers.map((c) => AnimatedBuilder(
-                animation: c,
-                builder: (context, _) {
-                  return Container(
-                    width: 160 * c.value,
-                    height: 160 * c.value,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.primary
-                            .withAlpha((255 * (1 - c.value)).toInt()),
-                        width: 2,
+          ..._controllers.map(
+            (c) => AnimatedBuilder(
+              animation: c,
+              builder: (context, _) {
+                return Container(
+                  width: 160 * c.value,
+                  height: 160 * c.value,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.primary.withAlpha(
+                        (255 * (1 - c.value)).toInt(),
                       ),
+                      width: 2,
                     ),
-                  );
-                },
-              )),
+                  ),
+                );
+              },
+            ),
+          ),
           Container(
             width: 64,
             height: 64,
@@ -526,62 +438,64 @@ class _MatchedView extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 96,
-            height: 96,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.success.withAlpha(30),
-            ),
-            child: const Icon(
-              Icons.celebration_rounded,
-              size: 48,
-              color: AppColors.success,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Text(
-            tr(LocaleKeys.matchmakingMatchFound),
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.success,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            tr(LocaleKeys.matchmakingMatchHint),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withAlpha(153),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.xxl),
-          FilledButton.icon(
-            onPressed: () {
-              final roomId = state.roomId;
-              if (roomId != null && roomId.isNotEmpty) {
-                context.go('${AppRoutes.chat}/$roomId');
-              }
-            },
-            icon: const Icon(Icons.chat_rounded),
-            label: Text(tr(LocaleKeys.matchmakingStartChat)),
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.success,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xxl,
-                vertical: AppSpacing.md,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusLg),
-              ),
-            ),
-          ),
-        ]
-            .animate(interval: 100.ms)
-            .fadeIn(duration: 500.ms)
-            .scale(begin: const Offset(0.8, 0.8)),
+        children:
+            [
+                  Container(
+                    width: 96,
+                    height: 96,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.success.withAlpha(30),
+                    ),
+                    child: const Icon(
+                      Icons.celebration_rounded,
+                      size: 48,
+                      color: AppColors.success,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Text(
+                    tr(LocaleKeys.matchmakingMatchFound),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.success,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    tr(LocaleKeys.matchmakingMatchHint),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withAlpha(153),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+                  FilledButton.icon(
+                    onPressed: () {
+                      final roomId = state.roomId;
+                      if (roomId != null && roomId.isNotEmpty) {
+                        context.go('${AppRoutes.chat}/$roomId');
+                      }
+                    },
+                    icon: const Icon(Icons.chat_rounded),
+                    label: Text(tr(LocaleKeys.matchmakingStartChat)),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.success,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl,
+                        vertical: AppSpacing.md,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg,
+                        ),
+                      ),
+                    ),
+                  ),
+                ]
+                .animate(interval: 100.ms)
+                .fadeIn(duration: 500.ms)
+                .scale(begin: const Offset(0.8, 0.8)),
       ),
     );
   }
@@ -603,52 +517,171 @@ class _TimedOutView extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.timer_off_rounded,
-              size: 72,
-              color: theme.colorScheme.onSurface.withAlpha(120),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(
-              tr(LocaleKeys.matchmakingTimeout),
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              tr(LocaleKeys.matchmakingTimeoutHint),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withAlpha(153),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: AppSpacing.xxl),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: FilledButton.icon(
-                onPressed: () => context
-                    .read<MatchmakingBloc>()
-                    .add(const MatchmakingJoinQueue()),
-                icon: const Icon(Icons.refresh_rounded),
-                label: Text(tr(LocaleKeys.matchmakingRetry)),
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusLg),
+          children:
+              [
+                    Icon(
+                      Icons.timer_off_rounded,
+                      size: 72,
+                      color: theme.colorScheme.onSurface.withAlpha(120),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    Text(
+                      tr(LocaleKeys.matchmakingTimeout),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      tr(LocaleKeys.matchmakingTimeoutHint),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withAlpha(153),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSpacing.xxl),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: FilledButton.icon(
+                        onPressed: () => context.read<MatchmakingBloc>().add(
+                          const MatchmakingJoinQueue(),
+                        ),
+                        icon: const Icon(Icons.refresh_rounded),
+                        label: Text(tr(LocaleKeys.matchmakingRetry)),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusLg,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                  .animate(interval: 80.ms)
+                  .fadeIn(duration: 400.ms)
+                  .slideY(begin: 0.05),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Preference bottom sheet ──
+
+class _PreferenceSheet extends StatelessWidget {
+  const _PreferenceSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return BlocBuilder<MatchmakingBloc, MatchmakingState>(
+      buildWhen: (p, c) =>
+          p.selectedPreference != c.selectedPreference ||
+          p.selectedPreferredGender != c.selectedPreferredGender,
+      builder: (context, state) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: AppSpacing.xl,
+            right: AppSpacing.xl,
+            top: AppSpacing.xl,
+            bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.outline,
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
-            ),
-          ]
-              .animate(interval: 80.ms)
-              .fadeIn(duration: 400.ms)
-              .slideY(begin: 0.05),
-        ),
-      ),
+              const Gap(AppSpacing.lg),
+              Text(
+                tr(LocaleKeys.matchmakingPreferenceTitle),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Gap(AppSpacing.xl),
+
+              Text(
+                tr(LocaleKeys.profileChatPreference),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withAlpha(153),
+                ),
+              ),
+              const Gap(AppSpacing.sm),
+              _PreferenceChips(
+                selected: state.selectedPreference,
+                options: {
+                  'any': tr(LocaleKeys.profileAny),
+                  'opposite': tr(LocaleKeys.profileOpposite),
+                  'same': tr(LocaleKeys.profileSame),
+                },
+                onChanged: (v) => context.read<MatchmakingBloc>().add(
+                  MatchmakingUpdatePreference(v),
+                ),
+              ),
+              const Gap(AppSpacing.lg),
+
+              Text(
+                tr(LocaleKeys.profileChatWith),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withAlpha(153),
+                ),
+              ),
+              const Gap(AppSpacing.sm),
+              _PreferenceChips(
+                selected: state.selectedPreferredGender,
+                options: {
+                  '': tr(LocaleKeys.profileAny),
+                  'male': tr(LocaleKeys.profileMale),
+                  'female': tr(LocaleKeys.profileFemale),
+                },
+                onChanged: (v) => context.read<MatchmakingBloc>().add(
+                  MatchmakingUpdatePreferredGender(v),
+                ),
+              ),
+              const Gap(AppSpacing.xl),
+
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: FilledButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.read<MatchmakingBloc>().add(
+                      const MatchmakingRestartSearch(),
+                    );
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                    ),
+                  ),
+                  child: Text(
+                    tr(LocaleKeys.matchmakingFind),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -677,8 +710,7 @@ class _ErrorView extends StatelessWidget {
             ),
             const Gap(AppSpacing.lg),
             Text(
-              state.errorMessage ??
-                  tr(LocaleKeys.commonConnectionError),
+              state.errorMessage ?? tr(LocaleKeys.commonConnectionError),
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withAlpha(153),
               ),
@@ -686,9 +718,9 @@ class _ErrorView extends StatelessWidget {
             ),
             const Gap(AppSpacing.xl),
             OutlinedButton.icon(
-              onPressed: () => context
-                  .read<MatchmakingBloc>()
-                  .add(const MatchmakingStarted()),
+              onPressed: () => context.read<MatchmakingBloc>().add(
+                const MatchmakingStarted(),
+              ),
               icon: const Icon(Icons.refresh_rounded),
               label: Text(tr(LocaleKeys.profileRetry)),
             ),
