@@ -18,6 +18,8 @@ import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart'
     as _i854;
+import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dart'
+    as _i910;
 import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart'
     as _i962;
 import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
@@ -59,6 +61,10 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
+    gh.lazySingleton<_i910.MatchmakingSocketService>(
+      () => _i910.MatchmakingSocketService(gh<_i670.TokenStorage>()),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i999.AuthRemoteDatasource>(
       () => registerModule.authRemoteDatasource(gh<_i361.Dio>()),
     );
@@ -115,8 +121,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i987.MatchmakingBloc(
         gh<_i443.JoinQueueUseCase>(),
         gh<_i569.LeaveQueueUseCase>(),
-        gh<_i438.GetQueueStatusUseCase>(),
         gh<_i669.GetProfileUseCase>(),
+        gh<_i910.MatchmakingSocketService>(),
       ),
     );
     return this;

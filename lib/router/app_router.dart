@@ -22,6 +22,7 @@ abstract final class AppRoutes {
   static const home = '/home';
   static const profile = '/profile';
   static const matchmaking = '/matchmaking';
+  static const chat = '/chat';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -59,6 +60,13 @@ final GoRouter appRouter = GoRouter(
         child: const MatchmakingPage(),
       ),
     ),
+    GoRoute(
+      path: '${AppRoutes.chat}/:roomId',
+      builder: (context, state) {
+        final roomId = state.pathParameters['roomId'] ?? '';
+        return _ChatPlaceholder(roomId: roomId);
+      },
+    ),
   ],
 );
 
@@ -71,6 +79,37 @@ class _LoginWrapper extends StatelessWidget {
       listenWhen: (prev, curr) => curr.status == LoginStatus.success,
       listener: (context, state) => context.go(AppRoutes.home),
       child: const LoginPage(),
+    );
+  }
+}
+
+// TODO: Replace with actual ChatPage when chat feature is implemented
+class _ChatPlaceholder extends StatelessWidget {
+  const _ChatPlaceholder({required this.roomId});
+
+  final String roomId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Chat')),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.chat_rounded, size: 64),
+            const SizedBox(height: 16),
+            Text('Room: $roomId'),
+            const SizedBox(height: 8),
+            const Text('Chat feature coming soon...'),
+            const SizedBox(height: 24),
+            OutlinedButton(
+              onPressed: () => context.go(AppRoutes.home),
+              child: const Text('Back to Home'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

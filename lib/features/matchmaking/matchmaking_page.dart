@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../router/app_router.dart';
 import '../../shared/widgets/app_snack_bar.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
@@ -33,16 +35,47 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
         ? AppColors.darkGradientBackground
         : AppColors.lightGradientBackground;
 
-    return BlocListener<MatchmakingBloc, MatchmakingState>(
-      listenWhen: (prev, curr) =>
-          curr.status == MatchmakingStatus.matched &&
-          prev.status != MatchmakingStatus.matched,
-      listener: (context, state) {
-        AppSnackBar.show(
-          context,
-          message: tr(LocaleKeys.matchmakingMatchFound),
-        );
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<MatchmakingBloc, MatchmakingState>(
+          listenWhen: (prev, curr) =>
+              curr.status == MatchmakingStatus.matched &&
+              prev.status != MatchmakingStatus.matched,
+          listener: (context, state) {
+            AppSnackBar.show(
+              context,
+              message: tr(LocaleKeys.matchmakingMatchFound),
+            );
+            if (state.roomId != null && state.roomId!.isNotEmpty) {
+              context.go('${AppRoutes.chat}/${state.roomId}');
+            }
+          },
+        ),
+        BlocListener<MatchmakingBloc, MatchmakingState>(
+          listenWhen: (prev, curr) =>
+              curr.status == MatchmakingStatus.timedOut &&
+              prev.status != MatchmakingStatus.timedOut,
+          listener: (context, state) {
+            AppSnackBar.show(
+              context,
+              message: tr(LocaleKeys.matchmakingTimeout),
+            );
+          },
+        ),
+        BlocListener<MatchmakingBloc, MatchmakingState>(
+          listenWhen: (prev, curr) =>
+              curr.status == MatchmakingStatus.profileRequired &&
+              prev.status != MatchmakingStatus.profileRequired,
+          listener: (context, state) {
+            AppSnackBar.show(
+              context,
+              message: state.errorMessage ??
+                  tr(LocaleKeys.matchmakingProfileRequired),
+            );
+            context.go(AppRoutes.profile);
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text(tr(LocaleKeys.matchmakingTitle)),
@@ -65,10 +98,12 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
                     ),
                   MatchmakingStatus.searching =>
                     _SearchingView(state: state),
-                  MatchmakingStatus.matched => const _MatchedView(),
+                  MatchmakingStatus.matched => _MatchedView(state: state),
                   MatchmakingStatus.timedOut =>
                     _TimedOutView(state: state),
                   MatchmakingStatus.error => _ErrorView(state: state),
+                  MatchmakingStatus.profileRequired =>
+                    const Center(child: CircularProgressIndicator()),
                 };
               },
             ),
@@ -343,7 +378,7 @@ class _SearchingView extends StatelessWidget {
   String _formatDuration(int seconds) {
     final m = seconds ~/ 60;
     final s = seconds % 60;
-    return '${m}:${s.toString().padLeft(2, '0')}';
+    return '$m:${s.toString().padLeft(2, '0')}';
   }
 }
 
@@ -480,7 +515,9 @@ class _PulsingRadarState extends State<_PulsingRadar>
 // ── Matched ──
 
 class _MatchedView extends StatelessWidget {
-  const _MatchedView();
+  const _MatchedView({required this.state});
+
+  final MatchmakingState state;
 
   @override
   Widget build(BuildContext context) {
@@ -522,7 +559,10 @@ class _MatchedView extends StatelessWidget {
           const Gap(AppSpacing.xxl),
           FilledButton.icon(
             onPressed: () {
-              // TODO: navigate to chat room when chat feature is ready
+              final roomId = state.roomId;
+              if (roomId != null && roomId.isNotEmpty) {
+                context.go('${AppRoutes.chat}/$roomId');
+              }
             },
             icon: const Icon(Icons.chat_rounded),
             label: Text(tr(LocaleKeys.matchmakingStartChat)),

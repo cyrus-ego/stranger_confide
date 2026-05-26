@@ -12,6 +12,7 @@ enum MatchmakingStatus {
   matched,
   timedOut,
   error,
+  profileRequired,
 }
 
 @freezed
@@ -22,5 +23,7 @@ sealed class MatchmakingState with _$MatchmakingState {
     @Default('any') String selectedPreference,
     @Default('') String selectedPreferredGender,
     String? errorMessage,
+    String? roomId,
+    String? partnerId,
   }) = _MatchmakingState;
 }

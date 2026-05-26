@@ -60,6 +60,7 @@ abstract final class LocaleKeys {
   static const matchmakingTimeout = 'matchmaking.timeout';
   static const matchmakingTimeoutHint = 'matchmaking.timeout_hint';
   static const matchmakingRetry = 'matchmaking.retry';
+  static const matchmakingProfileRequired = 'matchmaking.profile_required';
 
   // Common
   static const commonErrorTitle = 'common.error_title';
