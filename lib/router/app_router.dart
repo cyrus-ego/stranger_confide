@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -31,6 +33,7 @@ abstract final class AppRoutes {
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.splash,
+  observers: [_RouterObserver()],
   routes: [
     GoRoute(
       path: AppRoutes.splash,
@@ -77,6 +80,42 @@ final GoRouter appRouter = GoRouter(
     ),
   ],
 );
+
+class _RouterObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    log(
+      '→ PUSH ${route.settings.name ?? route.settings.toString()}'
+      '${previousRoute != null ? ' (from ${previousRoute.settings.name})' : ''}',
+      name: 'Router',
+    );
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    log(
+      '← POP ${route.settings.name ?? route.settings.toString()}'
+      '${previousRoute != null ? ' (back to ${previousRoute.settings.name})' : ''}',
+      name: 'Router',
+    );
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    log(
+      '⇄ REPLACE ${oldRoute?.settings.name} → ${newRoute?.settings.name}',
+      name: 'Router',
+    );
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    log(
+      '✕ REMOVE ${route.settings.name ?? route.settings.toString()}',
+      name: 'Router',
+    );
+  }
+}
 
 class _LoginWrapper extends StatelessWidget {
   const _LoginWrapper();
