@@ -29,4 +29,23 @@ class RoomRepositoryImpl extends BaseRepository implements RoomRepository {
       return AppFailure(apiError);
     }
   }
+
+  @override
+  Future<AppResult<void>> blockRoom(
+    String roomId,
+    String targetUserId,
+  ) async {
+    try {
+      await _remoteDatasource.blockRoom(
+        roomId,
+        {'targetUserId': targetUserId},
+      );
+      return AppSuccess(null);
+    } on DioException catch (e) {
+      final apiError = e.error is ApiError
+          ? e.error! as ApiError
+          : ApiError.fromDioException(e);
+      return AppFailure(apiError);
+    }
+  }
 }

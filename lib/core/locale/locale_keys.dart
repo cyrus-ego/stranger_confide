@@ -81,6 +81,9 @@ abstract final class LocaleKeys {
   static const chatReportDescription = 'chat.report_description';
   static const chatReportSubmit = 'chat.report_submit';
   static const chatReportSuccess = 'chat.report_success';
+  static const chatReportFailed = 'chat.report_failed';
+  static const chatModerationBlocked = 'chat.moderation_blocked';
+  static const chatSpamDetected = 'chat.spam_detected';
   static const chatRoomClosedTitle = 'chat.room_closed_title';
   static const chatRoomClosedPartnerLeft = 'chat.room_closed_partner_left';
   static const chatRoomClosedBlocked = 'chat.room_closed_blocked';

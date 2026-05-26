@@ -8,7 +8,9 @@ import 'package:injectable/injectable.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../core/token_storage.dart';
+import '../../../domain/usecases/block_room_usecase.dart';
 import '../../../domain/usecases/leave_room_usecase.dart';
+import '../../../domain/usecases/report_user_usecase.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 
@@ -16,7 +18,12 @@ const _defaultBaseUrl = 'https://c44e-1-54-23-149.ngrok-free.app';
 
 @injectable
 class ChatBloc extends AppBloc<ChatEvent, ChatState> {
-  ChatBloc(this._tokenStorage, this._leaveRoomUseCase) : super(const ChatState()) {
+  ChatBloc(
+    this._tokenStorage,
+    this._leaveRoomUseCase,
+    this._blockRoomUseCase,
+    this._reportUserUseCase,
+  ) : super(const ChatState()) {
     on<ChatStarted>(_onStarted);
     on<ChatSendMessage>(_onSendMessage);
     on<ChatSendImage>(_onSendImage);
@@ -27,19 +34,23 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
 
     on<ChatMessageReceived>(_onMessageReceived);
     on<ChatPartnerTyping>(_onPartnerTyping);
-    on<ChatPartnerLeft>(_onPartnerLeft);
     on<ChatRoomClosed>(_onRoomClosed);
     on<ChatSocketConnected>(_onSocketConnected);
     on<ChatSocketError>(_onSocketError);
-    on<ChatRoomReady>(_onRoomReady);
+    on<ChatRoomJoined>(_onRoomJoined);
     on<ChatPartnerOnlineChanged>(_onPartnerOnlineChanged);
+    on<ChatAccessDenied>(_onAccessDenied);
   }
 
   final TokenStorage _tokenStorage;
   final LeaveRoomUseCase _leaveRoomUseCase;
+  final BlockRoomUseCase _blockRoomUseCase;
+  final ReportUserUseCase _reportUserUseCase;
   io.Socket? _socket;
   Timer? _typingDebounce;
-  int _msgSeq = 0;
+  bool _isTypingEmitted = false;
+
+  // ── User action handlers ──
 
   void _onStarted(ChatStarted event, Emitter<ChatState> emit) {
     emit(state.copyWith(
@@ -52,54 +63,44 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   void _onSendMessage(ChatSendMessage event, Emitter<ChatState> emit) {
     if (event.text.trim().isEmpty || state.status != ChatStatus.active) return;
 
-    final msg = ChatMessage(
-      id: 'local_${_msgSeq++}',
-      type: MessageType.text,
-      content: event.text.trim(),
-      isMine: true,
-      timestamp: DateTime.now(),
-    );
-
-    emit(state.copyWith(messages: [...state.messages, msg]));
-    _socket?.emit('message:send', {
+    _socket?.emit('chat:send', {
       'roomId': state.roomId,
       'type': 'text',
       'content': event.text.trim(),
     });
+
+    _cancelTyping();
+    emit(state.copyWith(isSending: true));
   }
 
   void _onSendImage(ChatSendImage event, Emitter<ChatState> emit) {
     if (state.status != ChatStatus.active) return;
-
-    final placeholder = ChatMessage(
-      id: 'upload_${_msgSeq++}',
-      type: MessageType.image,
-      content: event.filePath,
-      isMine: true,
-      timestamp: DateTime.now(),
-      isUploading: true,
-    );
-
-    emit(state.copyWith(
-      messages: [...state.messages, placeholder],
-      isUploading: true,
-    ));
-
-    // TODO: upload image via REST, then emit socket event with URL
-    // For now emit as text placeholder
-    _socket?.emit('message:send', {
-      'roomId': state.roomId,
-      'type': 'image',
-      'content': event.filePath,
-    });
+    // TODO: POST /chat/:roomId/image multipart upload (phase sau)
+    emit(state.copyWith(isUploading: true));
   }
 
   void _onTyping(ChatTyping event, Emitter<ChatState> emit) {
+    if (!_isTypingEmitted) {
+      _isTypingEmitted = true;
+      _socket?.emit('chat:typing', {
+        'roomId': state.roomId,
+        'isTyping': true,
+      });
+    }
+
     _typingDebounce?.cancel();
-    _socket?.emit('typing:start', {'roomId': state.roomId});
-    _typingDebounce = Timer(const Duration(seconds: 2), () {
-      _socket?.emit('typing:stop', {'roomId': state.roomId});
-    });
+    _typingDebounce = Timer(const Duration(seconds: 2), _cancelTyping);
+  }
+
+  void _cancelTyping() {
+    if (_isTypingEmitted) {
+      _isTypingEmitted = false;
+      _socket?.emit('chat:typing', {
+        'roomId': state.roomId,
+        'isTyping': false,
+      });
+    }
+    _typingDebounce?.cancel();
   }
 
   Future<void> _onLeaveRoom(
@@ -120,22 +121,51 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
         }
       });
 
-  void _onBlockPartner(ChatBlockPartner event, Emitter<ChatState> emit) {
-    _socket?.emit('room:block', {'roomId': state.roomId});
-    _disconnectSocket();
-    emit(state.copyWith(
-      status: ChatStatus.closed,
-      closedReason: 'blocked',
-    ));
-  }
+  Future<void> _onBlockPartner(
+    ChatBlockPartner event,
+    Emitter<ChatState> emit,
+  ) =>
+      guard(() async {
+        if (state.partnerUserId.isEmpty) return;
 
-  void _onReportPartner(ChatReportPartner event, Emitter<ChatState> emit) {
-    _socket?.emit('room:report', {
-      'roomId': state.roomId,
-      'reason': event.reason,
-      'description': event.description,
-    });
-  }
+        final result = await _blockRoomUseCase(
+          state.roomId,
+          state.partnerUserId,
+        );
+        if (result.isSuccess) {
+          _socket?.emit('room:block', {
+            'roomId': state.roomId,
+            'targetUserId': state.partnerUserId,
+          });
+          _disconnectSocket();
+          emit(state.copyWith(
+            status: ChatStatus.closed,
+            closedReason: 'blocked',
+          ));
+        } else {
+          throw result.errorOrNull!;
+        }
+      });
+
+  Future<void> _onReportPartner(
+    ChatReportPartner event,
+    Emitter<ChatState> emit,
+  ) =>
+      guard(() async {
+        if (state.partnerUserId.isEmpty) return;
+
+        final result = await _reportUserUseCase(
+          reportedUserId: state.partnerUserId,
+          roomId: state.roomId,
+          reason: event.reason,
+          description: event.description,
+        );
+        emit(state.copyWith(
+          lastAction: result.isSuccess
+              ? ChatAction.reportSuccess
+              : ChatAction.reportFailed,
+        ));
+      });
 
   // ── Socket-driven handlers ──
 
@@ -146,55 +176,63 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     _socket?.emit('room:join', {'roomId': state.roomId});
   }
 
+  void _onRoomJoined(ChatRoomJoined event, Emitter<ChatState> emit) {
+    final data = event.data;
+    final session = data['session'] as Map<String, dynamic>? ?? {};
+    final partnerUserId = data['partnerUserId']?.toString() ?? '';
+    final rawMessages = data['messages'] as List<dynamic>? ?? [];
+
+    final myAlias = session['myAlias']?.toString() ?? '';
+    final myAvatar = session['myAvatar']?.toString() ?? '';
+    final partnerAlias = session['partnerAlias']?.toString() ?? 'Stranger';
+    final partnerAvatar = session['partnerAvatar']?.toString() ?? '';
+    final partnerOnline = session['partnerOnline'] == true;
+
+    final messages = rawMessages
+        .whereType<Map<String, dynamic>>()
+        .map((m) => _parseMessage(m, myAlias))
+        .toList();
+
+    emit(state.copyWith(
+      status: ChatStatus.active,
+      myAlias: myAlias,
+      myAvatar: myAvatar,
+      partnerAlias: partnerAlias,
+      partnerAvatar: partnerAvatar,
+      partnerUserId: partnerUserId,
+      partnerOnline: partnerOnline,
+      messages: messages,
+    ));
+  }
+
   void _onMessageReceived(
     ChatMessageReceived event,
     Emitter<ChatState> emit,
   ) {
-    final data = event.data;
-    final type = switch (data['type']?.toString()) {
-      'image' => MessageType.image,
-      'system' => MessageType.system,
-      _ => MessageType.text,
-    };
-    final isMine = data['isMine'] == true;
+    final msg = _parseMessage(event.data, state.myAlias);
 
-    final msg = ChatMessage(
-      id: data['id']?.toString() ?? 'srv_${_msgSeq++}',
-      type: type,
-      content: (data['content'] ?? '').toString(),
-      isMine: isMine,
-      timestamp: DateTime.tryParse(data['timestamp']?.toString() ?? '') ??
-          DateTime.now(),
-    );
-
-    // For image uploads that complete, replace placeholder
-    if (isMine && type == MessageType.image) {
+    if (msg.isMine && msg.type == MessageType.image) {
       final updated = state.messages.map((m) {
-        if (m.isUploading && m.type == MessageType.image) {
-          return msg;
-        }
+        if (m.isUploading && m.type == MessageType.image) return msg;
         return m;
       }).toList();
-      emit(state.copyWith(messages: updated, isUploading: false));
+      emit(state.copyWith(
+        messages: updated,
+        isUploading: false,
+        isSending: false,
+      ));
       return;
     }
 
     emit(state.copyWith(
       messages: [...state.messages, msg],
       partnerTyping: false,
+      isSending: msg.isMine ? false : state.isSending,
     ));
   }
 
   void _onPartnerTyping(ChatPartnerTyping event, Emitter<ChatState> emit) {
     emit(state.copyWith(partnerTyping: event.isTyping));
-  }
-
-  void _onPartnerLeft(ChatPartnerLeft event, Emitter<ChatState> emit) {
-    _disconnectSocket();
-    emit(state.copyWith(
-      status: ChatStatus.closed,
-      closedReason: 'partner_left',
-    ));
   }
 
   void _onRoomClosed(ChatRoomClosed event, Emitter<ChatState> emit) {
@@ -206,19 +244,39 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   }
 
   void _onSocketError(ChatSocketError event, Emitter<ChatState> emit) {
-    if (state.status == ChatStatus.active) return;
-    emit(state.copyWith(
-      status: ChatStatus.error,
-      errorMessage: event.message,
-    ));
-  }
+    final msg = event.message.toLowerCase();
 
-  void _onRoomReady(ChatRoomReady event, Emitter<ChatState> emit) {
-    emit(state.copyWith(
-      status: ChatStatus.active,
-      partnerAlias: event.partnerAlias,
-      partnerOnline: true,
-    ));
+    if (msg.contains('vi phạm') || msg.contains('nội quy')) {
+      emit(state.copyWith(
+        isSending: false,
+        lastAction: ChatAction.moderationBlocked,
+      ));
+      return;
+    }
+
+    if (msg.contains('quá nhanh') || msg.contains('spam')) {
+      emit(state.copyWith(
+        isSending: false,
+        lastAction: ChatAction.spamDetected,
+      ));
+      return;
+    }
+
+    if (msg.contains('không thể gửi')) {
+      _disconnectSocket();
+      emit(state.copyWith(
+        status: ChatStatus.closed,
+        closedReason: 'blocked',
+      ));
+      return;
+    }
+
+    if (state.status != ChatStatus.active) {
+      emit(state.copyWith(
+        status: ChatStatus.error,
+        errorMessage: event.message,
+      ));
+    }
   }
 
   void _onPartnerOnlineChanged(
@@ -226,6 +284,15 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) {
     emit(state.copyWith(partnerOnline: event.online));
+  }
+
+  void _onAccessDenied(ChatAccessDenied event, Emitter<ChatState> emit) {
+    _disconnectSocket();
+    emit(state.copyWith(
+      status: ChatStatus.error,
+      errorMessage: event.message,
+      closedReason: 'access_denied',
+    ));
   }
 
   // ── Socket management ──
@@ -253,47 +320,84 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     _socket!
       ..onConnect((_) {
         log('ChatSocket: connected', name: 'Socket');
-        add(const ChatSocketConnected());
+        if (!isClosed) add(const ChatSocketConnected());
       })
       ..onConnectError((error) {
         log('ChatSocket: connect error $error', name: 'Socket');
-        add(ChatSocketError(error.toString()));
+        if (!isClosed) add(ChatSocketError(error.toString()));
       })
-      ..on('room:ready', (data) {
-        final map = data is Map<String, dynamic> ? data : <String, dynamic>{};
-        final alias = map['partnerAlias']?.toString() ?? 'Stranger';
-        add(ChatRoomReady(alias));
+      ..on('room:joined', (data) {
+        if (data is Map<String, dynamic> && !isClosed) {
+          add(ChatRoomJoined(data));
+        }
       })
-      ..on('message:new', (data) {
-        if (data is Map<String, dynamic>) {
+      ..on('chat:message', (data) {
+        if (data is Map<String, dynamic> && !isClosed) {
           add(ChatMessageReceived(data));
         }
       })
-      ..on('typing:start', (_) => add(const ChatPartnerTyping(true)))
-      ..on('typing:stop', (_) => add(const ChatPartnerTyping(false)))
-      ..on('partner:left', (_) => add(const ChatPartnerLeft()))
+      ..on('chat:typing', (data) {
+        if (!isClosed) {
+          final isTyping = data is Map ? data['isTyping'] == true : false;
+          add(ChatPartnerTyping(isTyping));
+        }
+      })
+      ..on('room:presence', (data) {
+        if (data is Map && !isClosed) {
+          final online = data['online'] == true;
+          add(ChatPartnerOnlineChanged(online));
+        }
+      })
       ..on('room:closed', (data) {
-        final reason =
-            data is Map ? (data['reason'] ?? 'closed').toString() : 'closed';
-        add(ChatRoomClosed(reason));
+        if (!isClosed) {
+          final reason = data is Map
+              ? (data['reason'] ?? 'closed').toString()
+              : 'closed';
+          add(ChatRoomClosed(reason));
+        }
       })
-      ..on('partner:online', (_) {
-        add(const ChatPartnerOnlineChanged(true));
-      })
-      ..on('partner:offline', (_) {
-        add(const ChatPartnerOnlineChanged(false));
+      ..on('room:access_denied', (data) {
+        if (!isClosed) {
+          final message = data is Map
+              ? (data['message'] ?? 'Không có quyền truy cập').toString()
+              : 'Không có quyền truy cập';
+          add(ChatAccessDenied(message));
+        }
       })
       ..on('error', (data) {
-        final msg =
-            data is Map ? (data['message'] ?? data.toString()) : '$data';
-        add(ChatSocketError(msg.toString()));
+        if (!isClosed) {
+          final msg =
+              data is Map ? (data['message'] ?? data.toString()) : '$data';
+          add(ChatSocketError(msg.toString()));
+        }
       });
 
     _socket!.connect();
   }
 
+  ChatMessage _parseMessage(Map<String, dynamic> data, String myAlias) {
+    final type = switch (data['type']?.toString()) {
+      'image' => MessageType.image,
+      'system' => MessageType.system,
+      _ => MessageType.text,
+    };
+    final senderAlias = data['senderAlias']?.toString() ?? '';
+    final isMine = senderAlias == myAlias;
+
+    return ChatMessage(
+      id: data['id']?.toString() ?? 'msg_${DateTime.now().millisecondsSinceEpoch}',
+      senderAlias: senderAlias,
+      type: type,
+      content: (data['content'] ?? '').toString(),
+      imageUrl: data['imageUrl']?.toString(),
+      createdAt: DateTime.tryParse(data['createdAt']?.toString() ?? '') ??
+          DateTime.now(),
+      isMine: isMine,
+    );
+  }
+
   void _disconnectSocket() {
-    _typingDebounce?.cancel();
+    _cancelTyping();
     _socket?.dispose();
     _socket = null;
   }

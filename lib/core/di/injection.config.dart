@@ -20,6 +20,8 @@ import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.
     as _i854;
 import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dart'
     as _i910;
+import 'package:stranger_confide/data/datasources/moderation_remote_datasource.dart'
+    as _i708;
 import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart'
     as _i962;
 import 'package:stranger_confide/data/datasources/room_remote_datasource.dart'
@@ -28,6 +30,8 @@ import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
     as _i1019;
 import 'package:stranger_confide/data/repositories/matchmaking_repository_impl.dart'
     as _i433;
+import 'package:stranger_confide/data/repositories/moderation_repository_impl.dart'
+    as _i807;
 import 'package:stranger_confide/data/repositories/profile_repository_impl.dart'
     as _i412;
 import 'package:stranger_confide/data/repositories/room_repository_impl.dart'
@@ -36,10 +40,14 @@ import 'package:stranger_confide/domain/repositories/auth_repository.dart'
     as _i982;
 import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart'
     as _i304;
+import 'package:stranger_confide/domain/repositories/moderation_repository.dart'
+    as _i396;
 import 'package:stranger_confide/domain/repositories/profile_repository.dart'
     as _i34;
 import 'package:stranger_confide/domain/repositories/room_repository.dart'
     as _i133;
+import 'package:stranger_confide/domain/usecases/block_room_usecase.dart'
+    as _i851;
 import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
     as _i990;
 import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
@@ -55,6 +63,8 @@ import 'package:stranger_confide/domain/usecases/leave_room_usecase.dart'
 import 'package:stranger_confide/domain/usecases/login_usecase.dart' as _i878;
 import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart'
     as _i247;
+import 'package:stranger_confide/domain/usecases/report_user_usecase.dart'
+    as _i691;
 import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
     as _i853;
 import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
@@ -88,6 +98,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i916.RoomRemoteDatasource>(
       () => registerModule.roomRemoteDatasource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i708.ModerationRemoteDatasource>(
+      () => registerModule.moderationRemoteDatasource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i133.RoomRepository>(
       () => _i836.RoomRepositoryImpl(gh<_i916.RoomRemoteDatasource>()),
     );
@@ -101,6 +114,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i982.AuthRepository>(
       () => _i1019.AuthRepositoryImpl(gh<_i999.AuthRemoteDatasource>()),
+    );
+    gh.factory<_i851.BlockRoomUseCase>(
+      () => _i851.BlockRoomUseCase(gh<_i133.RoomRepository>()),
     );
     gh.factory<_i990.GetActiveRoomUseCase>(
       () => _i990.GetActiveRoomUseCase(gh<_i133.RoomRepository>()),
@@ -126,13 +142,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i853.UpdateProfileUseCase>(
       () => _i853.UpdateProfileUseCase(gh<_i34.ProfileRepository>()),
     );
+    gh.lazySingleton<_i396.ModerationRepository>(
+      () => _i807.ModerationRepositoryImpl(
+        gh<_i708.ModerationRemoteDatasource>(),
+      ),
+    );
     gh.factory<_i878.LoginUseCase>(
       () => _i878.LoginUseCase(gh<_i982.AuthRepository>()),
+    );
+    gh.factory<_i691.ReportUserUseCase>(
+      () => _i691.ReportUserUseCase(gh<_i396.ModerationRepository>()),
     );
     gh.factory<_i460.ChatBloc>(
       () => _i460.ChatBloc(
         gh<_i670.TokenStorage>(),
         gh<_i212.LeaveRoomUseCase>(),
+        gh<_i851.BlockRoomUseCase>(),
+        gh<_i691.ReportUserUseCase>(),
       ),
     );
     gh.factory<_i162.ProfileBloc>(

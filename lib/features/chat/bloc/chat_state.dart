@@ -19,12 +19,22 @@ enum MessageType {
 sealed class ChatMessage with _$ChatMessage {
   const factory ChatMessage({
     required String id,
+    required String senderAlias,
     required MessageType type,
     required String content,
+    String? imageUrl,
+    required DateTime createdAt,
     required bool isMine,
-    required DateTime timestamp,
     @Default(false) bool isUploading,
   }) = _ChatMessage;
+}
+
+enum ChatAction {
+  none,
+  reportSuccess,
+  reportFailed,
+  moderationBlocked,
+  spamDetected,
 }
 
 @freezed
@@ -33,10 +43,16 @@ sealed class ChatState with _$ChatState {
     @Default(ChatStatus.connecting) ChatStatus status,
     @Default([]) List<ChatMessage> messages,
     @Default('') String roomId,
+    @Default('') String myAlias,
+    @Default('') String myAvatar,
     @Default('Stranger') String partnerAlias,
+    @Default('') String partnerAvatar,
+    @Default('') String partnerUserId,
     @Default(false) bool partnerOnline,
     @Default(false) bool partnerTyping,
     @Default(false) bool isUploading,
+    @Default(false) bool isSending,
+    @Default(ChatAction.none) ChatAction lastAction,
     String? closedReason,
     String? errorMessage,
   }) = _ChatState;

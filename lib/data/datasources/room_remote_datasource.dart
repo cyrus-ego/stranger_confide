@@ -14,4 +14,10 @@ abstract class RoomRemoteDatasource {
 
   @POST('/rooms/{roomId}/leave')
   Future<dynamic> leaveRoom(@Path('roomId') String roomId);
+
+  @POST('/rooms/{roomId}/block')
+  Future<dynamic> blockRoom(
+    @Path('roomId') String roomId,
+    @Body() Map<String, dynamic> body,
+  );
 }

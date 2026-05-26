@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart';
+import 'package:stranger_confide/data/datasources/moderation_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/room_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart';
 
@@ -23,4 +24,8 @@ abstract class RegisterModule {
   @lazySingleton
   RoomRemoteDatasource roomRemoteDatasource(Dio dio) =>
       RoomRemoteDatasource(dio);
+
+  @lazySingleton
+  ModerationRemoteDatasource moderationRemoteDatasource(Dio dio) =>
+      ModerationRemoteDatasource(dio);
 }

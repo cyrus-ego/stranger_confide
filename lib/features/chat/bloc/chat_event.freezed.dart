@@ -55,7 +55,7 @@ extension ChatEventPatterns on ChatEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ChatStarted value)?  started,TResult Function( ChatSendMessage value)?  sendMessage,TResult Function( ChatSendImage value)?  sendImage,TResult Function( ChatTyping value)?  typing,TResult Function( ChatLeaveRoom value)?  leaveRoom,TResult Function( ChatBlockPartner value)?  blockPartner,TResult Function( ChatReportPartner value)?  reportPartner,TResult Function( ChatMessageReceived value)?  messageReceived,TResult Function( ChatPartnerTyping value)?  partnerTyping,TResult Function( ChatPartnerLeft value)?  partnerLeft,TResult Function( ChatRoomClosed value)?  roomClosed,TResult Function( ChatSocketConnected value)?  socketConnected,TResult Function( ChatSocketError value)?  socketError,TResult Function( ChatRoomReady value)?  roomReady,TResult Function( ChatPartnerOnlineChanged value)?  partnerOnlineChanged,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ChatStarted value)?  started,TResult Function( ChatSendMessage value)?  sendMessage,TResult Function( ChatSendImage value)?  sendImage,TResult Function( ChatTyping value)?  typing,TResult Function( ChatLeaveRoom value)?  leaveRoom,TResult Function( ChatBlockPartner value)?  blockPartner,TResult Function( ChatReportPartner value)?  reportPartner,TResult Function( ChatMessageReceived value)?  messageReceived,TResult Function( ChatPartnerTyping value)?  partnerTyping,TResult Function( ChatRoomClosed value)?  roomClosed,TResult Function( ChatSocketConnected value)?  socketConnected,TResult Function( ChatSocketError value)?  socketError,TResult Function( ChatRoomJoined value)?  roomJoined,TResult Function( ChatPartnerOnlineChanged value)?  partnerOnlineChanged,TResult Function( ChatAccessDenied value)?  accessDenied,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ChatStarted() when started != null:
@@ -67,13 +67,13 @@ return leaveRoom(_that);case ChatBlockPartner() when blockPartner != null:
 return blockPartner(_that);case ChatReportPartner() when reportPartner != null:
 return reportPartner(_that);case ChatMessageReceived() when messageReceived != null:
 return messageReceived(_that);case ChatPartnerTyping() when partnerTyping != null:
-return partnerTyping(_that);case ChatPartnerLeft() when partnerLeft != null:
-return partnerLeft(_that);case ChatRoomClosed() when roomClosed != null:
+return partnerTyping(_that);case ChatRoomClosed() when roomClosed != null:
 return roomClosed(_that);case ChatSocketConnected() when socketConnected != null:
 return socketConnected(_that);case ChatSocketError() when socketError != null:
-return socketError(_that);case ChatRoomReady() when roomReady != null:
-return roomReady(_that);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
-return partnerOnlineChanged(_that);case _:
+return socketError(_that);case ChatRoomJoined() when roomJoined != null:
+return roomJoined(_that);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
+return partnerOnlineChanged(_that);case ChatAccessDenied() when accessDenied != null:
+return accessDenied(_that);case _:
   return orElse();
 
 }
@@ -91,7 +91,7 @@ return partnerOnlineChanged(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ChatStarted value)  started,required TResult Function( ChatSendMessage value)  sendMessage,required TResult Function( ChatSendImage value)  sendImage,required TResult Function( ChatTyping value)  typing,required TResult Function( ChatLeaveRoom value)  leaveRoom,required TResult Function( ChatBlockPartner value)  blockPartner,required TResult Function( ChatReportPartner value)  reportPartner,required TResult Function( ChatMessageReceived value)  messageReceived,required TResult Function( ChatPartnerTyping value)  partnerTyping,required TResult Function( ChatPartnerLeft value)  partnerLeft,required TResult Function( ChatRoomClosed value)  roomClosed,required TResult Function( ChatSocketConnected value)  socketConnected,required TResult Function( ChatSocketError value)  socketError,required TResult Function( ChatRoomReady value)  roomReady,required TResult Function( ChatPartnerOnlineChanged value)  partnerOnlineChanged,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ChatStarted value)  started,required TResult Function( ChatSendMessage value)  sendMessage,required TResult Function( ChatSendImage value)  sendImage,required TResult Function( ChatTyping value)  typing,required TResult Function( ChatLeaveRoom value)  leaveRoom,required TResult Function( ChatBlockPartner value)  blockPartner,required TResult Function( ChatReportPartner value)  reportPartner,required TResult Function( ChatMessageReceived value)  messageReceived,required TResult Function( ChatPartnerTyping value)  partnerTyping,required TResult Function( ChatRoomClosed value)  roomClosed,required TResult Function( ChatSocketConnected value)  socketConnected,required TResult Function( ChatSocketError value)  socketError,required TResult Function( ChatRoomJoined value)  roomJoined,required TResult Function( ChatPartnerOnlineChanged value)  partnerOnlineChanged,required TResult Function( ChatAccessDenied value)  accessDenied,}){
 final _that = this;
 switch (_that) {
 case ChatStarted():
@@ -103,13 +103,13 @@ return leaveRoom(_that);case ChatBlockPartner():
 return blockPartner(_that);case ChatReportPartner():
 return reportPartner(_that);case ChatMessageReceived():
 return messageReceived(_that);case ChatPartnerTyping():
-return partnerTyping(_that);case ChatPartnerLeft():
-return partnerLeft(_that);case ChatRoomClosed():
+return partnerTyping(_that);case ChatRoomClosed():
 return roomClosed(_that);case ChatSocketConnected():
 return socketConnected(_that);case ChatSocketError():
-return socketError(_that);case ChatRoomReady():
-return roomReady(_that);case ChatPartnerOnlineChanged():
-return partnerOnlineChanged(_that);}
+return socketError(_that);case ChatRoomJoined():
+return roomJoined(_that);case ChatPartnerOnlineChanged():
+return partnerOnlineChanged(_that);case ChatAccessDenied():
+return accessDenied(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -123,7 +123,7 @@ return partnerOnlineChanged(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ChatStarted value)?  started,TResult? Function( ChatSendMessage value)?  sendMessage,TResult? Function( ChatSendImage value)?  sendImage,TResult? Function( ChatTyping value)?  typing,TResult? Function( ChatLeaveRoom value)?  leaveRoom,TResult? Function( ChatBlockPartner value)?  blockPartner,TResult? Function( ChatReportPartner value)?  reportPartner,TResult? Function( ChatMessageReceived value)?  messageReceived,TResult? Function( ChatPartnerTyping value)?  partnerTyping,TResult? Function( ChatPartnerLeft value)?  partnerLeft,TResult? Function( ChatRoomClosed value)?  roomClosed,TResult? Function( ChatSocketConnected value)?  socketConnected,TResult? Function( ChatSocketError value)?  socketError,TResult? Function( ChatRoomReady value)?  roomReady,TResult? Function( ChatPartnerOnlineChanged value)?  partnerOnlineChanged,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ChatStarted value)?  started,TResult? Function( ChatSendMessage value)?  sendMessage,TResult? Function( ChatSendImage value)?  sendImage,TResult? Function( ChatTyping value)?  typing,TResult? Function( ChatLeaveRoom value)?  leaveRoom,TResult? Function( ChatBlockPartner value)?  blockPartner,TResult? Function( ChatReportPartner value)?  reportPartner,TResult? Function( ChatMessageReceived value)?  messageReceived,TResult? Function( ChatPartnerTyping value)?  partnerTyping,TResult? Function( ChatRoomClosed value)?  roomClosed,TResult? Function( ChatSocketConnected value)?  socketConnected,TResult? Function( ChatSocketError value)?  socketError,TResult? Function( ChatRoomJoined value)?  roomJoined,TResult? Function( ChatPartnerOnlineChanged value)?  partnerOnlineChanged,TResult? Function( ChatAccessDenied value)?  accessDenied,}){
 final _that = this;
 switch (_that) {
 case ChatStarted() when started != null:
@@ -135,13 +135,13 @@ return leaveRoom(_that);case ChatBlockPartner() when blockPartner != null:
 return blockPartner(_that);case ChatReportPartner() when reportPartner != null:
 return reportPartner(_that);case ChatMessageReceived() when messageReceived != null:
 return messageReceived(_that);case ChatPartnerTyping() when partnerTyping != null:
-return partnerTyping(_that);case ChatPartnerLeft() when partnerLeft != null:
-return partnerLeft(_that);case ChatRoomClosed() when roomClosed != null:
+return partnerTyping(_that);case ChatRoomClosed() when roomClosed != null:
 return roomClosed(_that);case ChatSocketConnected() when socketConnected != null:
 return socketConnected(_that);case ChatSocketError() when socketError != null:
-return socketError(_that);case ChatRoomReady() when roomReady != null:
-return roomReady(_that);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
-return partnerOnlineChanged(_that);case _:
+return socketError(_that);case ChatRoomJoined() when roomJoined != null:
+return roomJoined(_that);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
+return partnerOnlineChanged(_that);case ChatAccessDenied() when accessDenied != null:
+return accessDenied(_that);case _:
   return null;
 
 }
@@ -158,7 +158,7 @@ return partnerOnlineChanged(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String roomId)?  started,TResult Function( String text)?  sendMessage,TResult Function( String filePath)?  sendImage,TResult Function()?  typing,TResult Function()?  leaveRoom,TResult Function()?  blockPartner,TResult Function( String reason,  String? description)?  reportPartner,TResult Function( Map<String, dynamic> data)?  messageReceived,TResult Function( bool isTyping)?  partnerTyping,TResult Function()?  partnerLeft,TResult Function( String reason)?  roomClosed,TResult Function()?  socketConnected,TResult Function( String message)?  socketError,TResult Function( String partnerAlias)?  roomReady,TResult Function( bool online)?  partnerOnlineChanged,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String roomId)?  started,TResult Function( String text)?  sendMessage,TResult Function( String filePath)?  sendImage,TResult Function()?  typing,TResult Function()?  leaveRoom,TResult Function()?  blockPartner,TResult Function( String reason,  String? description)?  reportPartner,TResult Function( Map<String, dynamic> data)?  messageReceived,TResult Function( bool isTyping)?  partnerTyping,TResult Function( String reason)?  roomClosed,TResult Function()?  socketConnected,TResult Function( String message)?  socketError,TResult Function( Map<String, dynamic> data)?  roomJoined,TResult Function( bool online)?  partnerOnlineChanged,TResult Function( String message)?  accessDenied,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ChatStarted() when started != null:
 return started(_that.roomId);case ChatSendMessage() when sendMessage != null:
@@ -169,13 +169,13 @@ return leaveRoom();case ChatBlockPartner() when blockPartner != null:
 return blockPartner();case ChatReportPartner() when reportPartner != null:
 return reportPartner(_that.reason,_that.description);case ChatMessageReceived() when messageReceived != null:
 return messageReceived(_that.data);case ChatPartnerTyping() when partnerTyping != null:
-return partnerTyping(_that.isTyping);case ChatPartnerLeft() when partnerLeft != null:
-return partnerLeft();case ChatRoomClosed() when roomClosed != null:
+return partnerTyping(_that.isTyping);case ChatRoomClosed() when roomClosed != null:
 return roomClosed(_that.reason);case ChatSocketConnected() when socketConnected != null:
 return socketConnected();case ChatSocketError() when socketError != null:
-return socketError(_that.message);case ChatRoomReady() when roomReady != null:
-return roomReady(_that.partnerAlias);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
-return partnerOnlineChanged(_that.online);case _:
+return socketError(_that.message);case ChatRoomJoined() when roomJoined != null:
+return roomJoined(_that.data);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
+return partnerOnlineChanged(_that.online);case ChatAccessDenied() when accessDenied != null:
+return accessDenied(_that.message);case _:
   return orElse();
 
 }
@@ -193,7 +193,7 @@ return partnerOnlineChanged(_that.online);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String roomId)  started,required TResult Function( String text)  sendMessage,required TResult Function( String filePath)  sendImage,required TResult Function()  typing,required TResult Function()  leaveRoom,required TResult Function()  blockPartner,required TResult Function( String reason,  String? description)  reportPartner,required TResult Function( Map<String, dynamic> data)  messageReceived,required TResult Function( bool isTyping)  partnerTyping,required TResult Function()  partnerLeft,required TResult Function( String reason)  roomClosed,required TResult Function()  socketConnected,required TResult Function( String message)  socketError,required TResult Function( String partnerAlias)  roomReady,required TResult Function( bool online)  partnerOnlineChanged,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String roomId)  started,required TResult Function( String text)  sendMessage,required TResult Function( String filePath)  sendImage,required TResult Function()  typing,required TResult Function()  leaveRoom,required TResult Function()  blockPartner,required TResult Function( String reason,  String? description)  reportPartner,required TResult Function( Map<String, dynamic> data)  messageReceived,required TResult Function( bool isTyping)  partnerTyping,required TResult Function( String reason)  roomClosed,required TResult Function()  socketConnected,required TResult Function( String message)  socketError,required TResult Function( Map<String, dynamic> data)  roomJoined,required TResult Function( bool online)  partnerOnlineChanged,required TResult Function( String message)  accessDenied,}) {final _that = this;
 switch (_that) {
 case ChatStarted():
 return started(_that.roomId);case ChatSendMessage():
@@ -204,13 +204,13 @@ return leaveRoom();case ChatBlockPartner():
 return blockPartner();case ChatReportPartner():
 return reportPartner(_that.reason,_that.description);case ChatMessageReceived():
 return messageReceived(_that.data);case ChatPartnerTyping():
-return partnerTyping(_that.isTyping);case ChatPartnerLeft():
-return partnerLeft();case ChatRoomClosed():
+return partnerTyping(_that.isTyping);case ChatRoomClosed():
 return roomClosed(_that.reason);case ChatSocketConnected():
 return socketConnected();case ChatSocketError():
-return socketError(_that.message);case ChatRoomReady():
-return roomReady(_that.partnerAlias);case ChatPartnerOnlineChanged():
-return partnerOnlineChanged(_that.online);}
+return socketError(_that.message);case ChatRoomJoined():
+return roomJoined(_that.data);case ChatPartnerOnlineChanged():
+return partnerOnlineChanged(_that.online);case ChatAccessDenied():
+return accessDenied(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -224,7 +224,7 @@ return partnerOnlineChanged(_that.online);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String roomId)?  started,TResult? Function( String text)?  sendMessage,TResult? Function( String filePath)?  sendImage,TResult? Function()?  typing,TResult? Function()?  leaveRoom,TResult? Function()?  blockPartner,TResult? Function( String reason,  String? description)?  reportPartner,TResult? Function( Map<String, dynamic> data)?  messageReceived,TResult? Function( bool isTyping)?  partnerTyping,TResult? Function()?  partnerLeft,TResult? Function( String reason)?  roomClosed,TResult? Function()?  socketConnected,TResult? Function( String message)?  socketError,TResult? Function( String partnerAlias)?  roomReady,TResult? Function( bool online)?  partnerOnlineChanged,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String roomId)?  started,TResult? Function( String text)?  sendMessage,TResult? Function( String filePath)?  sendImage,TResult? Function()?  typing,TResult? Function()?  leaveRoom,TResult? Function()?  blockPartner,TResult? Function( String reason,  String? description)?  reportPartner,TResult? Function( Map<String, dynamic> data)?  messageReceived,TResult? Function( bool isTyping)?  partnerTyping,TResult? Function( String reason)?  roomClosed,TResult? Function()?  socketConnected,TResult? Function( String message)?  socketError,TResult? Function( Map<String, dynamic> data)?  roomJoined,TResult? Function( bool online)?  partnerOnlineChanged,TResult? Function( String message)?  accessDenied,}) {final _that = this;
 switch (_that) {
 case ChatStarted() when started != null:
 return started(_that.roomId);case ChatSendMessage() when sendMessage != null:
@@ -235,13 +235,13 @@ return leaveRoom();case ChatBlockPartner() when blockPartner != null:
 return blockPartner();case ChatReportPartner() when reportPartner != null:
 return reportPartner(_that.reason,_that.description);case ChatMessageReceived() when messageReceived != null:
 return messageReceived(_that.data);case ChatPartnerTyping() when partnerTyping != null:
-return partnerTyping(_that.isTyping);case ChatPartnerLeft() when partnerLeft != null:
-return partnerLeft();case ChatRoomClosed() when roomClosed != null:
+return partnerTyping(_that.isTyping);case ChatRoomClosed() when roomClosed != null:
 return roomClosed(_that.reason);case ChatSocketConnected() when socketConnected != null:
 return socketConnected();case ChatSocketError() when socketError != null:
-return socketError(_that.message);case ChatRoomReady() when roomReady != null:
-return roomReady(_that.partnerAlias);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
-return partnerOnlineChanged(_that.online);case _:
+return socketError(_that.message);case ChatRoomJoined() when roomJoined != null:
+return roomJoined(_that.data);case ChatPartnerOnlineChanged() when partnerOnlineChanged != null:
+return partnerOnlineChanged(_that.online);case ChatAccessDenied() when accessDenied != null:
+return accessDenied(_that.message);case _:
   return null;
 
 }
@@ -752,38 +752,6 @@ as bool,
 /// @nodoc
 
 
-class ChatPartnerLeft extends ChatEvent {
-  const ChatPartnerLeft(): super._();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatPartnerLeft);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'ChatEvent.partnerLeft()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
 class ChatRoomClosed extends ChatEvent {
   const ChatRoomClosed(this.reason): super._();
   
@@ -948,43 +916,49 @@ as String,
 /// @nodoc
 
 
-class ChatRoomReady extends ChatEvent {
-  const ChatRoomReady(this.partnerAlias): super._();
+class ChatRoomJoined extends ChatEvent {
+  const ChatRoomJoined(final  Map<String, dynamic> data): _data = data,super._();
   
 
- final  String partnerAlias;
+ final  Map<String, dynamic> _data;
+ Map<String, dynamic> get data {
+  if (_data is EqualUnmodifiableMapView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_data);
+}
+
 
 /// Create a copy of ChatEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ChatRoomReadyCopyWith<ChatRoomReady> get copyWith => _$ChatRoomReadyCopyWithImpl<ChatRoomReady>(this, _$identity);
+$ChatRoomJoinedCopyWith<ChatRoomJoined> get copyWith => _$ChatRoomJoinedCopyWithImpl<ChatRoomJoined>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatRoomReady&&(identical(other.partnerAlias, partnerAlias) || other.partnerAlias == partnerAlias));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatRoomJoined&&const DeepCollectionEquality().equals(other._data, _data));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,partnerAlias);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
 
 @override
 String toString() {
-  return 'ChatEvent.roomReady(partnerAlias: $partnerAlias)';
+  return 'ChatEvent.roomJoined(data: $data)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ChatRoomReadyCopyWith<$Res> implements $ChatEventCopyWith<$Res> {
-  factory $ChatRoomReadyCopyWith(ChatRoomReady value, $Res Function(ChatRoomReady) _then) = _$ChatRoomReadyCopyWithImpl;
+abstract mixin class $ChatRoomJoinedCopyWith<$Res> implements $ChatEventCopyWith<$Res> {
+  factory $ChatRoomJoinedCopyWith(ChatRoomJoined value, $Res Function(ChatRoomJoined) _then) = _$ChatRoomJoinedCopyWithImpl;
 @useResult
 $Res call({
- String partnerAlias
+ Map<String, dynamic> data
 });
 
 
@@ -992,19 +966,19 @@ $Res call({
 
 }
 /// @nodoc
-class _$ChatRoomReadyCopyWithImpl<$Res>
-    implements $ChatRoomReadyCopyWith<$Res> {
-  _$ChatRoomReadyCopyWithImpl(this._self, this._then);
+class _$ChatRoomJoinedCopyWithImpl<$Res>
+    implements $ChatRoomJoinedCopyWith<$Res> {
+  _$ChatRoomJoinedCopyWithImpl(this._self, this._then);
 
-  final ChatRoomReady _self;
-  final $Res Function(ChatRoomReady) _then;
+  final ChatRoomJoined _self;
+  final $Res Function(ChatRoomJoined) _then;
 
 /// Create a copy of ChatEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? partnerAlias = null,}) {
-  return _then(ChatRoomReady(
-null == partnerAlias ? _self.partnerAlias : partnerAlias // ignore: cast_nullable_to_non_nullable
-as String,
+@pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
+  return _then(ChatRoomJoined(
+null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,
   ));
 }
 
@@ -1071,6 +1045,72 @@ class _$ChatPartnerOnlineChangedCopyWithImpl<$Res>
   return _then(ChatPartnerOnlineChanged(
 null == online ? _self.online : online // ignore: cast_nullable_to_non_nullable
 as bool,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ChatAccessDenied extends ChatEvent {
+  const ChatAccessDenied(this.message): super._();
+  
+
+ final  String message;
+
+/// Create a copy of ChatEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ChatAccessDeniedCopyWith<ChatAccessDenied> get copyWith => _$ChatAccessDeniedCopyWithImpl<ChatAccessDenied>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatAccessDenied&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'ChatEvent.accessDenied(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ChatAccessDeniedCopyWith<$Res> implements $ChatEventCopyWith<$Res> {
+  factory $ChatAccessDeniedCopyWith(ChatAccessDenied value, $Res Function(ChatAccessDenied) _then) = _$ChatAccessDeniedCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$ChatAccessDeniedCopyWithImpl<$Res>
+    implements $ChatAccessDeniedCopyWith<$Res> {
+  _$ChatAccessDeniedCopyWithImpl(this._self, this._then);
+
+  final ChatAccessDenied _self;
+  final $Res Function(ChatAccessDenied) _then;
+
+/// Create a copy of ChatEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(ChatAccessDenied(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

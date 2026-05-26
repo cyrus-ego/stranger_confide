@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../router/app_router.dart';
 import '../../shared/widgets/app_snack_bar.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
@@ -31,13 +34,63 @@ class _ChatPageState extends BlocHostPageState<ChatPage> {
 
   @override
   Widget buildPage(BuildContext context) {
-    return BlocListener<ChatBloc, ChatState>(
-      listenWhen: (prev, curr) =>
-          curr.status == ChatStatus.closed &&
-          prev.status != ChatStatus.closed,
-      listener: (context, state) {
-        showRoomClosedDialog(context, reason: state.closedReason ?? 'closed');
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ChatBloc, ChatState>(
+          listenWhen: (prev, curr) =>
+              curr.status == ChatStatus.closed &&
+              prev.status != ChatStatus.closed,
+          listener: (context, state) {
+            if (state.closedReason == 'access_denied') {
+              AppSnackBar.show(
+                context,
+                message: state.errorMessage ?? 'Không có quyền truy cập',
+                type: SnackBarType.error,
+              );
+              context.go(AppRoutes.home);
+              return;
+            }
+            showRoomClosedDialog(
+              context,
+              reason: state.closedReason ?? 'closed',
+            );
+          },
+        ),
+        BlocListener<ChatBloc, ChatState>(
+          listenWhen: (prev, curr) =>
+              curr.lastAction != ChatAction.none &&
+              curr.lastAction != prev.lastAction,
+          listener: (context, state) {
+            switch (state.lastAction) {
+              case ChatAction.reportSuccess:
+                AppSnackBar.show(
+                  context,
+                  message: tr(LocaleKeys.chatReportSuccess),
+                );
+              case ChatAction.reportFailed:
+                AppSnackBar.show(
+                  context,
+                  message: tr(LocaleKeys.chatReportFailed),
+                  type: SnackBarType.error,
+                );
+              case ChatAction.moderationBlocked:
+                AppSnackBar.show(
+                  context,
+                  message: tr(LocaleKeys.chatModerationBlocked),
+                  type: SnackBarType.error,
+                );
+              case ChatAction.spamDetected:
+                AppSnackBar.show(
+                  context,
+                  message: tr(LocaleKeys.chatSpamDetected),
+                  type: SnackBarType.error,
+                );
+              case ChatAction.none:
+                break;
+            }
+          },
+        ),
+      ],
       child: const _ChatScaffold(),
     );
   }
@@ -59,48 +112,12 @@ class _ChatScaffold extends StatelessWidget {
               ? AppColors.darkGradientBackground
               : AppColors.lightGradientBackground,
         ),
-        child: Column(
+        child: const Column(
           children: [
-            // Connecting indicator
-            BlocBuilder<ChatBloc, ChatState>(
-              buildWhen: (p, c) => p.status != c.status,
-              builder: (context, state) {
-                if (state.status == ChatStatus.connecting) {
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                    ),
-                    color: AppColors.primary.withAlpha(30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 14,
-                          height: 14,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        const Gap(AppSpacing.sm),
-                        Text(
-                          tr(LocaleKeys.chatConnecting),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-
-            // Message list
-            const Expanded(child: _MessageList()),
-
-            // Typing indicator
-            const _TypingIndicator(),
-
-            // Input bar
-            const _ChatInputBar(),
+            _ConnectingBanner(),
+            Expanded(child: _MessageList()),
+            _TypingIndicator(),
+            _ChatInputBar(),
           ],
         ),
       ),
@@ -119,12 +136,15 @@ class _ChatScaffold extends StatelessWidget {
       title: BlocBuilder<ChatBloc, ChatState>(
         buildWhen: (p, c) =>
             p.partnerAlias != c.partnerAlias ||
+            p.partnerAvatar != c.partnerAvatar ||
             p.partnerOnline != c.partnerOnline,
         builder: (context, state) {
           return Row(
             children: [
-              // DiceBear-style avatar
-              _PartnerAvatar(alias: state.partnerAlias),
+              _PartnerAvatar(
+                alias: state.partnerAlias,
+                avatarUrl: state.partnerAvatar,
+              ),
               const Gap(AppSpacing.md),
               Expanded(
                 child: Column(
@@ -171,48 +191,56 @@ class _ChatScaffold extends StatelessWidget {
         },
       ),
       actions: [
-        PopupMenuButton<String>(
-          icon: Icon(
-            Icons.more_vert_rounded,
-            color: theme.colorScheme.onSurface.withAlpha(180),
-          ),
-          onSelected: (value) => _onMenuAction(context, value),
-          itemBuilder: (_) => [
-            PopupMenuItem(
-              value: 'report',
-              child: Row(
-                children: [
-                  const Icon(Icons.flag_outlined,
-                      size: 20, color: AppColors.tertiary),
-                  const Gap(AppSpacing.md),
-                  Text(tr(LocaleKeys.chatReport)),
-                ],
+        BlocBuilder<ChatBloc, ChatState>(
+          buildWhen: (p, c) => p.status != c.status,
+          builder: (context, state) {
+            final isActive = state.status == ChatStatus.active;
+            return PopupMenuButton<String>(
+              enabled: isActive,
+              icon: Icon(
+                Icons.more_vert_rounded,
+                color: theme.colorScheme.onSurface
+                    .withAlpha(isActive ? 180 : 60),
               ),
-            ),
-            PopupMenuItem(
-              value: 'block',
-              child: Row(
-                children: [
-                  const Icon(Icons.block_rounded,
-                      size: 20, color: AppColors.error),
-                  const Gap(AppSpacing.md),
-                  Text(tr(LocaleKeys.chatBlock)),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'leave',
-              child: Row(
-                children: [
-                  Icon(Icons.exit_to_app_rounded,
-                      size: 20,
-                      color: theme.colorScheme.onSurface.withAlpha(150)),
-                  const Gap(AppSpacing.md),
-                  Text(tr(LocaleKeys.chatLeave)),
-                ],
-              ),
-            ),
-          ],
+              onSelected: (value) => _onMenuAction(context, value),
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  value: 'report',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.flag_outlined,
+                          size: 20, color: AppColors.tertiary),
+                      const Gap(AppSpacing.md),
+                      Text(tr(LocaleKeys.chatReport)),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'block',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.block_rounded,
+                          size: 20, color: AppColors.error),
+                      const Gap(AppSpacing.md),
+                      Text(tr(LocaleKeys.chatBlock)),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'leave',
+                  child: Row(
+                    children: [
+                      Icon(Icons.exit_to_app_rounded,
+                          size: 20,
+                          color: theme.colorScheme.onSurface.withAlpha(150)),
+                      const Gap(AppSpacing.md),
+                      Text(tr(LocaleKeys.chatLeave)),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -234,10 +262,6 @@ class _ChatScaffold extends StatelessWidget {
     final result = await showReportSheet(context);
     if (result != null && context.mounted) {
       bloc.add(ChatReportPartner(result.reason, result.description));
-      AppSnackBar.show(
-        context,
-        message: tr(LocaleKeys.chatReportSuccess),
-      );
     }
   }
 
@@ -249,15 +273,66 @@ class _ChatScaffold extends StatelessWidget {
   }
 }
 
-// ── Partner avatar (DiceBear-style gradient circle) ──
+// ── Connecting banner ──
 
-class _PartnerAvatar extends StatelessWidget {
-  const _PartnerAvatar({required this.alias});
-
-  final String alias;
+class _ConnectingBanner extends StatelessWidget {
+  const _ConnectingBanner();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return BlocBuilder<ChatBloc, ChatState>(
+      buildWhen: (p, c) => p.status != c.status,
+      builder: (context, state) {
+        if (state.status == ChatStatus.connecting) {
+          return Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+            color: AppColors.primary.withAlpha(30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                const Gap(AppSpacing.sm),
+                Text(
+                  tr(LocaleKeys.chatConnecting),
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
+// ── Partner avatar ──
+
+class _PartnerAvatar extends StatelessWidget {
+  const _PartnerAvatar({required this.alias, required this.avatarUrl});
+
+  final String alias;
+  final String avatarUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    if (avatarUrl.isNotEmpty && !avatarUrl.contains('.svg')) {
+      return CircleAvatar(
+        radius: 20,
+        backgroundImage: NetworkImage(avatarUrl),
+        onBackgroundImageError: (_, __) {},
+      );
+    }
+    return _buildFallback();
+  }
+
+  Widget _buildFallback() {
     final hash = alias.hashCode;
     final hue1 = (hash % 360).abs().toDouble();
     final hue2 = ((hash * 17) % 360).abs().toDouble();
@@ -324,7 +399,10 @@ class _MessageListState extends State<_MessageList> {
   Widget build(BuildContext context) {
     return BlocConsumer<ChatBloc, ChatState>(
       listenWhen: (p, c) => c.messages.length > p.messages.length,
-      listener: (_, __) => _scrollToBottom(),
+      listener: (_, __) {
+        _scrollToBottom();
+        HapticFeedback.lightImpact();
+      },
       buildWhen: (p, c) => p.messages != c.messages,
       builder: (context, state) {
         if (state.messages.isEmpty) {
@@ -365,8 +443,8 @@ class _MessageListState extends State<_MessageList> {
           itemBuilder: (context, i) {
             final msg = state.messages[i];
             final showTimestamp = i == 0 ||
-                msg.timestamp
-                        .difference(state.messages[i - 1].timestamp)
+                msg.createdAt
+                        .difference(state.messages[i - 1].createdAt)
                         .inMinutes >
                     5;
 
@@ -378,7 +456,7 @@ class _MessageListState extends State<_MessageList> {
                       vertical: AppSpacing.sm,
                     ),
                     child: Text(
-                      _formatTime(msg.timestamp),
+                      _formatTime(msg.createdAt),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
@@ -432,9 +510,7 @@ class _MessageBubble extends StatelessWidget {
             ? AppColors.darkSurfaceBright
             : AppColors.lightSurfaceVariant;
 
-    final textColor = isMine
-        ? Colors.white
-        : theme.colorScheme.onSurface;
+    final textColor = isMine ? Colors.white : theme.colorScheme.onSurface;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
@@ -498,12 +574,14 @@ class _ImageContent extends StatelessWidget {
       );
     }
 
+    final url = message.imageUrl ?? message.content;
+
     return GestureDetector(
-      onTap: () => _showFullscreen(context, message.content),
+      onTap: () => _showFullscreen(context, url),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: Image.network(
-          message.content,
+          url,
           width: 200,
           height: 200,
           fit: BoxFit.cover,
@@ -681,17 +759,14 @@ class _ChatInputBar extends StatefulWidget {
 
 class _ChatInputBarState extends State<_ChatInputBar> {
   final _controller = TextEditingController();
-  Timer? _typingDebounce;
 
   @override
   void dispose() {
     _controller.dispose();
-    _typingDebounce?.cancel();
     super.dispose();
   }
 
   void _onChanged(String text) {
-    _typingDebounce?.cancel();
     if (text.isNotEmpty) {
       context.read<ChatBloc>().add(const ChatTyping());
     }
@@ -702,6 +777,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
     if (text.isEmpty) return;
     context.read<ChatBloc>().add(ChatSendMessage(text));
     _controller.clear();
+    HapticFeedback.lightImpact();
   }
 
   @override
@@ -711,9 +787,12 @@ class _ChatInputBarState extends State<_ChatInputBar> {
 
     return BlocBuilder<ChatBloc, ChatState>(
       buildWhen: (p, c) =>
-          p.status != c.status || p.isUploading != c.isUploading,
+          p.status != c.status ||
+          p.isUploading != c.isUploading ||
+          p.isSending != c.isSending,
       builder: (context, state) {
-        final disabled = state.status != ChatStatus.active;
+        final disabled =
+            state.status != ChatStatus.active || state.isSending;
 
         return Container(
           padding: EdgeInsets.only(
@@ -733,11 +812,12 @@ class _ChatInputBarState extends State<_ChatInputBar> {
           ),
           child: Row(
             children: [
-              // Camera / image picker
               IconButton(
-                onPressed: disabled || state.isUploading ? null : () {
-                  // TODO: image_picker integration
-                },
+                onPressed: disabled || state.isUploading
+                    ? null
+                    : () {
+                        // TODO: image_picker integration (phase sau)
+                      },
                 icon: state.isUploading
                     ? const SizedBox(
                         width: 20,
@@ -751,8 +831,6 @@ class _ChatInputBarState extends State<_ChatInputBar> {
                             : AppColors.primary,
                       ),
               ),
-
-              // Text input
               Expanded(
                 child: TextField(
                   controller: _controller,
@@ -793,27 +871,38 @@ class _ChatInputBarState extends State<_ChatInputBar> {
                 ),
               ),
               const Gap(AppSpacing.xs),
-
-              // Send button
               ValueListenableBuilder<TextEditingValue>(
                 valueListenable: _controller,
                 builder: (_, value, __) {
                   final hasText = value.text.trim().isNotEmpty;
+                  final canSend = hasText && !disabled;
+
+                  if (state.isSending) {
+                    return const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    );
+                  }
+
                   return IconButton(
-                    onPressed: disabled || !hasText ? null : _send,
+                    onPressed: canSend ? _send : null,
                     icon: Container(
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: hasText && !disabled
+                        color: canSend
                             ? AppColors.primary
                             : theme.colorScheme.onSurface.withAlpha(20),
                       ),
                       child: Icon(
                         Icons.send_rounded,
                         size: 18,
-                        color: hasText && !disabled
+                        color: canSend
                             ? Colors.white
                             : theme.colorScheme.onSurface.withAlpha(60),
                       ),
