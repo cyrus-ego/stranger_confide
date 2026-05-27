@@ -6,6 +6,8 @@ import 'package:injectable/injectable.dart';
 
 import '../../../data/datasources/matchmaking_socket_service.dart';
 import '../../../data/models/request/join_queue_request.dart';
+import '../../../domain/enums/chat_preference.dart';
+import '../../../domain/enums/gender.dart';
 import '../../../domain/usecases/get_profile_usecase.dart';
 import '../../../domain/usecases/join_queue_usecase.dart';
 import '../../../domain/usecases/leave_queue_usecase.dart';
@@ -54,12 +56,13 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
           (_) => emit(state.copyWith(status: MatchmakingStatus.error)),
         );
 
-        final pref = profile.profile?.chatPreference ?? '';
-        final gender = profile.profile?.preferredGender ?? '';
-
         emit(state.copyWith(
-          selectedPreference: pref.isEmpty ? 'any' : pref,
-          selectedPreferredGender: gender,
+          selectedPreference: ChatPreference.tryParse(
+            profile.profile?.chatPreference,
+          ),
+          selectedPreferredGender: PreferredGenderFilter.tryParse(
+            profile.profile?.preferredGender,
+          ),
         ));
 
         add(const MatchmakingJoinQueue());
@@ -73,10 +76,11 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
         emit(state.copyWith(status: MatchmakingStatus.joining));
 
         final request = JoinQueueRequest(
-          preference: state.selectedPreference,
-          preferredGender: state.selectedPreferredGender.isEmpty
-              ? null
-              : state.selectedPreferredGender,
+          preference: state.selectedPreference.value,
+          preferredGender:
+              state.selectedPreferredGender == PreferredGenderFilter.any
+                  ? null
+                  : state.selectedPreferredGender.value,
         );
 
         final result = await _joinQueueUseCase(request);

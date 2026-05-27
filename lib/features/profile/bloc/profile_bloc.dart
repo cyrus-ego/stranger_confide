@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/token_storage.dart';
+import '../../../domain/usecases/create_profile_usecase.dart';
+import '../../../domain/usecases/get_current_user_usecase.dart';
 import '../../../domain/usecases/get_profile_usecase.dart';
 import '../../../domain/usecases/patch_profile_usecase.dart';
 import '../../../domain/usecases/update_profile_usecase.dart';
@@ -13,17 +15,23 @@ import 'profile_state.dart';
 class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
   ProfileBloc(
     this._getProfileUseCase,
+    this._getCurrentUserUseCase,
+    this._createProfileUseCase,
     this._updateProfileUseCase,
     this._patchProfileUseCase,
     this._tokenStorage,
   ) : super(const ProfileState()) {
     on<ProfileLoad>(_onLoad);
+    on<ProfileLoadMe>(_onLoadMe);
+    on<ProfileCreate>(_onCreate);
     on<ProfileUpdate>(_onUpdate);
     on<ProfilePatchField>(_onPatchField);
     on<ProfileLogout>(_onLogout);
   }
 
   final GetProfileUseCase _getProfileUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
+  final CreateProfileUseCase _createProfileUseCase;
   final UpdateProfileUseCase _updateProfileUseCase;
   final PatchProfileUseCase _patchProfileUseCase;
   final TokenStorage _tokenStorage;
@@ -39,6 +47,39 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
             .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
 
         emit(state.copyWith(status: ProfileStatus.loaded, data: data));
+      });
+
+  Future<void> _onLoadMe(
+    ProfileLoadMe event,
+    Emitter<ProfileState> emit,
+  ) =>
+      guard(() async {
+        emit(state.copyWith(status: ProfileStatus.loading));
+
+        final user = (await _getCurrentUserUseCase())
+            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
+
+        emit(state.copyWith(
+          status: ProfileStatus.loaded,
+          currentUser: user,
+        ));
+      });
+
+  Future<void> _onCreate(
+    ProfileCreate event,
+    Emitter<ProfileState> emit,
+  ) =>
+      guard(() async {
+        emit(state.copyWith(status: ProfileStatus.updating, createSuccess: false));
+
+        final data = (await _createProfileUseCase(event.request))
+            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
+
+        emit(state.copyWith(
+          status: ProfileStatus.loaded,
+          data: data,
+          createSuccess: true,
+        ));
       });
 
   Future<void> _onUpdate(

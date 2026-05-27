@@ -1,5 +1,7 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stranger_confide/domain/enums/chat_preference.dart';
+import 'package:stranger_confide/domain/enums/gender.dart';
 
 import '../../../data/models/response/queue_status_response.dart';
 
@@ -12,10 +14,11 @@ sealed class MatchmakingEvent extends BlocEvent with _$MatchmakingEvent {
   const factory MatchmakingEvent.started() = MatchmakingStarted;
   const factory MatchmakingEvent.joinQueue() = MatchmakingJoinQueue;
   const factory MatchmakingEvent.leaveQueue() = MatchmakingLeaveQueue;
-  const factory MatchmakingEvent.updatePreference(String preference) =
+  const factory MatchmakingEvent.updatePreference(ChatPreference preference) =
       MatchmakingUpdatePreference;
-  const factory MatchmakingEvent.updatePreferredGender(String gender) =
-      MatchmakingUpdatePreferredGender;
+  const factory MatchmakingEvent.updatePreferredGender(
+    PreferredGenderFilter gender,
+  ) = MatchmakingUpdatePreferredGender;
   const factory MatchmakingEvent.restartSearch() = MatchmakingRestartSearch;
 
   // Socket events

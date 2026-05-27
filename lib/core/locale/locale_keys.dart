@@ -59,6 +59,15 @@ abstract final class LocaleKeys {
   static const profileOpposite = 'profile.opposite';
   static const profileSame = 'profile.same';
   static const profileAny = 'profile.any';
+  static const profileCreateTitle = 'profile.create_title';
+  static const profileCreateSubtitle = 'profile.create_subtitle';
+  static const profileCreateAgeHint = 'profile.create_age_hint';
+  static const profileCreateAgeRequired = 'profile.create_age_required';
+  static const profileCreateBioHint = 'profile.create_bio_hint';
+  static const profileCreatePreferredGender = 'profile.create_preferred_gender';
+  static const profileCreateChatPreference = 'profile.create_chat_preference';
+  static const profileCreateSubmit = 'profile.create_submit';
+  static const profileCreateSuccess = 'profile.create_success';
 
   // Matchmaking
   static const matchmakingTitle = 'matchmaking.title';

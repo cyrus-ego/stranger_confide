@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../domain/enums/gender.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/theme_cubit.dart';
@@ -27,7 +28,7 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
   final _displayNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isRegisterMode = false;
-  String? _selectedGender;
+  Gender? _selectedGender;
 
   @override
   Stream<String> get errorStream => context.read<LoginBloc>().errorStream;
@@ -58,7 +59,7 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text,
           displayName: _displayNameController.text.trim(),
-          gender: _selectedGender!,
+          gender: _selectedGender!.value,
         ),
       );
     } else {
@@ -193,18 +194,18 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                               ),
                             ),
                             const Gap(AppSpacing.sm),
-                            SegmentedButton<String>(
+                            SegmentedButton<Gender>(
                               segments: [
-                                ButtonSegment(
-                                  value: 'male',
-                                  label: Text(tr(LocaleKeys.loginMale)),
-                                  icon: const Icon(Icons.male_rounded),
-                                ),
-                                ButtonSegment(
-                                  value: 'female',
-                                  label: Text(tr(LocaleKeys.loginFemale)),
-                                  icon: const Icon(Icons.female_rounded),
-                                ),
+                                for (final g in Gender.values)
+                                  ButtonSegment(
+                                    value: g,
+                                    label: Text(tr(g.labelKey)),
+                                    icon: Icon(
+                                      g == Gender.male
+                                          ? Icons.male_rounded
+                                          : Icons.female_rounded,
+                                    ),
+                                  ),
                               ],
                               selected: _selectedGender != null
                                   ? {_selectedGender!}

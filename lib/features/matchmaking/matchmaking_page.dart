@@ -7,6 +7,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../domain/enums/chat_preference.dart';
+import '../../domain/enums/gender.dart';
 import '../../router/app_router.dart';
 import '../../shared/widgets/app_snack_bar.dart';
 import '../../theme/app_colors.dart';
@@ -621,14 +623,13 @@ class _PreferenceSheet extends StatelessWidget {
               ),
               const Gap(AppSpacing.sm),
               _PreferenceChips(
-                selected: state.selectedPreference,
+                selected: state.selectedPreference.value,
                 options: {
-                  'any': tr(LocaleKeys.profileAny),
-                  'opposite': tr(LocaleKeys.profileOpposite),
-                  'same': tr(LocaleKeys.profileSame),
+                  for (final p in ChatPreference.values)
+                    p.value: tr(p.labelKey),
                 },
                 onChanged: (v) => context.read<MatchmakingBloc>().add(
-                  MatchmakingUpdatePreference(v),
+                  MatchmakingUpdatePreference(ChatPreference.tryParse(v)),
                 ),
               ),
               const Gap(AppSpacing.lg),
@@ -641,14 +642,15 @@ class _PreferenceSheet extends StatelessWidget {
               ),
               const Gap(AppSpacing.sm),
               _PreferenceChips(
-                selected: state.selectedPreferredGender,
+                selected: state.selectedPreferredGender.value,
                 options: {
-                  '': tr(LocaleKeys.profileAny),
-                  'male': tr(LocaleKeys.profileMale),
-                  'female': tr(LocaleKeys.profileFemale),
+                  for (final f in PreferredGenderFilter.values)
+                    f.value: tr(f.labelKey),
                 },
                 onChanged: (v) => context.read<MatchmakingBloc>().add(
-                  MatchmakingUpdatePreferredGender(v),
+                  MatchmakingUpdatePreferredGender(
+                    PreferredGenderFilter.tryParse(v),
+                  ),
                 ),
               ),
               const Gap(AppSpacing.xl),

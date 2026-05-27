@@ -152,7 +152,7 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( String preference)?  updatePreference,TResult Function( String gender)?  updatePreferredGender,TResult Function()?  restartSearch,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function( PreferredGenderFilter gender)?  updatePreferredGender,TResult Function()?  restartSearch,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
@@ -185,7 +185,7 @@ return socketDisconnected(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( String preference)  updatePreference,required TResult Function( String gender)  updatePreferredGender,required TResult Function()  restartSearch,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function( PreferredGenderFilter gender)  updatePreferredGender,required TResult Function()  restartSearch,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted():
 return started();case MatchmakingJoinQueue():
@@ -214,7 +214,7 @@ return socketDisconnected(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( String preference)?  updatePreference,TResult? Function( String gender)?  updatePreferredGender,TResult? Function()?  restartSearch,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function( PreferredGenderFilter gender)?  updatePreferredGender,TResult? Function()?  restartSearch,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
@@ -340,7 +340,7 @@ class MatchmakingUpdatePreference extends MatchmakingEvent {
   const MatchmakingUpdatePreference(this.preference): super._();
   
 
- final  String preference;
+ final  ChatPreference preference;
 
 /// Create a copy of MatchmakingEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -372,7 +372,7 @@ abstract mixin class $MatchmakingUpdatePreferenceCopyWith<$Res> implements $Matc
   factory $MatchmakingUpdatePreferenceCopyWith(MatchmakingUpdatePreference value, $Res Function(MatchmakingUpdatePreference) _then) = _$MatchmakingUpdatePreferenceCopyWithImpl;
 @useResult
 $Res call({
- String preference
+ ChatPreference preference
 });
 
 
@@ -392,7 +392,7 @@ class _$MatchmakingUpdatePreferenceCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? preference = null,}) {
   return _then(MatchmakingUpdatePreference(
 null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
-as String,
+as ChatPreference,
   ));
 }
 
@@ -406,7 +406,7 @@ class MatchmakingUpdatePreferredGender extends MatchmakingEvent {
   const MatchmakingUpdatePreferredGender(this.gender): super._();
   
 
- final  String gender;
+ final  PreferredGenderFilter gender;
 
 /// Create a copy of MatchmakingEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -438,7 +438,7 @@ abstract mixin class $MatchmakingUpdatePreferredGenderCopyWith<$Res> implements 
   factory $MatchmakingUpdatePreferredGenderCopyWith(MatchmakingUpdatePreferredGender value, $Res Function(MatchmakingUpdatePreferredGender) _then) = _$MatchmakingUpdatePreferredGenderCopyWithImpl;
 @useResult
 $Res call({
- String gender
+ PreferredGenderFilter gender
 });
 
 
@@ -458,7 +458,7 @@ class _$MatchmakingUpdatePreferredGenderCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? gender = null,}) {
   return _then(MatchmakingUpdatePreferredGender(
 null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as String,
+as PreferredGenderFilter,
   ));
 }
 

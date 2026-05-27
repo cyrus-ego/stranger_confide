@@ -55,7 +55,16 @@
     "logout_confirm": "Are you sure you want to sign out?",
     "opposite": "Opposite",
     "same": "Same",
-    "any": "Any"
+    "any": "Any",
+    "create_title": "Set up your profile",
+    "create_subtitle": "Tell us a bit about yourself to get started",
+    "create_age_hint": "Your age",
+    "create_age_required": "Enter your age",
+    "create_bio_hint": "Tell us about yourself (optional)",
+    "create_preferred_gender": "Want to chat with",
+    "create_chat_preference": "Chat preference",
+    "create_submit": "Get started",
+    "create_success": "Profile created successfully!"
   },
   "matchmaking": {
     "title": "Find Someone",

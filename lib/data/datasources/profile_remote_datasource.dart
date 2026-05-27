@@ -13,6 +13,9 @@ abstract class ProfileRemoteDatasource {
   @GET('/profile')
   Future<ProfileResponse> getProfile();
 
+  @POST('/profile')
+  Future<ProfileResponse> createProfile(@Body() UpdateProfileRequest body);
+
   @PUT('/profile')
   Future<ProfileResponse> updateProfile(@Body() UpdateProfileRequest body);
 

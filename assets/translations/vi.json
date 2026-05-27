@@ -55,7 +55,16 @@
     "logout_confirm": "Bạn có chắc muốn đăng xuất?",
     "opposite": "Khác giới",
     "same": "Cùng giới",
-    "any": "Tất cả"
+    "any": "Tất cả",
+    "create_title": "Tạo hồ sơ của bạn",
+    "create_subtitle": "Cho chúng tôi biết một chút về bạn để bắt đầu",
+    "create_age_hint": "Tuổi của bạn",
+    "create_age_required": "Nhập tuổi",
+    "create_bio_hint": "Giới thiệu về bản thân (tuỳ chọn)",
+    "create_preferred_gender": "Muốn chat với",
+    "create_chat_preference": "Kiểu chat",
+    "create_submit": "Bắt đầu",
+    "create_success": "Tạo hồ sơ thành công!"
   },
   "matchmaking": {
     "title": "Tìm người tâm sự",

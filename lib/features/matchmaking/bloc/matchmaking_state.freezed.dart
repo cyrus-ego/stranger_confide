@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MatchmakingState {
 
- MatchmakingStatus get status; QueueStatusResponse? get queueData; String get selectedPreference; String get selectedPreferredGender; String? get errorMessage; String? get roomId; String? get partnerId;
+ MatchmakingStatus get status; QueueStatusResponse? get queueData; ChatPreference get selectedPreference; PreferredGenderFilter get selectedPreferredGender; String? get errorMessage; String? get roomId; String? get partnerId;
 /// Create a copy of MatchmakingState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $MatchmakingStateCopyWith<$Res>  {
   factory $MatchmakingStateCopyWith(MatchmakingState value, $Res Function(MatchmakingState) _then) = _$MatchmakingStateCopyWithImpl;
 @useResult
 $Res call({
- MatchmakingStatus status, QueueStatusResponse? queueData, String selectedPreference, String selectedPreferredGender, String? errorMessage, String? roomId, String? partnerId
+ MatchmakingStatus status, QueueStatusResponse? queueData, ChatPreference selectedPreference, PreferredGenderFilter selectedPreferredGender, String? errorMessage, String? roomId, String? partnerId
 });
 
 
@@ -67,8 +67,8 @@ class _$MatchmakingStateCopyWithImpl<$Res>
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MatchmakingStatus,queueData: freezed == queueData ? _self.queueData : queueData // ignore: cast_nullable_to_non_nullable
 as QueueStatusResponse?,selectedPreference: null == selectedPreference ? _self.selectedPreference : selectedPreference // ignore: cast_nullable_to_non_nullable
-as String,selectedPreferredGender: null == selectedPreferredGender ? _self.selectedPreferredGender : selectedPreferredGender // ignore: cast_nullable_to_non_nullable
-as String,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as ChatPreference,selectedPreferredGender: null == selectedPreferredGender ? _self.selectedPreferredGender : selectedPreferredGender // ignore: cast_nullable_to_non_nullable
+as PreferredGenderFilter,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
 as String?,partnerId: freezed == partnerId ? _self.partnerId : partnerId // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  String selectedPreference,  String selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  PreferredGenderFilter selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MatchmakingState() when $default != null:
 return $default(_that.status,_that.queueData,_that.selectedPreference,_that.selectedPreferredGender,_that.errorMessage,_that.roomId,_that.partnerId);case _:
@@ -186,7 +186,7 @@ return $default(_that.status,_that.queueData,_that.selectedPreference,_that.sele
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  String selectedPreference,  String selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  PreferredGenderFilter selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)  $default,) {final _that = this;
 switch (_that) {
 case _MatchmakingState():
 return $default(_that.status,_that.queueData,_that.selectedPreference,_that.selectedPreferredGender,_that.errorMessage,_that.roomId,_that.partnerId);}
@@ -203,7 +203,7 @@ return $default(_that.status,_that.queueData,_that.selectedPreference,_that.sele
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  String selectedPreference,  String selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  PreferredGenderFilter selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,) {final _that = this;
 switch (_that) {
 case _MatchmakingState() when $default != null:
 return $default(_that.status,_that.queueData,_that.selectedPreference,_that.selectedPreferredGender,_that.errorMessage,_that.roomId,_that.partnerId);case _:
@@ -218,13 +218,13 @@ return $default(_that.status,_that.queueData,_that.selectedPreference,_that.sele
 
 
 class _MatchmakingState implements MatchmakingState {
-  const _MatchmakingState({this.status = MatchmakingStatus.initial, this.queueData, this.selectedPreference = 'any', this.selectedPreferredGender = '', this.errorMessage, this.roomId, this.partnerId});
+  const _MatchmakingState({this.status = MatchmakingStatus.initial, this.queueData, this.selectedPreference = ChatPreference.any, this.selectedPreferredGender = PreferredGenderFilter.any, this.errorMessage, this.roomId, this.partnerId});
   
 
 @override@JsonKey() final  MatchmakingStatus status;
 @override final  QueueStatusResponse? queueData;
-@override@JsonKey() final  String selectedPreference;
-@override@JsonKey() final  String selectedPreferredGender;
+@override@JsonKey() final  ChatPreference selectedPreference;
+@override@JsonKey() final  PreferredGenderFilter selectedPreferredGender;
 @override final  String? errorMessage;
 @override final  String? roomId;
 @override final  String? partnerId;
@@ -259,7 +259,7 @@ abstract mixin class _$MatchmakingStateCopyWith<$Res> implements $MatchmakingSta
   factory _$MatchmakingStateCopyWith(_MatchmakingState value, $Res Function(_MatchmakingState) _then) = __$MatchmakingStateCopyWithImpl;
 @override @useResult
 $Res call({
- MatchmakingStatus status, QueueStatusResponse? queueData, String selectedPreference, String selectedPreferredGender, String? errorMessage, String? roomId, String? partnerId
+ MatchmakingStatus status, QueueStatusResponse? queueData, ChatPreference selectedPreference, PreferredGenderFilter selectedPreferredGender, String? errorMessage, String? roomId, String? partnerId
 });
 
 
@@ -281,8 +281,8 @@ class __$MatchmakingStateCopyWithImpl<$Res>
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MatchmakingStatus,queueData: freezed == queueData ? _self.queueData : queueData // ignore: cast_nullable_to_non_nullable
 as QueueStatusResponse?,selectedPreference: null == selectedPreference ? _self.selectedPreference : selectedPreference // ignore: cast_nullable_to_non_nullable
-as String,selectedPreferredGender: null == selectedPreferredGender ? _self.selectedPreferredGender : selectedPreferredGender // ignore: cast_nullable_to_non_nullable
-as String,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as ChatPreference,selectedPreferredGender: null == selectedPreferredGender ? _self.selectedPreferredGender : selectedPreferredGender // ignore: cast_nullable_to_non_nullable
+as PreferredGenderFilter,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
 as String?,partnerId: freezed == partnerId ? _self.partnerId : partnerId // ignore: cast_nullable_to_non_nullable
 as String?,

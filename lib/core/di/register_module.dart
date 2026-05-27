@@ -6,12 +6,17 @@ import 'package:stranger_confide/data/datasources/room_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
+import '../../data/datasources/user_remote_datasource.dart';
 
 @module
 abstract class RegisterModule {
   @lazySingleton
   AuthRemoteDatasource authRemoteDatasource(Dio dio) =>
       AuthRemoteDatasource(dio);
+
+  @lazySingleton
+  UserRemoteDatasource userRemoteDatasource(Dio dio) =>
+      UserRemoteDatasource(dio);
 
   @lazySingleton
   ProfileRemoteDatasource profileRemoteDatasource(Dio dio) =>

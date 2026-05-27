@@ -19,6 +19,12 @@ class ProfileRepositoryImpl extends BaseRepository
       safeApiCall(() => _remoteDatasource.getProfile());
 
   @override
+  Future<AppResult<ProfileResponse>> createProfile(
+    UpdateProfileRequest request,
+  ) =>
+      safeApiCall(() => _remoteDatasource.createProfile(request));
+
+  @override
   Future<AppResult<ProfileResponse>> updateProfile(
     UpdateProfileRequest request,
   ) =>

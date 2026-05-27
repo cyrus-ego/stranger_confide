@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/locale/locale_keys.dart';
 import '../../core/token_storage.dart';
 import '../../domain/usecases/get_active_room_usecase.dart';
+import '../../domain/usecases/get_profile_usecase.dart';
 import '../../router/app_router.dart';
 import '../../theme/app_colors.dart';
 
@@ -15,10 +16,12 @@ class SplashPage extends StatefulWidget {
     super.key,
     required this.tokenStorage,
     required this.getActiveRoomUseCase,
+    required this.getProfileUseCase,
   });
 
   final TokenStorage tokenStorage;
   final GetActiveRoomUseCase getActiveRoomUseCase;
+  final GetProfileUseCase getProfileUseCase;
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -40,17 +43,32 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    final result = await widget.getActiveRoomUseCase();
+    // Check active room
+    final roomResult = await widget.getActiveRoomUseCase();
     if (!mounted) return;
 
-    if (result case AppSuccess(:final value)) {
+    if (roomResult case AppSuccess(:final value)) {
       if (value.hasActiveRoom && value.roomId != null) {
         context.go('${AppRoutes.chat}/${value.roomId}');
         return;
       }
     }
 
-    context.go(AppRoutes.home);
+    // Check profile completeness
+    final profileResult = await widget.getProfileUseCase();
+    if (!mounted) return;
+
+    if (profileResult case AppSuccess(:final value)) {
+      if (value.isComplete == true) {
+        context.go(AppRoutes.home);
+        return;
+      }
+      context.go(AppRoutes.createProfile);
+      return;
+    }
+
+    // Profile fetch failed (new user or error) → create profile
+    context.go(AppRoutes.createProfile);
   }
 
   @override

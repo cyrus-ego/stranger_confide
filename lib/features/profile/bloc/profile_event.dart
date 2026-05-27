@@ -9,6 +9,9 @@ sealed class ProfileEvent extends BlocEvent with _$ProfileEvent {
   const ProfileEvent._();
 
   const factory ProfileEvent.load() = ProfileLoad;
+  const factory ProfileEvent.loadMe() = ProfileLoadMe;
+  const factory ProfileEvent.create(UpdateProfileRequest request) =
+      ProfileCreate;
   const factory ProfileEvent.update(UpdateProfileRequest request) =
       ProfileUpdate;
   const factory ProfileEvent.patchField(Map<String, dynamic> fields) =

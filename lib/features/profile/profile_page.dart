@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:stranger_confide/data/models/response/profile_response.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../domain/enums/chat_preference.dart';
+import '../../domain/enums/gender.dart';
 import '../../router/app_router.dart';
 import '../../shared/widgets/app_shimmer.dart';
 import '../../shared/widgets/app_snack_bar.dart';
@@ -325,8 +327,7 @@ class _ProfileContent extends StatelessWidget {
       context: context,
       title: tr(LocaleKeys.profileChatWith),
       options: {
-        'male': tr(LocaleKeys.profileMale),
-        'female': tr(LocaleKeys.profileFemale),
+        for (final g in Gender.values) g.value: tr(g.labelKey),
       },
       current: current,
       onSelect: (v) {
@@ -344,9 +345,7 @@ class _ProfileContent extends StatelessWidget {
       context: context,
       title: tr(LocaleKeys.profileChatPreference),
       options: {
-        'opposite': tr(LocaleKeys.profileOpposite),
-        'same': tr(LocaleKeys.profileSame),
-        'any': tr(LocaleKeys.profileAny),
+        for (final p in ChatPreference.values) p.value: tr(p.labelKey),
       },
       current: current,
       onSelect: (v) {
@@ -441,18 +440,17 @@ class _ProfileContent extends StatelessWidget {
 
   // ── Label helpers ──
 
-  static String _genderLabel(String gender) => switch (gender) {
-        'male' => tr(LocaleKeys.profileMale),
-        'female' => tr(LocaleKeys.profileFemale),
-        _ => gender,
-      };
+  static String _genderLabel(String gender) {
+    final parsed = Gender.tryParse(gender);
+    return parsed != null ? tr(parsed.labelKey) : gender;
+  }
 
-  static String _chatPrefLabel(String value) => switch (value) {
-        'opposite' => tr(LocaleKeys.profileOpposite),
-        'same' => tr(LocaleKeys.profileSame),
-        'any' => tr(LocaleKeys.profileAny),
-        _ => value,
-      };
+  static String _chatPrefLabel(String value) {
+    for (final p in ChatPreference.values) {
+      if (p.value == value) return tr(p.labelKey);
+    }
+    return value;
+  }
 }
 
 // ── Row không edit được (Gender, VIP) ──

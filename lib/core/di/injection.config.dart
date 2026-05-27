@@ -26,6 +26,8 @@ import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart
     as _i962;
 import 'package:stranger_confide/data/datasources/room_remote_datasource.dart'
     as _i916;
+import 'package:stranger_confide/data/datasources/user_remote_datasource.dart'
+    as _i510;
 import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
     as _i1019;
 import 'package:stranger_confide/data/repositories/matchmaking_repository_impl.dart'
@@ -36,6 +38,8 @@ import 'package:stranger_confide/data/repositories/profile_repository_impl.dart'
     as _i412;
 import 'package:stranger_confide/data/repositories/room_repository_impl.dart'
     as _i836;
+import 'package:stranger_confide/data/repositories/user_repository_impl.dart'
+    as _i263;
 import 'package:stranger_confide/domain/repositories/auth_repository.dart'
     as _i982;
 import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart'
@@ -46,10 +50,16 @@ import 'package:stranger_confide/domain/repositories/profile_repository.dart'
     as _i34;
 import 'package:stranger_confide/domain/repositories/room_repository.dart'
     as _i133;
+import 'package:stranger_confide/domain/repositories/user_repository.dart'
+    as _i687;
 import 'package:stranger_confide/domain/usecases/block_room_usecase.dart'
     as _i851;
+import 'package:stranger_confide/domain/usecases/create_profile_usecase.dart'
+    as _i115;
 import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
     as _i990;
+import 'package:stranger_confide/domain/usecases/get_current_user_usecase.dart'
+    as _i1047;
 import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
     as _i669;
 import 'package:stranger_confide/domain/usecases/get_queue_status_usecase.dart'
@@ -93,6 +103,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i999.AuthRemoteDatasource>(
       () => registerModule.authRemoteDatasource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i510.UserRemoteDatasource>(
+      () => registerModule.userRemoteDatasource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i962.ProfileRemoteDatasource>(
       () => registerModule.profileRemoteDatasource(gh<_i361.Dio>()),
     );
@@ -119,6 +132,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i982.AuthRepository>(
       () => _i1019.AuthRepositoryImpl(gh<_i999.AuthRemoteDatasource>()),
     );
+    gh.lazySingleton<_i687.UserRepository>(
+      () => _i263.UserRepositoryImpl(gh<_i510.UserRemoteDatasource>()),
+    );
     gh.factory<_i851.BlockRoomUseCase>(
       () => _i851.BlockRoomUseCase(gh<_i133.RoomRepository>()),
     );
@@ -136,6 +152,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i569.LeaveQueueUseCase>(
       () => _i569.LeaveQueueUseCase(gh<_i304.MatchmakingRepository>()),
+    );
+    gh.factory<_i115.CreateProfileUseCase>(
+      () => _i115.CreateProfileUseCase(gh<_i34.ProfileRepository>()),
     );
     gh.factory<_i669.GetProfileUseCase>(
       () => _i669.GetProfileUseCase(gh<_i34.ProfileRepository>()),
@@ -163,20 +182,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i691.ReportUserUseCase>(
       () => _i691.ReportUserUseCase(gh<_i396.ModerationRepository>()),
     );
+    gh.factory<_i1047.GetCurrentUserUseCase>(
+      () => _i1047.GetCurrentUserUseCase(gh<_i687.UserRepository>()),
+    );
+    gh.factory<_i162.ProfileBloc>(
+      () => _i162.ProfileBloc(
+        gh<_i669.GetProfileUseCase>(),
+        gh<_i1047.GetCurrentUserUseCase>(),
+        gh<_i115.CreateProfileUseCase>(),
+        gh<_i853.UpdateProfileUseCase>(),
+        gh<_i247.PatchProfileUseCase>(),
+        gh<_i670.TokenStorage>(),
+      ),
+    );
     gh.factory<_i460.ChatBloc>(
       () => _i460.ChatBloc(
         gh<_i670.TokenStorage>(),
         gh<_i212.LeaveRoomUseCase>(),
         gh<_i851.BlockRoomUseCase>(),
         gh<_i691.ReportUserUseCase>(),
-      ),
-    );
-    gh.factory<_i162.ProfileBloc>(
-      () => _i162.ProfileBloc(
-        gh<_i669.GetProfileUseCase>(),
-        gh<_i853.UpdateProfileUseCase>(),
-        gh<_i247.PatchProfileUseCase>(),
-        gh<_i670.TokenStorage>(),
       ),
     );
     gh.factory<_i987.MatchmakingBloc>(
