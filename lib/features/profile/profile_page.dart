@@ -16,6 +16,7 @@ import '../../shared/widgets/app_snack_bar.dart';
 import '../../shared/widgets/gradient_avatar.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
+import '../../theme/theme_cubit.dart';
 import 'bloc/profile_bloc.dart';
 import 'bloc/profile_event.dart';
 import 'bloc/profile_state.dart';
@@ -247,6 +248,53 @@ class _ProfileContent extends StatelessWidget {
             ),
           ),
           const Gap(AppSpacing.xxl),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BlocBuilder<ThemeCubit, ThemeMode>(
+                builder: (context, mode) {
+                  final isDarkMode = mode == ThemeMode.dark;
+                  return TextButton.icon(
+                    onPressed: () => context.read<ThemeCubit>().toggle(),
+                    icon: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, anim) => RotationTransition(
+                        turns: anim,
+                        child: FadeTransition(
+                          opacity: anim,
+                          child: child,
+                        ),
+                      ),
+                      child: Icon(
+                        isDarkMode
+                            ? Icons.dark_mode_rounded
+                            : Icons.light_mode_rounded,
+                        key: ValueKey(isDarkMode),
+                        size: 20,
+                      ),
+                    ),
+                    label: Text(tr(LocaleKeys.commonTheme)),
+                  );
+                },
+              ),
+              Container(
+                width: 1,
+                height: 20,
+                color: theme.colorScheme.outline,
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  final next = context.locale.languageCode == 'vi'
+                      ? const Locale('en')
+                      : const Locale('vi');
+                  context.setLocale(next);
+                },
+                icon: const Icon(Icons.language, size: 20),
+                label: Text(context.locale.languageCode.toUpperCase()),
+              ),
+            ],
+          ),
+          const Gap(AppSpacing.lg),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
