@@ -1,6 +1,7 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -23,7 +24,10 @@ class LoginPage extends BlocHostPage {
 class _LoginPageState extends BlocHostPageState<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _displayNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isRegisterMode = false;
+  String? _selectedGender;
 
   @override
   Stream<String> get errorStream => context.read<LoginBloc>().errorStream;
@@ -32,17 +36,72 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _displayNameController.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    context.read<LoginBloc>().add(
-          LoginSubmitted(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
+    final bloc = context.read<LoginBloc>();
+    if (_isRegisterMode) {
+      if (_selectedGender == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(tr(LocaleKeys.loginGenderRequired)),
+            behavior: SnackBarBehavior.floating,
           ),
         );
+        return;
+      }
+      bloc.add(
+        RegisterSubmitted(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          displayName: _displayNameController.text.trim(),
+          gender: _selectedGender!,
+        ),
+      );
+    } else {
+      bloc.add(
+        LoginSubmitted(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        ),
+      );
+    }
+  }
+
+  void _toggleMode() {
+    setState(() {
+      _isRegisterMode = !_isRegisterMode;
+    });
+  }
+
+  void _showOtpDialog(String email) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return BlocProvider.value(
+          value: context.read<LoginBloc>(),
+          child: _OtpDialogContent(
+            email: email,
+            onSuccess: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    message ?? tr(LocaleKeys.loginOtpSuccess),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              );
+              setState(() => _isRegisterMode = false);
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -65,170 +124,401 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
               ),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.chat_bubble_rounded,
-                      size: 56,
-                      color: colors.primary,
-                    )
-                        .animate()
-                        .fadeIn(duration: 600.ms)
-                        .scale(begin: const Offset(0.5, 0.5)),
-                    const Gap(AppSpacing.lg),
-                    Text(
-                      tr(LocaleKeys.appName),
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5,
-                      ),
-                    )
-                        .animate()
-                        .fadeIn(duration: 500.ms, delay: 200.ms)
-                        .slideY(begin: 0.3),
-                    const Gap(AppSpacing.sm),
-                    Text(
-                      tr(LocaleKeys.loginSubtitle),
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: colors.onSurface.withAlpha(153),
-                      ),
-                    )
-                        .animate()
-                        .fadeIn(duration: 500.ms, delay: 300.ms)
-                        .slideY(begin: 0.3),
-                    const Gap(AppSpacing.xxxl),
-                    TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: tr(LocaleKeys.loginEmail),
-                        prefixIcon: const Icon(Icons.email_outlined),
-                      ),
-                      validator: (v) => (v == null || v.isEmpty)
-                          ? tr(LocaleKeys.loginEmailRequired)
-                          : null,
-                    )
-                        .animate()
-                        .fadeIn(duration: 500.ms, delay: 400.ms)
-                        .slideX(begin: -0.1),
-                    const Gap(AppSpacing.lg),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => _submit(),
-                      decoration: InputDecoration(
-                        labelText: tr(LocaleKeys.loginPassword),
-                        prefixIcon: const Icon(Icons.lock_outlined),
-                      ),
-                      validator: (v) => (v == null || v.isEmpty)
-                          ? tr(LocaleKeys.loginPasswordRequired)
-                          : null,
-                    )
-                        .animate()
-                        .fadeIn(duration: 500.ms, delay: 500.ms)
-                        .slideX(begin: -0.1),
-                    const Gap(AppSpacing.xl),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        return BlocConsumer<LoginBloc, LoginState>(
-                          listener: (context, state) {
-                            if (state.status == LoginStatus.success) {
-                              // GoRouter redirect sẽ xử lý chuyển trang
-                            }
-                          },
-                          builder: (context, state) {
-                            final isLoading =
-                                state.status == LoginStatus.loading;
-                            return AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                              width: isLoading ? 52 : constraints.maxWidth,
-                              height: 52,
-                              child: FilledButton(
-                                onPressed: isLoading ? null : _submit,
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.5,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Text(tr(LocaleKeys.loginSubmit)),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    )
-                        .animate()
-                        .fadeIn(duration: 500.ms, delay: 600.ms)
-                        .slideY(begin: 0.2),
-                    const Gap(AppSpacing.xxl),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BlocBuilder<ThemeCubit, ThemeMode>(
-                          builder: (context, mode) {
-                            final isDarkMode = mode == ThemeMode.dark;
-                            return TextButton.icon(
-                              onPressed: () =>
-                                  context.read<ThemeCubit>().toggle(),
-                              icon: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                transitionBuilder: (child, anim) =>
-                                    RotationTransition(
-                                  turns: anim,
-                                  child: FadeTransition(
-                                    opacity: anim,
-                                    child: child,
-                                  ),
-                                ),
-                                child: Icon(
-                                  isDarkMode
-                                      ? Icons.dark_mode_rounded
-                                      : Icons.light_mode_rounded,
-                                  key: ValueKey(isDarkMode),
-                                  size: 20,
-                                ),
-                              ),
-                              label: Text(tr(LocaleKeys.commonTheme)),
-                            );
-                          },
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.chat_bubble_rounded,
+                        size: 56,
+                        color: colors.primary,
+                      )
+                          .animate()
+                          .fadeIn(duration: 600.ms)
+                          .scale(begin: const Offset(0.5, 0.5)),
+                      const Gap(AppSpacing.lg),
+                      Text(
+                        tr(LocaleKeys.appName),
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.5,
                         ),
-                        Container(
-                          width: 1,
-                          height: 20,
-                          color: colors.outline,
-                        ),
-                        TextButton.icon(
-                          onPressed: () {
-                            final next =
-                                context.locale.languageCode == 'vi'
-                                    ? const Locale('en')
-                                    : const Locale('vi');
-                            context.setLocale(next);
-                          },
-                          icon: const Icon(Icons.language, size: 20),
-                          label: Text(
-                            context.locale.languageCode.toUpperCase(),
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 200.ms)
+                          .slideY(begin: 0.3),
+                      const Gap(AppSpacing.sm),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: Text(
+                          tr(_isRegisterMode
+                              ? LocaleKeys.loginRegisterSubtitle
+                              : LocaleKeys.loginSubtitle),
+                          key: ValueKey(_isRegisterMode),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: colors.onSurface.withAlpha(153),
                           ),
                         ),
-                      ],
-                    )
-                        .animate()
-                        .fadeIn(duration: 500.ms, delay: 700.ms),
-                  ],
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 300.ms)
+                          .slideY(begin: 0.3),
+                      const Gap(AppSpacing.xxxl),
+                      if (_isRegisterMode)
+                        TextFormField(
+                          controller: _displayNameController,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            labelText: tr(LocaleKeys.loginDisplayName),
+                            prefixIcon: const Icon(Icons.person_outlined),
+                          ),
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? tr(LocaleKeys.loginDisplayNameRequired)
+                              : null,
+                        )
+                            .animate()
+                            .fadeIn(duration: 300.ms)
+                            .slideX(begin: -0.1),
+                      if (_isRegisterMode) const Gap(AppSpacing.lg),
+                      if (_isRegisterMode)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr(LocaleKeys.loginGender),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: colors.onSurface.withAlpha(178),
+                              ),
+                            ),
+                            const Gap(AppSpacing.sm),
+                            SegmentedButton<String>(
+                              segments: [
+                                ButtonSegment(
+                                  value: 'male',
+                                  label: Text(tr(LocaleKeys.loginMale)),
+                                  icon: const Icon(Icons.male_rounded),
+                                ),
+                                ButtonSegment(
+                                  value: 'female',
+                                  label: Text(tr(LocaleKeys.loginFemale)),
+                                  icon: const Icon(Icons.female_rounded),
+                                ),
+                              ],
+                              selected: _selectedGender != null
+                                  ? {_selectedGender!}
+                                  : {},
+                              emptySelectionAllowed: true,
+                              onSelectionChanged: (selected) {
+                                setState(() {
+                                  _selectedGender = selected.firstOrNull;
+                                });
+                              },
+                              style: const ButtonStyle(
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ),
+                          ],
+                        )
+                            .animate()
+                            .fadeIn(duration: 300.ms)
+                            .slideX(begin: -0.1),
+                      if (_isRegisterMode) const Gap(AppSpacing.lg),
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: tr(LocaleKeys.loginEmail),
+                          prefixIcon: const Icon(Icons.email_outlined),
+                        ),
+                        validator: (v) => (v == null || v.isEmpty)
+                            ? tr(LocaleKeys.loginEmailRequired)
+                            : null,
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 400.ms)
+                          .slideX(begin: -0.1),
+                      const Gap(AppSpacing.lg),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _submit(),
+                        decoration: InputDecoration(
+                          labelText: tr(LocaleKeys.loginPassword),
+                          prefixIcon: const Icon(Icons.lock_outlined),
+                        ),
+                        validator: (v) => (v == null || v.isEmpty)
+                            ? tr(LocaleKeys.loginPasswordRequired)
+                            : null,
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 500.ms)
+                          .slideX(begin: -0.1),
+                      const Gap(AppSpacing.xl),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          return BlocConsumer<LoginBloc, LoginState>(
+                            listener: (context, state) {
+                              if (state.registerStatus ==
+                                  RegisterStatus.success) {
+                                final email = state.pendingEmail;
+                                if (email != null) {
+                                  _showOtpDialog(email);
+                                }
+                              }
+                            },
+                            builder: (context, state) {
+                              final isLoading = _isRegisterMode
+                                  ? state.registerStatus ==
+                                      RegisterStatus.loading
+                                  : state.status == LoginStatus.loading;
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                                width:
+                                    isLoading ? 52 : constraints.maxWidth,
+                                height: 52,
+                                child: FilledButton(
+                                  onPressed: isLoading ? null : _submit,
+                                  child: isLoading
+                                      ? const SizedBox(
+                                          width: 22,
+                                          height: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.5,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : Text(tr(_isRegisterMode
+                                          ? LocaleKeys.loginRegisterSubmit
+                                          : LocaleKeys.loginSubmit)),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 600.ms)
+                          .slideY(begin: 0.2),
+                      const Gap(AppSpacing.lg),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            tr(_isRegisterMode
+                                ? LocaleKeys.loginAlreadyHaveAccount
+                                : LocaleKeys.loginNoAccount),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: colors.onSurface.withAlpha(153),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _toggleMode,
+                            child: Text(
+                              tr(_isRegisterMode
+                                  ? LocaleKeys.loginSubmit
+                                  : LocaleKeys.loginRegister),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: colors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 650.ms),
+                      const Gap(AppSpacing.md),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BlocBuilder<ThemeCubit, ThemeMode>(
+                            builder: (context, mode) {
+                              final isDarkMode = mode == ThemeMode.dark;
+                              return TextButton.icon(
+                                onPressed: () =>
+                                    context.read<ThemeCubit>().toggle(),
+                                icon: AnimatedSwitcher(
+                                  duration:
+                                      const Duration(milliseconds: 300),
+                                  transitionBuilder: (child, anim) =>
+                                      RotationTransition(
+                                    turns: anim,
+                                    child: FadeTransition(
+                                      opacity: anim,
+                                      child: child,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    isDarkMode
+                                        ? Icons.dark_mode_rounded
+                                        : Icons.light_mode_rounded,
+                                    key: ValueKey(isDarkMode),
+                                    size: 20,
+                                  ),
+                                ),
+                                label: Text(tr(LocaleKeys.commonTheme)),
+                              );
+                            },
+                          ),
+                          Container(
+                            width: 1,
+                            height: 20,
+                            color: colors.outline,
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              final next =
+                                  context.locale.languageCode == 'vi'
+                                      ? const Locale('en')
+                                      : const Locale('vi');
+                              context.setLocale(next);
+                            },
+                            icon: const Icon(Icons.language, size: 20),
+                            label: Text(
+                              context.locale.languageCode.toUpperCase(),
+                            ),
+                          ),
+                        ],
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 700.ms),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _OtpDialogContent extends StatefulWidget {
+  const _OtpDialogContent({
+    required this.email,
+    required this.onSuccess,
+  });
+
+  final String email;
+  final void Function(String? message) onSuccess;
+
+  @override
+  State<_OtpDialogContent> createState() => _OtpDialogContentState();
+}
+
+class _OtpDialogContentState extends State<_OtpDialogContent> {
+  final _otpController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _otpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (ctx, state) {
+        if (state.otpStatus == OtpStatus.success) {
+          Navigator.of(context).pop();
+          widget.onSuccess(state.otpMessage);
+        }
+      },
+      builder: (ctx, state) {
+        final isLoading = state.otpStatus == OtpStatus.loading;
+        return AlertDialog(
+          icon: Icon(
+            Icons.mark_email_read_rounded,
+            size: 48,
+            color: colors.primary,
+          ),
+          title: Text(tr(LocaleKeys.loginOtpTitle)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                tr(LocaleKeys.loginOtpSubtitle),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colors.onSurface.withAlpha(153),
+                ),
+              ),
+              const Gap(AppSpacing.sm),
+              Text(
+                widget.email,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Gap(AppSpacing.xl),
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: _otpController,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    letterSpacing: 8,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: tr(LocaleKeys.loginOtpHint),
+                    hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                      color: colors.onSurface.withAlpha(100),
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  validator: (v) => (v == null || v.isEmpty)
+                      ? tr(LocaleKeys.loginOtpRequired)
+                      : null,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: isLoading ? null : () => Navigator.of(context).pop(),
+              child: Text(tr(LocaleKeys.commonClose)),
+            ),
+            FilledButton(
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      if (!_formKey.currentState!.validate()) return;
+                      ctx.read<LoginBloc>().add(
+                            OtpSubmitted(
+                              email: widget.email,
+                              otp: _otpController.text.trim(),
+                            ),
+                          );
+                    },
+              child: isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(tr(LocaleKeys.loginOtpSubmit)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -11,4 +11,16 @@ sealed class LoginEvent extends BlocEvent with _$LoginEvent {
     required String email,
     required String password,
   }) = LoginSubmitted;
+
+  const factory LoginEvent.registerSubmitted({
+    required String email,
+    required String password,
+    required String displayName,
+    required String gender,
+  }) = RegisterSubmitted;
+
+  const factory LoginEvent.otpSubmitted({
+    required String email,
+    required String otp,
+  }) = OtpSubmitted;
 }

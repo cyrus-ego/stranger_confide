@@ -63,10 +63,14 @@ import 'package:stranger_confide/domain/usecases/leave_room_usecase.dart'
 import 'package:stranger_confide/domain/usecases/login_usecase.dart' as _i878;
 import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart'
     as _i247;
+import 'package:stranger_confide/domain/usecases/register_usecase.dart'
+    as _i419;
 import 'package:stranger_confide/domain/usecases/report_user_usecase.dart'
     as _i691;
 import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
     as _i853;
+import 'package:stranger_confide/domain/usecases/verify_email_usecase.dart'
+    as _i29;
 import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
 import 'package:stranger_confide/features/chat/bloc/chat_bloc.dart' as _i460;
 import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_bloc.dart'
@@ -150,6 +154,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i878.LoginUseCase>(
       () => _i878.LoginUseCase(gh<_i982.AuthRepository>()),
     );
+    gh.factory<_i419.RegisterUseCase>(
+      () => _i419.RegisterUseCase(gh<_i982.AuthRepository>()),
+    );
+    gh.factory<_i29.VerifyEmailUseCase>(
+      () => _i29.VerifyEmailUseCase(gh<_i982.AuthRepository>()),
+    );
     gh.factory<_i691.ReportUserUseCase>(
       () => _i691.ReportUserUseCase(gh<_i396.ModerationRepository>()),
     );
@@ -169,15 +179,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i670.TokenStorage>(),
       ),
     );
-    gh.factory<_i209.LoginBloc>(
-      () => _i209.LoginBloc(gh<_i878.LoginUseCase>(), gh<_i670.TokenStorage>()),
-    );
     gh.factory<_i987.MatchmakingBloc>(
       () => _i987.MatchmakingBloc(
         gh<_i443.JoinQueueUseCase>(),
         gh<_i569.LeaveQueueUseCase>(),
         gh<_i669.GetProfileUseCase>(),
         gh<_i910.MatchmakingSocketService>(),
+      ),
+    );
+    gh.factory<_i209.LoginBloc>(
+      () => _i209.LoginBloc(
+        gh<_i878.LoginUseCase>(),
+        gh<_i419.RegisterUseCase>(),
+        gh<_i29.VerifyEmailUseCase>(),
+        gh<_i670.TokenStorage>(),
       ),
     );
     return this;
