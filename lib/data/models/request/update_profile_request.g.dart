@@ -14,7 +14,6 @@ _UpdateProfileRequest _$UpdateProfileRequestFromJson(
   age: (json['age'] as num).toInt(),
   bio: json['bio'] as String,
   chatPreference: json['chatPreference'] as String,
-  preferredGender: json['preferredGender'] as String,
 );
 
 Map<String, dynamic> _$UpdateProfileRequestToJson(
@@ -25,5 +24,4 @@ Map<String, dynamic> _$UpdateProfileRequestToJson(
   'age': instance.age,
   'bio': instance.bio,
   'chatPreference': instance.chatPreference,
-  'preferredGender': instance.preferredGender,
 };

@@ -6,7 +6,7 @@
     "configurations": [
     
         {
-            "name": "stranger_confide",
+            "name": "(debug)",
             "request": "launch",
             "type": "dart"
         },

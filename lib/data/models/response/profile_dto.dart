@@ -12,7 +12,6 @@ sealed class ProfileDto with _$ProfileDto {
     String? bio,
     String? avatar,
     String? chatPreference,
-    String? preferredGender,
     bool? isVip,
     String? vipExpiresAt,
     String? createdAt,

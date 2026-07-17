@@ -12,7 +12,6 @@ sealed class QueueStatusResponse with _$QueueStatusResponse {
     int? waitSeconds,
     int? expiresInSeconds,
     String? preference,
-    String? preferredGender,
     bool? timedOut,
     String? roomId,
     String? partnerId,

@@ -7,7 +7,6 @@ part 'join_queue_request.g.dart';
 sealed class JoinQueueRequest with _$JoinQueueRequest {
   const factory JoinQueueRequest({
     required String preference,
-    String? preferredGender,
   }) = _JoinQueueRequest;
 
   factory JoinQueueRequest.fromJson(Map<String, dynamic> json) =>

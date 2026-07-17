@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
 import '../../domain/enums/chat_preference.dart';
-import '../../domain/enums/gender.dart';
 import '../../router/app_router.dart';
 import '../../shared/widgets/app_snack_bar.dart';
 import '../../theme/app_colors.dart';
@@ -582,8 +581,7 @@ class _PreferenceSheet extends StatelessWidget {
 
     return BlocBuilder<MatchmakingBloc, MatchmakingState>(
       buildWhen: (p, c) =>
-          p.selectedPreference != c.selectedPreference ||
-          p.selectedPreferredGender != c.selectedPreferredGender,
+          p.selectedPreference != c.selectedPreference,
       builder: (context, state) {
         return Padding(
           padding: EdgeInsets.only(
@@ -630,27 +628,6 @@ class _PreferenceSheet extends StatelessWidget {
                 },
                 onChanged: (v) => context.read<MatchmakingBloc>().add(
                   MatchmakingUpdatePreference(ChatPreference.tryParse(v)),
-                ),
-              ),
-              const Gap(AppSpacing.lg),
-
-              Text(
-                tr(LocaleKeys.profileChatWith),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withAlpha(153),
-                ),
-              ),
-              const Gap(AppSpacing.sm),
-              _PreferenceChips(
-                selected: state.selectedPreferredGender.value,
-                options: {
-                  for (final f in PreferredGenderFilter.values)
-                    f.value: tr(f.labelKey),
-                },
-                onChanged: (v) => context.read<MatchmakingBloc>().add(
-                  MatchmakingUpdatePreferredGender(
-                    PreferredGenderFilter.tryParse(v),
-                  ),
                 ),
               ),
               const Gap(AppSpacing.xl),

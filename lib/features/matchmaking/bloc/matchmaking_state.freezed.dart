@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MatchmakingState {
 
- MatchmakingStatus get status; QueueStatusResponse? get queueData; ChatPreference get selectedPreference; PreferredGenderFilter get selectedPreferredGender; String? get errorMessage; String? get roomId; String? get partnerId;
+ MatchmakingStatus get status; QueueStatusResponse? get queueData; ChatPreference get selectedPreference; String? get errorMessage; String? get roomId; String? get partnerId;
 /// Create a copy of MatchmakingState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MatchmakingStateCopyWith<MatchmakingState> get copyWith => _$MatchmakingStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingState&&(identical(other.status, status) || other.status == status)&&(identical(other.queueData, queueData) || other.queueData == queueData)&&(identical(other.selectedPreference, selectedPreference) || other.selectedPreference == selectedPreference)&&(identical(other.selectedPreferredGender, selectedPreferredGender) || other.selectedPreferredGender == selectedPreferredGender)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.partnerId, partnerId) || other.partnerId == partnerId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingState&&(identical(other.status, status) || other.status == status)&&(identical(other.queueData, queueData) || other.queueData == queueData)&&(identical(other.selectedPreference, selectedPreference) || other.selectedPreference == selectedPreference)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.partnerId, partnerId) || other.partnerId == partnerId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,queueData,selectedPreference,selectedPreferredGender,errorMessage,roomId,partnerId);
+int get hashCode => Object.hash(runtimeType,status,queueData,selectedPreference,errorMessage,roomId,partnerId);
 
 @override
 String toString() {
-  return 'MatchmakingState(status: $status, queueData: $queueData, selectedPreference: $selectedPreference, selectedPreferredGender: $selectedPreferredGender, errorMessage: $errorMessage, roomId: $roomId, partnerId: $partnerId)';
+  return 'MatchmakingState(status: $status, queueData: $queueData, selectedPreference: $selectedPreference, errorMessage: $errorMessage, roomId: $roomId, partnerId: $partnerId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MatchmakingStateCopyWith<$Res>  {
   factory $MatchmakingStateCopyWith(MatchmakingState value, $Res Function(MatchmakingState) _then) = _$MatchmakingStateCopyWithImpl;
 @useResult
 $Res call({
- MatchmakingStatus status, QueueStatusResponse? queueData, ChatPreference selectedPreference, PreferredGenderFilter selectedPreferredGender, String? errorMessage, String? roomId, String? partnerId
+ MatchmakingStatus status, QueueStatusResponse? queueData, ChatPreference selectedPreference, String? errorMessage, String? roomId, String? partnerId
 });
 
 
@@ -62,13 +62,12 @@ class _$MatchmakingStateCopyWithImpl<$Res>
 
 /// Create a copy of MatchmakingState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? queueData = freezed,Object? selectedPreference = null,Object? selectedPreferredGender = null,Object? errorMessage = freezed,Object? roomId = freezed,Object? partnerId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? queueData = freezed,Object? selectedPreference = null,Object? errorMessage = freezed,Object? roomId = freezed,Object? partnerId = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MatchmakingStatus,queueData: freezed == queueData ? _self.queueData : queueData // ignore: cast_nullable_to_non_nullable
 as QueueStatusResponse?,selectedPreference: null == selectedPreference ? _self.selectedPreference : selectedPreference // ignore: cast_nullable_to_non_nullable
-as ChatPreference,selectedPreferredGender: null == selectedPreferredGender ? _self.selectedPreferredGender : selectedPreferredGender // ignore: cast_nullable_to_non_nullable
-as PreferredGenderFilter,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as ChatPreference,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
 as String?,partnerId: freezed == partnerId ? _self.partnerId : partnerId // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -165,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  PreferredGenderFilter selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MatchmakingState() when $default != null:
-return $default(_that.status,_that.queueData,_that.selectedPreference,_that.selectedPreferredGender,_that.errorMessage,_that.roomId,_that.partnerId);case _:
+return $default(_that.status,_that.queueData,_that.selectedPreference,_that.errorMessage,_that.roomId,_that.partnerId);case _:
   return orElse();
 
 }
@@ -186,10 +185,10 @@ return $default(_that.status,_that.queueData,_that.selectedPreference,_that.sele
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  PreferredGenderFilter selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  String? errorMessage,  String? roomId,  String? partnerId)  $default,) {final _that = this;
 switch (_that) {
 case _MatchmakingState():
-return $default(_that.status,_that.queueData,_that.selectedPreference,_that.selectedPreferredGender,_that.errorMessage,_that.roomId,_that.partnerId);}
+return $default(_that.status,_that.queueData,_that.selectedPreference,_that.errorMessage,_that.roomId,_that.partnerId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -203,10 +202,10 @@ return $default(_that.status,_that.queueData,_that.selectedPreference,_that.sele
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  PreferredGenderFilter selectedPreferredGender,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MatchmakingStatus status,  QueueStatusResponse? queueData,  ChatPreference selectedPreference,  String? errorMessage,  String? roomId,  String? partnerId)?  $default,) {final _that = this;
 switch (_that) {
 case _MatchmakingState() when $default != null:
-return $default(_that.status,_that.queueData,_that.selectedPreference,_that.selectedPreferredGender,_that.errorMessage,_that.roomId,_that.partnerId);case _:
+return $default(_that.status,_that.queueData,_that.selectedPreference,_that.errorMessage,_that.roomId,_that.partnerId);case _:
   return null;
 
 }
@@ -218,13 +217,12 @@ return $default(_that.status,_that.queueData,_that.selectedPreference,_that.sele
 
 
 class _MatchmakingState implements MatchmakingState {
-  const _MatchmakingState({this.status = MatchmakingStatus.initial, this.queueData, this.selectedPreference = ChatPreference.any, this.selectedPreferredGender = PreferredGenderFilter.any, this.errorMessage, this.roomId, this.partnerId});
+  const _MatchmakingState({this.status = MatchmakingStatus.initial, this.queueData, this.selectedPreference = ChatPreference.defaultPreference, this.errorMessage, this.roomId, this.partnerId});
   
 
 @override@JsonKey() final  MatchmakingStatus status;
 @override final  QueueStatusResponse? queueData;
 @override@JsonKey() final  ChatPreference selectedPreference;
-@override@JsonKey() final  PreferredGenderFilter selectedPreferredGender;
 @override final  String? errorMessage;
 @override final  String? roomId;
 @override final  String? partnerId;
@@ -239,16 +237,16 @@ _$MatchmakingStateCopyWith<_MatchmakingState> get copyWith => __$MatchmakingStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MatchmakingState&&(identical(other.status, status) || other.status == status)&&(identical(other.queueData, queueData) || other.queueData == queueData)&&(identical(other.selectedPreference, selectedPreference) || other.selectedPreference == selectedPreference)&&(identical(other.selectedPreferredGender, selectedPreferredGender) || other.selectedPreferredGender == selectedPreferredGender)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.partnerId, partnerId) || other.partnerId == partnerId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MatchmakingState&&(identical(other.status, status) || other.status == status)&&(identical(other.queueData, queueData) || other.queueData == queueData)&&(identical(other.selectedPreference, selectedPreference) || other.selectedPreference == selectedPreference)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.partnerId, partnerId) || other.partnerId == partnerId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,queueData,selectedPreference,selectedPreferredGender,errorMessage,roomId,partnerId);
+int get hashCode => Object.hash(runtimeType,status,queueData,selectedPreference,errorMessage,roomId,partnerId);
 
 @override
 String toString() {
-  return 'MatchmakingState(status: $status, queueData: $queueData, selectedPreference: $selectedPreference, selectedPreferredGender: $selectedPreferredGender, errorMessage: $errorMessage, roomId: $roomId, partnerId: $partnerId)';
+  return 'MatchmakingState(status: $status, queueData: $queueData, selectedPreference: $selectedPreference, errorMessage: $errorMessage, roomId: $roomId, partnerId: $partnerId)';
 }
 
 
@@ -259,7 +257,7 @@ abstract mixin class _$MatchmakingStateCopyWith<$Res> implements $MatchmakingSta
   factory _$MatchmakingStateCopyWith(_MatchmakingState value, $Res Function(_MatchmakingState) _then) = __$MatchmakingStateCopyWithImpl;
 @override @useResult
 $Res call({
- MatchmakingStatus status, QueueStatusResponse? queueData, ChatPreference selectedPreference, PreferredGenderFilter selectedPreferredGender, String? errorMessage, String? roomId, String? partnerId
+ MatchmakingStatus status, QueueStatusResponse? queueData, ChatPreference selectedPreference, String? errorMessage, String? roomId, String? partnerId
 });
 
 
@@ -276,13 +274,12 @@ class __$MatchmakingStateCopyWithImpl<$Res>
 
 /// Create a copy of MatchmakingState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? queueData = freezed,Object? selectedPreference = null,Object? selectedPreferredGender = null,Object? errorMessage = freezed,Object? roomId = freezed,Object? partnerId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? queueData = freezed,Object? selectedPreference = null,Object? errorMessage = freezed,Object? roomId = freezed,Object? partnerId = freezed,}) {
   return _then(_MatchmakingState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MatchmakingStatus,queueData: freezed == queueData ? _self.queueData : queueData // ignore: cast_nullable_to_non_nullable
 as QueueStatusResponse?,selectedPreference: null == selectedPreference ? _self.selectedPreference : selectedPreference // ignore: cast_nullable_to_non_nullable
-as ChatPreference,selectedPreferredGender: null == selectedPreferredGender ? _self.selectedPreferredGender : selectedPreferredGender // ignore: cast_nullable_to_non_nullable
-as PreferredGenderFilter,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as ChatPreference,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,roomId: freezed == roomId ? _self.roomId : roomId // ignore: cast_nullable_to_non_nullable
 as String?,partnerId: freezed == partnerId ? _self.partnerId : partnerId // ignore: cast_nullable_to_non_nullable
 as String?,

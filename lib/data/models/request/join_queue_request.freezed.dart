@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JoinQueueRequest {
 
- String get preference; String? get preferredGender;
+ String get preference;
 /// Create a copy of JoinQueueRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $JoinQueueRequestCopyWith<JoinQueueRequest> get copyWith => _$JoinQueueRequestCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JoinQueueRequest&&(identical(other.preference, preference) || other.preference == preference)&&(identical(other.preferredGender, preferredGender) || other.preferredGender == preferredGender));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JoinQueueRequest&&(identical(other.preference, preference) || other.preference == preference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,preference,preferredGender);
+int get hashCode => Object.hash(runtimeType,preference);
 
 @override
 String toString() {
-  return 'JoinQueueRequest(preference: $preference, preferredGender: $preferredGender)';
+  return 'JoinQueueRequest(preference: $preference)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $JoinQueueRequestCopyWith<$Res>  {
   factory $JoinQueueRequestCopyWith(JoinQueueRequest value, $Res Function(JoinQueueRequest) _then) = _$JoinQueueRequestCopyWithImpl;
 @useResult
 $Res call({
- String preference, String? preferredGender
+ String preference
 });
 
 
@@ -65,11 +65,10 @@ class _$JoinQueueRequestCopyWithImpl<$Res>
 
 /// Create a copy of JoinQueueRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? preference = null,Object? preferredGender = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? preference = null,}) {
   return _then(_self.copyWith(
 preference: null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
-as String,preferredGender: freezed == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 
@@ -151,10 +150,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String preference,  String? preferredGender)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String preference)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JoinQueueRequest() when $default != null:
-return $default(_that.preference,_that.preferredGender);case _:
+return $default(_that.preference);case _:
   return orElse();
 
 }
@@ -172,10 +171,10 @@ return $default(_that.preference,_that.preferredGender);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String preference,  String? preferredGender)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String preference)  $default,) {final _that = this;
 switch (_that) {
 case _JoinQueueRequest():
-return $default(_that.preference,_that.preferredGender);}
+return $default(_that.preference);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -189,10 +188,10 @@ return $default(_that.preference,_that.preferredGender);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String preference,  String? preferredGender)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String preference)?  $default,) {final _that = this;
 switch (_that) {
 case _JoinQueueRequest() when $default != null:
-return $default(_that.preference,_that.preferredGender);case _:
+return $default(_that.preference);case _:
   return null;
 
 }
@@ -204,11 +203,10 @@ return $default(_that.preference,_that.preferredGender);case _:
 @JsonSerializable()
 
 class _JoinQueueRequest implements JoinQueueRequest {
-  const _JoinQueueRequest({required this.preference, this.preferredGender});
+  const _JoinQueueRequest({required this.preference});
   factory _JoinQueueRequest.fromJson(Map<String, dynamic> json) => _$JoinQueueRequestFromJson(json);
 
 @override final  String preference;
-@override final  String? preferredGender;
 
 /// Create a copy of JoinQueueRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +221,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JoinQueueRequest&&(identical(other.preference, preference) || other.preference == preference)&&(identical(other.preferredGender, preferredGender) || other.preferredGender == preferredGender));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JoinQueueRequest&&(identical(other.preference, preference) || other.preference == preference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,preference,preferredGender);
+int get hashCode => Object.hash(runtimeType,preference);
 
 @override
 String toString() {
-  return 'JoinQueueRequest(preference: $preference, preferredGender: $preferredGender)';
+  return 'JoinQueueRequest(preference: $preference)';
 }
 
 
@@ -243,7 +241,7 @@ abstract mixin class _$JoinQueueRequestCopyWith<$Res> implements $JoinQueueReque
   factory _$JoinQueueRequestCopyWith(_JoinQueueRequest value, $Res Function(_JoinQueueRequest) _then) = __$JoinQueueRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String preference, String? preferredGender
+ String preference
 });
 
 
@@ -260,11 +258,10 @@ class __$JoinQueueRequestCopyWithImpl<$Res>
 
 /// Create a copy of JoinQueueRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? preference = null,Object? preferredGender = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? preference = null,}) {
   return _then(_JoinQueueRequest(
 preference: null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
-as String,preferredGender: freezed == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 

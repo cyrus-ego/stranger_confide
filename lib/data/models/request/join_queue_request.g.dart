@@ -7,13 +7,7 @@ part of 'join_queue_request.dart';
 // **************************************************************************
 
 _JoinQueueRequest _$JoinQueueRequestFromJson(Map<String, dynamic> json) =>
-    _JoinQueueRequest(
-      preference: json['preference'] as String,
-      preferredGender: json['preferredGender'] as String?,
-    );
+    _JoinQueueRequest(preference: json['preference'] as String);
 
 Map<String, dynamic> _$JoinQueueRequestToJson(_JoinQueueRequest instance) =>
-    <String, dynamic>{
-      'preference': instance.preference,
-      'preferredGender': instance.preferredGender,
-    };
+    <String, dynamic>{'preference': instance.preference};

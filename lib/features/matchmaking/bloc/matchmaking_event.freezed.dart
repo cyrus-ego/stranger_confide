@@ -55,15 +55,14 @@ extension MatchmakingEventPatterns on MatchmakingEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchmakingStarted value)?  started,TResult Function( MatchmakingJoinQueue value)?  joinQueue,TResult Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult Function( MatchmakingUpdatePreference value)?  updatePreference,TResult Function( MatchmakingUpdatePreferredGender value)?  updatePreferredGender,TResult Function( MatchmakingRestartSearch value)?  restartSearch,TResult Function( MatchmakingSocketConnected value)?  socketConnected,TResult Function( MatchmakingQueueJoined value)?  queueJoined,TResult Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult Function( MatchmakingMatchFound value)?  matchFound,TResult Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult Function( MatchmakingSocketError value)?  socketError,TResult Function( MatchmakingSocketDisconnected value)?  socketDisconnected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchmakingStarted value)?  started,TResult Function( MatchmakingJoinQueue value)?  joinQueue,TResult Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult Function( MatchmakingUpdatePreference value)?  updatePreference,TResult Function( MatchmakingRestartSearch value)?  restartSearch,TResult Function( MatchmakingSocketConnected value)?  socketConnected,TResult Function( MatchmakingQueueJoined value)?  queueJoined,TResult Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult Function( MatchmakingMatchFound value)?  matchFound,TResult Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult Function( MatchmakingSocketError value)?  socketError,TResult Function( MatchmakingSocketDisconnected value)?  socketDisconnected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started(_that);case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue(_that);case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue(_that);case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that);case MatchmakingUpdatePreferredGender() when updatePreferredGender != null:
-return updatePreferredGender(_that);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch(_that);case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected(_that);case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that);case MatchmakingPositionUpdated() when positionUpdated != null:
@@ -89,15 +88,14 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchmakingStarted value)  started,required TResult Function( MatchmakingJoinQueue value)  joinQueue,required TResult Function( MatchmakingLeaveQueue value)  leaveQueue,required TResult Function( MatchmakingUpdatePreference value)  updatePreference,required TResult Function( MatchmakingUpdatePreferredGender value)  updatePreferredGender,required TResult Function( MatchmakingRestartSearch value)  restartSearch,required TResult Function( MatchmakingSocketConnected value)  socketConnected,required TResult Function( MatchmakingQueueJoined value)  queueJoined,required TResult Function( MatchmakingPositionUpdated value)  positionUpdated,required TResult Function( MatchmakingMatchFound value)  matchFound,required TResult Function( MatchmakingQueueTimeout value)  queueTimeout,required TResult Function( MatchmakingSocketError value)  socketError,required TResult Function( MatchmakingSocketDisconnected value)  socketDisconnected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchmakingStarted value)  started,required TResult Function( MatchmakingJoinQueue value)  joinQueue,required TResult Function( MatchmakingLeaveQueue value)  leaveQueue,required TResult Function( MatchmakingUpdatePreference value)  updatePreference,required TResult Function( MatchmakingRestartSearch value)  restartSearch,required TResult Function( MatchmakingSocketConnected value)  socketConnected,required TResult Function( MatchmakingQueueJoined value)  queueJoined,required TResult Function( MatchmakingPositionUpdated value)  positionUpdated,required TResult Function( MatchmakingMatchFound value)  matchFound,required TResult Function( MatchmakingQueueTimeout value)  queueTimeout,required TResult Function( MatchmakingSocketError value)  socketError,required TResult Function( MatchmakingSocketDisconnected value)  socketDisconnected,}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted():
 return started(_that);case MatchmakingJoinQueue():
 return joinQueue(_that);case MatchmakingLeaveQueue():
 return leaveQueue(_that);case MatchmakingUpdatePreference():
-return updatePreference(_that);case MatchmakingUpdatePreferredGender():
-return updatePreferredGender(_that);case MatchmakingRestartSearch():
+return updatePreference(_that);case MatchmakingRestartSearch():
 return restartSearch(_that);case MatchmakingSocketConnected():
 return socketConnected(_that);case MatchmakingQueueJoined():
 return queueJoined(_that);case MatchmakingPositionUpdated():
@@ -119,15 +117,14 @@ return socketDisconnected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchmakingStarted value)?  started,TResult? Function( MatchmakingJoinQueue value)?  joinQueue,TResult? Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult? Function( MatchmakingUpdatePreference value)?  updatePreference,TResult? Function( MatchmakingUpdatePreferredGender value)?  updatePreferredGender,TResult? Function( MatchmakingRestartSearch value)?  restartSearch,TResult? Function( MatchmakingSocketConnected value)?  socketConnected,TResult? Function( MatchmakingQueueJoined value)?  queueJoined,TResult? Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult? Function( MatchmakingMatchFound value)?  matchFound,TResult? Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult? Function( MatchmakingSocketError value)?  socketError,TResult? Function( MatchmakingSocketDisconnected value)?  socketDisconnected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchmakingStarted value)?  started,TResult? Function( MatchmakingJoinQueue value)?  joinQueue,TResult? Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult? Function( MatchmakingUpdatePreference value)?  updatePreference,TResult? Function( MatchmakingRestartSearch value)?  restartSearch,TResult? Function( MatchmakingSocketConnected value)?  socketConnected,TResult? Function( MatchmakingQueueJoined value)?  queueJoined,TResult? Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult? Function( MatchmakingMatchFound value)?  matchFound,TResult? Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult? Function( MatchmakingSocketError value)?  socketError,TResult? Function( MatchmakingSocketDisconnected value)?  socketDisconnected,}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started(_that);case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue(_that);case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue(_that);case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that);case MatchmakingUpdatePreferredGender() when updatePreferredGender != null:
-return updatePreferredGender(_that);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch(_that);case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected(_that);case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that);case MatchmakingPositionUpdated() when positionUpdated != null:
@@ -152,14 +149,13 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function( PreferredGenderFilter gender)?  updatePreferredGender,TResult Function()?  restartSearch,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function()?  restartSearch,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue();case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue();case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that.preference);case MatchmakingUpdatePreferredGender() when updatePreferredGender != null:
-return updatePreferredGender(_that.gender);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that.preference);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch();case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected();case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that.data);case MatchmakingPositionUpdated() when positionUpdated != null:
@@ -185,14 +181,13 @@ return socketDisconnected(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function( PreferredGenderFilter gender)  updatePreferredGender,required TResult Function()  restartSearch,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function()  restartSearch,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted():
 return started();case MatchmakingJoinQueue():
 return joinQueue();case MatchmakingLeaveQueue():
 return leaveQueue();case MatchmakingUpdatePreference():
-return updatePreference(_that.preference);case MatchmakingUpdatePreferredGender():
-return updatePreferredGender(_that.gender);case MatchmakingRestartSearch():
+return updatePreference(_that.preference);case MatchmakingRestartSearch():
 return restartSearch();case MatchmakingSocketConnected():
 return socketConnected();case MatchmakingQueueJoined():
 return queueJoined(_that.data);case MatchmakingPositionUpdated():
@@ -214,14 +209,13 @@ return socketDisconnected(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function( PreferredGenderFilter gender)?  updatePreferredGender,TResult? Function()?  restartSearch,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function()?  restartSearch,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue();case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue();case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that.preference);case MatchmakingUpdatePreferredGender() when updatePreferredGender != null:
-return updatePreferredGender(_that.gender);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that.preference);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch();case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected();case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that.data);case MatchmakingPositionUpdated() when positionUpdated != null:
@@ -393,72 +387,6 @@ class _$MatchmakingUpdatePreferenceCopyWithImpl<$Res>
   return _then(MatchmakingUpdatePreference(
 null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
 as ChatPreference,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class MatchmakingUpdatePreferredGender extends MatchmakingEvent {
-  const MatchmakingUpdatePreferredGender(this.gender): super._();
-  
-
- final  PreferredGenderFilter gender;
-
-/// Create a copy of MatchmakingEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$MatchmakingUpdatePreferredGenderCopyWith<MatchmakingUpdatePreferredGender> get copyWith => _$MatchmakingUpdatePreferredGenderCopyWithImpl<MatchmakingUpdatePreferredGender>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingUpdatePreferredGender&&(identical(other.gender, gender) || other.gender == gender));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,gender);
-
-@override
-String toString() {
-  return 'MatchmakingEvent.updatePreferredGender(gender: $gender)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $MatchmakingUpdatePreferredGenderCopyWith<$Res> implements $MatchmakingEventCopyWith<$Res> {
-  factory $MatchmakingUpdatePreferredGenderCopyWith(MatchmakingUpdatePreferredGender value, $Res Function(MatchmakingUpdatePreferredGender) _then) = _$MatchmakingUpdatePreferredGenderCopyWithImpl;
-@useResult
-$Res call({
- PreferredGenderFilter gender
-});
-
-
-
-
-}
-/// @nodoc
-class _$MatchmakingUpdatePreferredGenderCopyWithImpl<$Res>
-    implements $MatchmakingUpdatePreferredGenderCopyWith<$Res> {
-  _$MatchmakingUpdatePreferredGenderCopyWithImpl(this._self, this._then);
-
-  final MatchmakingUpdatePreferredGender _self;
-  final $Res Function(MatchmakingUpdatePreferredGender) _then;
-
-/// Create a copy of MatchmakingEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? gender = null,}) {
-  return _then(MatchmakingUpdatePreferredGender(
-null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as PreferredGenderFilter,
   ));
 }
 

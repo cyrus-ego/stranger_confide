@@ -7,7 +7,6 @@ import 'package:injectable/injectable.dart';
 import '../../../data/datasources/matchmaking_socket_service.dart';
 import '../../../data/models/request/join_queue_request.dart';
 import '../../../domain/enums/chat_preference.dart';
-import '../../../domain/enums/gender.dart';
 import '../../../domain/usecases/get_profile_usecase.dart';
 import '../../../domain/usecases/join_queue_usecase.dart';
 import '../../../domain/usecases/leave_queue_usecase.dart';
@@ -26,7 +25,6 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
     on<MatchmakingJoinQueue>(_onJoinQueue);
     on<MatchmakingLeaveQueue>(_onLeaveQueue);
     on<MatchmakingUpdatePreference>(_onUpdatePreference);
-    on<MatchmakingUpdatePreferredGender>(_onUpdatePreferredGender);
     on<MatchmakingRestartSearch>(_onRestartSearch);
 
     on<MatchmakingSocketConnected>(_onSocketConnected);
@@ -60,9 +58,6 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
           selectedPreference: ChatPreference.tryParse(
             profile.profile?.chatPreference,
           ),
-          selectedPreferredGender: PreferredGenderFilter.tryParse(
-            profile.profile?.preferredGender,
-          ),
         ));
 
         add(const MatchmakingJoinQueue());
@@ -77,10 +72,6 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
 
         final request = JoinQueueRequest(
           preference: state.selectedPreference.value,
-          preferredGender:
-              state.selectedPreferredGender == PreferredGenderFilter.any
-                  ? null
-                  : state.selectedPreferredGender.value,
         );
 
         final result = await _joinQueueUseCase(request);
@@ -142,13 +133,6 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
     Emitter<MatchmakingState> emit,
   ) {
     emit(state.copyWith(selectedPreference: event.preference));
-  }
-
-  void _onUpdatePreferredGender(
-    MatchmakingUpdatePreferredGender event,
-    Emitter<MatchmakingState> emit,
-  ) {
-    emit(state.copyWith(selectedPreferredGender: event.gender));
   }
 
   Future<void> _onRestartSearch(

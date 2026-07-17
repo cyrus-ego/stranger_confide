@@ -44,6 +44,7 @@ abstract final class LocaleKeys {
   static const profileNo = 'profile.no';
   static const profileMale = 'profile.male';
   static const profileFemale = 'profile.female';
+  static const profileOther = 'profile.other';
   static const profileDisplayName = 'profile.display_name';
   static const profileEmail = 'profile.email';
   static const profileEmailVerified = 'profile.email_verified';

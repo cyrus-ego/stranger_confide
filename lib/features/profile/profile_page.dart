@@ -219,14 +219,6 @@ class _ProfileContent extends StatelessWidget {
                   ),
                   const Divider(),
                   _EditableInfoRow(
-                    icon: Icons.chat_bubble_outline,
-                    label: tr(LocaleKeys.profileChatWith),
-                    value: _genderLabel(profile?.preferredGender ?? ''),
-                    onTap: () => _editPreferredGender(
-                        context, profile?.preferredGender ?? ''),
-                  ),
-                  const Divider(),
-                  _EditableInfoRow(
                     icon: Icons.swap_horiz,
                     label: tr(LocaleKeys.profileChatPreference),
                     value: _chatPrefLabel(profile?.chatPreference ?? ''),
@@ -365,24 +357,6 @@ class _ProfileContent extends StatelessWidget {
         context
             .read<ProfileBloc>()
             .add(ProfilePatchField({'bio': ctrl.text.trim()}));
-      },
-    );
-  }
-
-  static void _editPreferredGender(
-      BuildContext context, String current) {
-    _showOptionsDialog(
-      context: context,
-      title: tr(LocaleKeys.profileChatWith),
-      options: {
-        for (final g in Gender.values) g.value: tr(g.labelKey),
-      },
-      current: current,
-      onSelect: (v) {
-        Navigator.of(context).pop();
-        context
-            .read<ProfileBloc>()
-            .add(ProfilePatchField({'preferredGender': v}));
       },
     );
   }

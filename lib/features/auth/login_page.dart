@@ -201,9 +201,12 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                                     value: g,
                                     label: Text(tr(g.labelKey)),
                                     icon: Icon(
-                                      g == Gender.male
-                                          ? Icons.male_rounded
-                                          : Icons.female_rounded,
+                                      switch (g) {
+                                        Gender.male => Icons.male_rounded,
+                                        Gender.female => Icons.female_rounded,
+                                        Gender.other =>
+                                          Icons.transgender_rounded,
+                                      },
                                     ),
                                   ),
                               ],

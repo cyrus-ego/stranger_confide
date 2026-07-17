@@ -20,11 +20,11 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
   Future<AppResult<AuthTokens>> login({
     required String email,
     required String password,
-  }) =>
-      safeApiCall(
-        () => _remoteDatasource
-            .login(LoginRequest(email: email, password: password)),
-      );
+  }) => safeApiCall(
+    () =>
+        _remoteDatasource.login(LoginRequest(email: email, password: password)),
+    onError: (e) => AppFailure(ApiError.fromDioException(e)),
+  );
 
   @override
   Future<AppResult<RegisterResponse>> register({
@@ -32,26 +32,24 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
     required String password,
     required String displayName,
     required String gender,
-  }) =>
-      safeApiCall(
-        () => _remoteDatasource.register(
-          RegisterRequest(
-            email: email,
-            password: password,
-            displayName: displayName,
-            gender: gender,
-          ),
-        ),
-      );
+  }) => safeApiCall(
+    () => _remoteDatasource.register(
+      RegisterRequest(
+        email: email,
+        password: password,
+        displayName: displayName,
+        gender: gender,
+      ),
+    ),
+  );
 
   @override
   Future<AppResult<RegisterResponse>> verifyEmail({
     required String email,
     required String otp,
-  }) =>
-      safeApiCall(
-        () => _remoteDatasource.verifyEmail(
-          VerifyEmailRequest(email: email, otp: otp),
-        ),
-      );
+  }) => safeApiCall(
+    () => _remoteDatasource.verifyEmail(
+      VerifyEmailRequest(email: email, otp: otp),
+    ),
+  );
 }

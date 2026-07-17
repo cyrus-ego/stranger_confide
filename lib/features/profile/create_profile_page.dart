@@ -34,8 +34,7 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
 
   String _displayName = '';
   Gender? _gender;
-  Gender _preferredGender = Gender.female;
-  ChatPreference _chatPreference = ChatPreference.opposite;
+  ChatPreference _chatPreference = ChatPreference.defaultPreference;
   bool _userApplied = false;
 
   @override
@@ -56,9 +55,8 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
     final gender = Gender.tryParse(user.gender);
     if (gender != null) {
       _gender = gender;
-      _preferredGender = gender.opposite;
+      _chatPreference = ChatPreference.tryParse(gender.opposite.value);
     }
-    _chatPreference = ChatPreference.opposite;
   }
 
   void _submit() {
@@ -80,7 +78,6 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
               age: int.parse(_ageController.text.trim()),
               bio: _bioController.text.trim(),
               chatPreference: _chatPreference.value,
-              preferredGender: _preferredGender.value,
             ),
           ),
         );
@@ -195,9 +192,12 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                                     value: g,
                                     label: Text(tr(g.labelKey)),
                                     icon: Icon(
-                                      g == Gender.male
-                                          ? Icons.male_rounded
-                                          : Icons.female_rounded,
+                                      switch (g) {
+                                        Gender.male => Icons.male_rounded,
+                                        Gender.female => Icons.female_rounded,
+                                        Gender.other =>
+                                          Icons.transgender_rounded,
+                                      },
                                     ),
                                   ),
                               ],
@@ -208,7 +208,9 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                                 if (g == null) return;
                                 setState(() {
                                   _gender = g;
-                                  _preferredGender = g.opposite;
+                                  _chatPreference = ChatPreference.tryParse(
+                                    g.opposite.value,
+                                  );
                                 });
                               },
                               style: const ButtonStyle(
@@ -255,36 +257,6 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                                     tr(LocaleKeys.profileCreateBioHint),
                                 prefixIcon: const Icon(Icons.info_outline),
                                 alignLabelWithHint: true,
-                              ),
-                            ),
-                            const Gap(AppSpacing.xl),
-
-                            // Preferred Gender
-                            _SectionLabel(
-                              label: tr(
-                                  LocaleKeys.profileCreatePreferredGender),
-                            ),
-                            const Gap(AppSpacing.sm),
-                            SegmentedButton<Gender>(
-                              segments: [
-                                for (final g in Gender.values)
-                                  ButtonSegment(
-                                    value: g,
-                                    label: Text(tr(g.labelKey)),
-                                    icon: Icon(
-                                      g == Gender.male
-                                          ? Icons.male_rounded
-                                          : Icons.female_rounded,
-                                    ),
-                                  ),
-                              ],
-                              selected: {_preferredGender},
-                              onSelectionChanged: (selected) {
-                                setState(
-                                    () => _preferredGender = selected.first);
-                              },
-                              style: const ButtonStyle(
-                                visualDensity: VisualDensity.compact,
                               ),
                             ),
                             const Gap(AppSpacing.xl),

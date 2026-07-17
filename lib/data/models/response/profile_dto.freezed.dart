@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileDto {
 
- String? get id; String? get gender; int? get age; String? get bio; String? get avatar; String? get chatPreference; String? get preferredGender; bool? get isVip; String? get vipExpiresAt; String? get createdAt; String? get updatedAt;
+ String? get id; String? get gender; int? get age; String? get bio; String? get avatar; String? get chatPreference; bool? get isVip; String? get vipExpiresAt; String? get createdAt; String? get updatedAt;
 /// Create a copy of ProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProfileDtoCopyWith<ProfileDto> get copyWith => _$ProfileDtoCopyWithImpl<Profile
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileDto&&(identical(other.id, id) || other.id == id)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference)&&(identical(other.preferredGender, preferredGender) || other.preferredGender == preferredGender)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.vipExpiresAt, vipExpiresAt) || other.vipExpiresAt == vipExpiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileDto&&(identical(other.id, id) || other.id == id)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.vipExpiresAt, vipExpiresAt) || other.vipExpiresAt == vipExpiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,gender,age,bio,avatar,chatPreference,preferredGender,isVip,vipExpiresAt,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,gender,age,bio,avatar,chatPreference,isVip,vipExpiresAt,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ProfileDto(id: $id, gender: $gender, age: $age, bio: $bio, avatar: $avatar, chatPreference: $chatPreference, preferredGender: $preferredGender, isVip: $isVip, vipExpiresAt: $vipExpiresAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ProfileDto(id: $id, gender: $gender, age: $age, bio: $bio, avatar: $avatar, chatPreference: $chatPreference, isVip: $isVip, vipExpiresAt: $vipExpiresAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProfileDtoCopyWith<$Res>  {
   factory $ProfileDtoCopyWith(ProfileDto value, $Res Function(ProfileDto) _then) = _$ProfileDtoCopyWithImpl;
 @useResult
 $Res call({
- String? id, String? gender, int? age, String? bio, String? avatar, String? chatPreference, String? preferredGender, bool? isVip, String? vipExpiresAt, String? createdAt, String? updatedAt
+ String? id, String? gender, int? age, String? bio, String? avatar, String? chatPreference, bool? isVip, String? vipExpiresAt, String? createdAt, String? updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$ProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of ProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? gender = freezed,Object? age = freezed,Object? bio = freezed,Object? avatar = freezed,Object? chatPreference = freezed,Object? preferredGender = freezed,Object? isVip = freezed,Object? vipExpiresAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? gender = freezed,Object? age = freezed,Object? bio = freezed,Object? avatar = freezed,Object? chatPreference = freezed,Object? isVip = freezed,Object? vipExpiresAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,6 @@ as String?,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non
 as int?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
 as String?,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,chatPreference: freezed == chatPreference ? _self.chatPreference : chatPreference // ignore: cast_nullable_to_non_nullable
-as String?,preferredGender: freezed == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
 as String?,isVip: freezed == isVip ? _self.isVip : isVip // ignore: cast_nullable_to_non_nullable
 as bool?,vipExpiresAt: freezed == vipExpiresAt ? _self.vipExpiresAt : vipExpiresAt // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -160,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? gender,  int? age,  String? bio,  String? avatar,  String? chatPreference,  String? preferredGender,  bool? isVip,  String? vipExpiresAt,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? gender,  int? age,  String? bio,  String? avatar,  String? chatPreference,  bool? isVip,  String? vipExpiresAt,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfileDto() when $default != null:
-return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.chatPreference,_that.preferredGender,_that.isVip,_that.vipExpiresAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.chatPreference,_that.isVip,_that.vipExpiresAt,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +180,10 @@ return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.cha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? gender,  int? age,  String? bio,  String? avatar,  String? chatPreference,  String? preferredGender,  bool? isVip,  String? vipExpiresAt,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? gender,  int? age,  String? bio,  String? avatar,  String? chatPreference,  bool? isVip,  String? vipExpiresAt,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ProfileDto():
-return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.chatPreference,_that.preferredGender,_that.isVip,_that.vipExpiresAt,_that.createdAt,_that.updatedAt);}
+return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.chatPreference,_that.isVip,_that.vipExpiresAt,_that.createdAt,_that.updatedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -198,10 +197,10 @@ return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.cha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? gender,  int? age,  String? bio,  String? avatar,  String? chatPreference,  String? preferredGender,  bool? isVip,  String? vipExpiresAt,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? gender,  int? age,  String? bio,  String? avatar,  String? chatPreference,  bool? isVip,  String? vipExpiresAt,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfileDto() when $default != null:
-return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.chatPreference,_that.preferredGender,_that.isVip,_that.vipExpiresAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.chatPreference,_that.isVip,_that.vipExpiresAt,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -213,7 +212,7 @@ return $default(_that.id,_that.gender,_that.age,_that.bio,_that.avatar,_that.cha
 @JsonSerializable()
 
 class _ProfileDto implements ProfileDto {
-  const _ProfileDto({this.id, this.gender, this.age, this.bio, this.avatar, this.chatPreference, this.preferredGender, this.isVip, this.vipExpiresAt, this.createdAt, this.updatedAt});
+  const _ProfileDto({this.id, this.gender, this.age, this.bio, this.avatar, this.chatPreference, this.isVip, this.vipExpiresAt, this.createdAt, this.updatedAt});
   factory _ProfileDto.fromJson(Map<String, dynamic> json) => _$ProfileDtoFromJson(json);
 
 @override final  String? id;
@@ -222,7 +221,6 @@ class _ProfileDto implements ProfileDto {
 @override final  String? bio;
 @override final  String? avatar;
 @override final  String? chatPreference;
-@override final  String? preferredGender;
 @override final  bool? isVip;
 @override final  String? vipExpiresAt;
 @override final  String? createdAt;
@@ -241,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileDto&&(identical(other.id, id) || other.id == id)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference)&&(identical(other.preferredGender, preferredGender) || other.preferredGender == preferredGender)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.vipExpiresAt, vipExpiresAt) || other.vipExpiresAt == vipExpiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileDto&&(identical(other.id, id) || other.id == id)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.vipExpiresAt, vipExpiresAt) || other.vipExpiresAt == vipExpiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,gender,age,bio,avatar,chatPreference,preferredGender,isVip,vipExpiresAt,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,gender,age,bio,avatar,chatPreference,isVip,vipExpiresAt,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ProfileDto(id: $id, gender: $gender, age: $age, bio: $bio, avatar: $avatar, chatPreference: $chatPreference, preferredGender: $preferredGender, isVip: $isVip, vipExpiresAt: $vipExpiresAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ProfileDto(id: $id, gender: $gender, age: $age, bio: $bio, avatar: $avatar, chatPreference: $chatPreference, isVip: $isVip, vipExpiresAt: $vipExpiresAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -261,7 +259,7 @@ abstract mixin class _$ProfileDtoCopyWith<$Res> implements $ProfileDtoCopyWith<$
   factory _$ProfileDtoCopyWith(_ProfileDto value, $Res Function(_ProfileDto) _then) = __$ProfileDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String? gender, int? age, String? bio, String? avatar, String? chatPreference, String? preferredGender, bool? isVip, String? vipExpiresAt, String? createdAt, String? updatedAt
+ String? id, String? gender, int? age, String? bio, String? avatar, String? chatPreference, bool? isVip, String? vipExpiresAt, String? createdAt, String? updatedAt
 });
 
 
@@ -278,7 +276,7 @@ class __$ProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of ProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? gender = freezed,Object? age = freezed,Object? bio = freezed,Object? avatar = freezed,Object? chatPreference = freezed,Object? preferredGender = freezed,Object? isVip = freezed,Object? vipExpiresAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? gender = freezed,Object? age = freezed,Object? bio = freezed,Object? avatar = freezed,Object? chatPreference = freezed,Object? isVip = freezed,Object? vipExpiresAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_ProfileDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
@@ -286,7 +284,6 @@ as String?,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non
 as int?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
 as String?,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,chatPreference: freezed == chatPreference ? _self.chatPreference : chatPreference // ignore: cast_nullable_to_non_nullable
-as String?,preferredGender: freezed == preferredGender ? _self.preferredGender : preferredGender // ignore: cast_nullable_to_non_nullable
 as String?,isVip: freezed == isVip ? _self.isVip : isVip // ignore: cast_nullable_to_non_nullable
 as bool?,vipExpiresAt: freezed == vipExpiresAt ? _self.vipExpiresAt : vipExpiresAt // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'token_storage.dart';
 
 const _defaultApiBaseUrl =
-    'https://c44e-1-54-23-149.ngrok-free.app/api';
+    'https://api.chatvn.online/api';
 
 late final TokenStorage _tokenStorage;
 

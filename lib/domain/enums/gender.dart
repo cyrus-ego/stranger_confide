@@ -2,7 +2,8 @@ import '../../core/locale/locale_keys.dart';
 
 enum Gender {
   male('male'),
-  female('female');
+  female('female'),
+  other('other');
 
   const Gender(this.value);
 
@@ -11,11 +12,13 @@ enum Gender {
   Gender get opposite => switch (this) {
         Gender.male => Gender.female,
         Gender.female => Gender.male,
+        Gender.other => Gender.other,
       };
 
   String get labelKey => switch (this) {
         Gender.male => LocaleKeys.profileMale,
         Gender.female => LocaleKeys.profileFemale,
+        Gender.other => LocaleKeys.profileOther,
       };
 
   static Gender? tryParse(String? raw) {
@@ -24,30 +27,5 @@ enum Gender {
       if (g.value == raw) return g;
     }
     return null;
-  }
-}
-
-/// Lọc giới tính đối phương khi matchmaking (`''` = bất kỳ).
-enum PreferredGenderFilter {
-  any(''),
-  male('male'),
-  female('female');
-
-  const PreferredGenderFilter(this.value);
-
-  final String value;
-
-  String get labelKey => switch (this) {
-        PreferredGenderFilter.any => LocaleKeys.profileAny,
-        PreferredGenderFilter.male => LocaleKeys.profileMale,
-        PreferredGenderFilter.female => LocaleKeys.profileFemale,
-      };
-
-  static PreferredGenderFilter tryParse(String? raw) {
-    if (raw == null || raw.isEmpty) return PreferredGenderFilter.any;
-    for (final f in values) {
-      if (f.value == raw) return f;
-    }
-    return PreferredGenderFilter.any;
   }
 }

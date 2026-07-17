@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stranger_confide/data/models/response/queue_status_response.dart';
 import 'package:stranger_confide/domain/enums/chat_preference.dart';
-import 'package:stranger_confide/domain/enums/gender.dart';
 
 part 'matchmaking_state.freezed.dart';
 
@@ -22,9 +21,8 @@ sealed class MatchmakingState with _$MatchmakingState {
   const factory MatchmakingState({
     @Default(MatchmakingStatus.initial) MatchmakingStatus status,
     QueueStatusResponse? queueData,
-    @Default(ChatPreference.any) ChatPreference selectedPreference,
-    @Default(PreferredGenderFilter.any)
-    PreferredGenderFilter selectedPreferredGender,
+    @Default(ChatPreference.defaultPreference)
+    ChatPreference selectedPreference,
     String? errorMessage,
     String? roomId,
     String? partnerId,
