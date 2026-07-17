@@ -77,6 +77,8 @@ import 'package:stranger_confide/domain/usecases/register_usecase.dart'
     as _i419;
 import 'package:stranger_confide/domain/usecases/report_user_usecase.dart'
     as _i691;
+import 'package:stranger_confide/domain/usecases/resend_otp_usecase.dart'
+    as _i225;
 import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
     as _i853;
 import 'package:stranger_confide/domain/usecases/verify_email_usecase.dart'
@@ -176,6 +178,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i419.RegisterUseCase>(
       () => _i419.RegisterUseCase(gh<_i982.AuthRepository>()),
     );
+    gh.factory<_i225.ResendOtpUseCase>(
+      () => _i225.ResendOtpUseCase(gh<_i982.AuthRepository>()),
+    );
     gh.factory<_i29.VerifyEmailUseCase>(
       () => _i29.VerifyEmailUseCase(gh<_i982.AuthRepository>()),
     );
@@ -215,6 +220,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i209.LoginBloc(
         gh<_i878.LoginUseCase>(),
         gh<_i419.RegisterUseCase>(),
+        gh<_i225.ResendOtpUseCase>(),
         gh<_i29.VerifyEmailUseCase>(),
         gh<_i670.TokenStorage>(),
       ),

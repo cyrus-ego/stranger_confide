@@ -2,6 +2,7 @@ import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stranger_confide/data/models/request/login_request.dart';
 import 'package:stranger_confide/data/models/request/register_request.dart';
+import 'package:stranger_confide/data/models/request/resend_otp_request.dart';
 import 'package:stranger_confide/data/models/request/verify_email_request.dart';
 import 'package:stranger_confide/data/models/response/auth_tokens.dart';
 import 'package:stranger_confide/data/models/response/register_response.dart';
@@ -51,5 +52,12 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
     () => _remoteDatasource.verifyEmail(
       VerifyEmailRequest(email: email, otp: otp),
     ),
+  );
+
+  @override
+  Future<AppResult<RegisterResponse>> resendOtp({
+    required String email,
+  }) => safeApiCall(
+    () => _remoteDatasource.resendOtp(ResendOtpRequest(email: email)),
   );
 }

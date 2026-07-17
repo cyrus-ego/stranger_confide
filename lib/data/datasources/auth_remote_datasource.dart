@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:stranger_confide/data/models/request/login_request.dart';
 import 'package:stranger_confide/data/models/request/register_request.dart';
+import 'package:stranger_confide/data/models/request/resend_otp_request.dart';
 import 'package:stranger_confide/data/models/request/verify_email_request.dart';
 import 'package:stranger_confide/data/models/response/auth_tokens.dart';
 import 'package:stranger_confide/data/models/response/register_response.dart';
@@ -21,4 +22,7 @@ abstract class AuthRemoteDatasource {
 
   @POST('/auth/verify-email')
   Future<RegisterResponse> verifyEmail(@Body() VerifyEmailRequest body);
+
+  @POST('/auth/resend-otp')
+  Future<RegisterResponse> resendOtp(@Body() ResendOtpRequest body);
 }

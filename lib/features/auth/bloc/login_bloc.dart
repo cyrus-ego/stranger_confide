@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../../core/token_storage.dart';
 import '../../../domain/usecases/login_usecase.dart';
 import '../../../domain/usecases/register_usecase.dart';
+import '../../../domain/usecases/resend_otp_usecase.dart';
 import '../../../domain/usecases/verify_email_usecase.dart';
 import 'login_event.dart';
 import 'login_state.dart';
@@ -14,16 +15,19 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   LoginBloc(
     this._loginUseCase,
     this._registerUseCase,
+    this._resendOtpUseCase,
     this._verifyEmailUseCase,
     this._tokenStorage,
   ) : super(const LoginState()) {
     on<LoginSubmitted>(_onSubmitted);
     on<RegisterSubmitted>(_onRegisterSubmitted);
     on<OtpSubmitted>(_onOtpSubmitted);
+    on<ResendOtpSubmitted>(_onResendOtpSubmitted);
   }
 
   final LoginUseCase _loginUseCase;
   final RegisterUseCase _registerUseCase;
+  final ResendOtpUseCase _resendOtpUseCase;
   final VerifyEmailUseCase _verifyEmailUseCase;
   final TokenStorage _tokenStorage;
 
@@ -88,5 +92,23 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
           otpMessage: response.message,
           pendingEmail: null,
         ));
+      });
+
+  Future<void> _onResendOtpSubmitted(
+    ResendOtpSubmitted event,
+    Emitter<LoginState> emit,
+  ) =>
+      guard(() async {
+        emit(state.copyWith(resendOtpStatus: OtpStatus.loading));
+
+        final result = await _resendOtpUseCase(
+          ResendOtpParams(email: event.email),
+        );
+        result.orThrow(
+          (_) => emit(state.copyWith(resendOtpStatus: OtpStatus.failure)),
+        );
+
+        emit(state.copyWith(resendOtpStatus: OtpStatus.success));
+        emit(state.copyWith(resendOtpStatus: OtpStatus.initial));
       });
 }

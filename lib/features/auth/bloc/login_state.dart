@@ -17,5 +17,6 @@ sealed class LoginState with _$LoginState {
     String? registerMessage,
     String? otpMessage,
     String? pendingEmail,
+    @Default(OtpStatus.initial) OtpStatus resendOtpStatus,
   }) = _LoginState;
 }

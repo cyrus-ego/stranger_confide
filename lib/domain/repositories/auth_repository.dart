@@ -19,4 +19,8 @@ abstract class AuthRepository {
     required String email,
     required String otp,
   });
+
+  Future<AppResult<RegisterResponse>> resendOtp({
+    required String email,
+  });
 }

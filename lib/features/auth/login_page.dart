@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +27,12 @@ class LoginPage extends BlocHostPage {
 class _LoginPageState extends BlocHostPageState<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _displayNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isRegisterMode = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   Gender? _selectedGender;
 
   @override
@@ -37,6 +42,7 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _displayNameController.dispose();
     super.dispose();
   }
@@ -247,12 +253,20 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                       const Gap(AppSpacing.lg),
                       TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
                           labelText: tr(LocaleKeys.loginPassword),
                           prefixIcon: const Icon(Icons.lock_outlined),
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined),
+                            onPressed: () => setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            }),
+                          ),
                         ),
                         validator: (v) => (v == null || v.isEmpty)
                             ? tr(LocaleKeys.loginPasswordRequired)
@@ -261,6 +275,35 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                           .animate()
                           .fadeIn(duration: 500.ms, delay: 500.ms)
                           .slideX(begin: -0.1),
+                      if (_isRegisterMode) const Gap(AppSpacing.lg),
+                      if (_isRegisterMode)
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: _obscureConfirmPassword,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _submit(),
+                          decoration: InputDecoration(
+                            labelText: tr(LocaleKeys.loginConfirmPassword),
+                            prefixIcon: const Icon(Icons.lock_outlined),
+                            suffixIcon: IconButton(
+                              icon: Icon(_obscureConfirmPassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined),
+                              onPressed: () => setState(() {
+                                _obscureConfirmPassword =
+                                    !_obscureConfirmPassword;
+                              }),
+                            ),
+                          ),
+                          validator: (v) =>
+                              (v == null || v != _passwordController.text)
+                                  ? tr(LocaleKeys
+                                      .loginConfirmPasswordRequired)
+                                  : null,
+                        )
+                            .animate()
+                            .fadeIn(duration: 500.ms, delay: 550.ms)
+                            .slideX(begin: -0.1),
                       const Gap(AppSpacing.xl),
                       LayoutBuilder(
                         builder: (context, constraints) {
@@ -419,11 +462,33 @@ class _OtpDialogContent extends StatefulWidget {
 class _OtpDialogContentState extends State<_OtpDialogContent> {
   final _otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  Timer? _resendTimer;
+  int _countdown = 0;
 
   @override
   void dispose() {
     _otpController.dispose();
+    _resendTimer?.cancel();
     super.dispose();
+  }
+
+  void _startCountdown() {
+    _resendTimer?.cancel();
+    setState(() => _countdown = 60);
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_countdown <= 1) {
+        timer.cancel();
+        setState(() => _countdown = 0);
+      } else {
+        setState(() => _countdown--);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
   }
 
   @override
@@ -437,9 +502,19 @@ class _OtpDialogContentState extends State<_OtpDialogContent> {
           Navigator.of(context).pop();
           widget.onSuccess(state.otpMessage);
         }
+        if (state.resendOtpStatus == OtpStatus.success) {
+          _startCountdown();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(tr(LocaleKeys.loginOtpResend)),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       },
       builder: (ctx, state) {
         final isLoading = state.otpStatus == OtpStatus.loading;
+        final isResending = state.resendOtpStatus == OtpStatus.loading;
         return AlertDialog(
           icon: Icon(
             Icons.mark_email_read_rounded,
@@ -489,6 +564,29 @@ class _OtpDialogContentState extends State<_OtpDialogContent> {
                       ? tr(LocaleKeys.loginOtpRequired)
                       : null,
                 ),
+              ),
+              const Gap(AppSpacing.md),
+              TextButton(
+                onPressed: _countdown > 0 || isResending
+                    ? null
+                    : () {
+                        ctx.read<LoginBloc>().add(
+                              ResendOtpSubmitted(email: widget.email),
+                            );
+                      },
+                child: isResending
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        _countdown > 0
+                            ? tr(LocaleKeys.loginOtpResendIn,
+                                namedArgs: {'seconds': _countdown.toString()})
+                            : tr(LocaleKeys.loginOtpResend),
+                        textAlign: TextAlign.center,
+                      ),
               ),
             ],
           ),

@@ -10,6 +10,8 @@ abstract final class LocaleKeys {
   static const loginSubmit = 'login.submit';
   static const loginEmailRequired = 'login.email_required';
   static const loginPasswordRequired = 'login.password_required';
+  static const loginConfirmPassword = 'login.confirm_password';
+  static const loginConfirmPasswordRequired = 'login.confirm_password_required';
   static const loginRegister = 'login.register';
   static const loginRegisterSubtitle = 'login.register_subtitle';
   static const loginDisplayName = 'login.display_name';
@@ -28,6 +30,8 @@ abstract final class LocaleKeys {
   static const loginOtpRequired = 'login.otp_required';
   static const loginOtpSubmit = 'login.otp_submit';
   static const loginOtpSuccess = 'login.otp_success';
+  static const loginOtpResend = 'login.otp_resend';
+  static const loginOtpResendIn = 'login.otp_resend_in';
 
   // Profile
   static const profileTitle = 'profile.title';
