@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/di/injection.dart';
+import '../core/network_inspector.dart';
 import '../core/token_storage.dart';
 import '../domain/usecases/get_active_room_usecase.dart';
 import '../domain/usecases/get_profile_usecase.dart';
@@ -36,6 +37,7 @@ abstract final class AppRoutes {
 }
 
 final GoRouter appRouter = GoRouter(
+  navigatorKey: appNavigatorKey,
   initialLocation: AppRoutes.splash,
   observers: [_RouterObserver()],
   routes: [

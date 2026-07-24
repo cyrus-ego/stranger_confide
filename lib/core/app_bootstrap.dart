@@ -3,6 +3,7 @@ import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'network_inspector.dart';
 import 'token_storage.dart';
 
 const _defaultApiBaseUrl =
@@ -13,6 +14,7 @@ late final TokenStorage _tokenStorage;
 Future<void> bootstrapAppCore() async {
   _tokenStorage = TokenStorage();
   await _tokenStorage.load();
+  final chuckInterceptor = networkInspectorInterceptor;
 
   final config = CoreConfig(
     network: NetworkConfig(
@@ -25,6 +27,7 @@ Future<void> bootstrapAppCore() async {
       },
       headerProvider: _authHeaders,
       extraInterceptors: [
+        if (chuckInterceptor != null) chuckInterceptor,
         if (kDebugMode) CurlLoggerDioInterceptor(printOnSuccess: true),
       ],
     ),

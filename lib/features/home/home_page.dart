@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../core/network_inspector.dart';
 import '../../router/app_router.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
@@ -19,6 +21,12 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(tr(LocaleKeys.appName)),
         actions: [
+          if (kDebugMode)
+            IconButton(
+              tooltip: 'HTTP Inspector',
+              onPressed: showNetworkInspector,
+              icon: const Icon(Icons.bug_report_outlined),
+            ),
           IconButton(
             onPressed: () => context.push(AppRoutes.profile),
             icon: const Icon(Icons.person_outline),
