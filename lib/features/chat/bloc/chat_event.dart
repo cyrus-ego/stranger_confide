@@ -10,7 +10,10 @@ sealed class ChatEvent extends BlocEvent with _$ChatEvent {
   const factory ChatEvent.started(String roomId) = ChatStarted;
   const factory ChatEvent.sendMessage(String text) = ChatSendMessage;
   const factory ChatEvent.sendImage(String filePath) = ChatSendImage;
+  const factory ChatEvent.loadOlderMessages({@Default(50) int limit}) =
+      ChatLoadOlderMessages;
   const factory ChatEvent.typing() = ChatTyping;
+  const factory ChatEvent.appResumed() = ChatAppResumed;
   const factory ChatEvent.leaveRoom() = ChatLeaveRoom;
   const factory ChatEvent.blockPartner() = ChatBlockPartner;
   const factory ChatEvent.reportPartner(String reason, String? description) =
@@ -23,6 +26,7 @@ sealed class ChatEvent extends BlocEvent with _$ChatEvent {
   const factory ChatEvent.roomClosed(String reason) = ChatRoomClosed;
   const factory ChatEvent.socketConnected() = ChatSocketConnected;
   const factory ChatEvent.socketError(String message) = ChatSocketError;
+  const factory ChatEvent.errorCleared() = ChatErrorCleared;
   const factory ChatEvent.roomJoined(Map<String, dynamic> data) =
       ChatRoomJoined;
   const factory ChatEvent.partnerOnlineChanged(bool online) =

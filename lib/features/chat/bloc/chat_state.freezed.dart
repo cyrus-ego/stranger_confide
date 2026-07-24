@@ -286,7 +286,7 @@ as bool,
 /// @nodoc
 mixin _$ChatState {
 
- ChatStatus get status; List<ChatMessage> get messages; String get roomId; String get myAlias; String get myAvatar; String get partnerAlias; String get partnerAvatar; String get partnerUserId; bool get partnerOnline; bool get partnerTyping; bool get isUploading; bool get isSending; bool get closureInitiatedByMe; ChatAction get lastAction; String? get closedReason; String? get errorMessage;
+ ChatStatus get status; List<ChatMessage> get messages; String get roomId; String get myAlias; String get myAvatar; String get partnerAlias; String get partnerAvatar; String get partnerUserId; bool get partnerOnline; bool get partnerTyping; bool get isUploading; bool get isSending; bool get isLoadingOlderMessages; bool get hasMoreOlderMessages; bool get closureInitiatedByMe; ChatAction get lastAction; String? get oldestMessageId; String? get closedReason; String? get errorMessage;
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +297,16 @@ $ChatStateCopyWith<ChatState> get copyWith => _$ChatStateCopyWithImpl<ChatState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.myAlias, myAlias) || other.myAlias == myAlias)&&(identical(other.myAvatar, myAvatar) || other.myAvatar == myAvatar)&&(identical(other.partnerAlias, partnerAlias) || other.partnerAlias == partnerAlias)&&(identical(other.partnerAvatar, partnerAvatar) || other.partnerAvatar == partnerAvatar)&&(identical(other.partnerUserId, partnerUserId) || other.partnerUserId == partnerUserId)&&(identical(other.partnerOnline, partnerOnline) || other.partnerOnline == partnerOnline)&&(identical(other.partnerTyping, partnerTyping) || other.partnerTyping == partnerTyping)&&(identical(other.isUploading, isUploading) || other.isUploading == isUploading)&&(identical(other.isSending, isSending) || other.isSending == isSending)&&(identical(other.closureInitiatedByMe, closureInitiatedByMe) || other.closureInitiatedByMe == closureInitiatedByMe)&&(identical(other.lastAction, lastAction) || other.lastAction == lastAction)&&(identical(other.closedReason, closedReason) || other.closedReason == closedReason)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.myAlias, myAlias) || other.myAlias == myAlias)&&(identical(other.myAvatar, myAvatar) || other.myAvatar == myAvatar)&&(identical(other.partnerAlias, partnerAlias) || other.partnerAlias == partnerAlias)&&(identical(other.partnerAvatar, partnerAvatar) || other.partnerAvatar == partnerAvatar)&&(identical(other.partnerUserId, partnerUserId) || other.partnerUserId == partnerUserId)&&(identical(other.partnerOnline, partnerOnline) || other.partnerOnline == partnerOnline)&&(identical(other.partnerTyping, partnerTyping) || other.partnerTyping == partnerTyping)&&(identical(other.isUploading, isUploading) || other.isUploading == isUploading)&&(identical(other.isSending, isSending) || other.isSending == isSending)&&(identical(other.isLoadingOlderMessages, isLoadingOlderMessages) || other.isLoadingOlderMessages == isLoadingOlderMessages)&&(identical(other.hasMoreOlderMessages, hasMoreOlderMessages) || other.hasMoreOlderMessages == hasMoreOlderMessages)&&(identical(other.closureInitiatedByMe, closureInitiatedByMe) || other.closureInitiatedByMe == closureInitiatedByMe)&&(identical(other.lastAction, lastAction) || other.lastAction == lastAction)&&(identical(other.oldestMessageId, oldestMessageId) || other.oldestMessageId == oldestMessageId)&&(identical(other.closedReason, closedReason) || other.closedReason == closedReason)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(messages),roomId,myAlias,myAvatar,partnerAlias,partnerAvatar,partnerUserId,partnerOnline,partnerTyping,isUploading,isSending,closureInitiatedByMe,lastAction,closedReason,errorMessage);
+int get hashCode => Object.hashAll([runtimeType,status,const DeepCollectionEquality().hash(messages),roomId,myAlias,myAvatar,partnerAlias,partnerAvatar,partnerUserId,partnerOnline,partnerTyping,isUploading,isSending,isLoadingOlderMessages,hasMoreOlderMessages,closureInitiatedByMe,lastAction,oldestMessageId,closedReason,errorMessage]);
 
 @override
 String toString() {
-  return 'ChatState(status: $status, messages: $messages, roomId: $roomId, myAlias: $myAlias, myAvatar: $myAvatar, partnerAlias: $partnerAlias, partnerAvatar: $partnerAvatar, partnerUserId: $partnerUserId, partnerOnline: $partnerOnline, partnerTyping: $partnerTyping, isUploading: $isUploading, isSending: $isSending, closureInitiatedByMe: $closureInitiatedByMe, lastAction: $lastAction, closedReason: $closedReason, errorMessage: $errorMessage)';
+  return 'ChatState(status: $status, messages: $messages, roomId: $roomId, myAlias: $myAlias, myAvatar: $myAvatar, partnerAlias: $partnerAlias, partnerAvatar: $partnerAvatar, partnerUserId: $partnerUserId, partnerOnline: $partnerOnline, partnerTyping: $partnerTyping, isUploading: $isUploading, isSending: $isSending, isLoadingOlderMessages: $isLoadingOlderMessages, hasMoreOlderMessages: $hasMoreOlderMessages, closureInitiatedByMe: $closureInitiatedByMe, lastAction: $lastAction, oldestMessageId: $oldestMessageId, closedReason: $closedReason, errorMessage: $errorMessage)';
 }
 
 
@@ -317,7 +317,7 @@ abstract mixin class $ChatStateCopyWith<$Res>  {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) _then) = _$ChatStateCopyWithImpl;
 @useResult
 $Res call({
- ChatStatus status, List<ChatMessage> messages, String roomId, String myAlias, String myAvatar, String partnerAlias, String partnerAvatar, String partnerUserId, bool partnerOnline, bool partnerTyping, bool isUploading, bool isSending, bool closureInitiatedByMe, ChatAction lastAction, String? closedReason, String? errorMessage
+ ChatStatus status, List<ChatMessage> messages, String roomId, String myAlias, String myAvatar, String partnerAlias, String partnerAvatar, String partnerUserId, bool partnerOnline, bool partnerTyping, bool isUploading, bool isSending, bool isLoadingOlderMessages, bool hasMoreOlderMessages, bool closureInitiatedByMe, ChatAction lastAction, String? oldestMessageId, String? closedReason, String? errorMessage
 });
 
 
@@ -334,7 +334,7 @@ class _$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? messages = null,Object? roomId = null,Object? myAlias = null,Object? myAvatar = null,Object? partnerAlias = null,Object? partnerAvatar = null,Object? partnerUserId = null,Object? partnerOnline = null,Object? partnerTyping = null,Object? isUploading = null,Object? isSending = null,Object? closureInitiatedByMe = null,Object? lastAction = null,Object? closedReason = freezed,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? messages = null,Object? roomId = null,Object? myAlias = null,Object? myAvatar = null,Object? partnerAlias = null,Object? partnerAvatar = null,Object? partnerUserId = null,Object? partnerOnline = null,Object? partnerTyping = null,Object? isUploading = null,Object? isSending = null,Object? isLoadingOlderMessages = null,Object? hasMoreOlderMessages = null,Object? closureInitiatedByMe = null,Object? lastAction = null,Object? oldestMessageId = freezed,Object? closedReason = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ChatStatus,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
@@ -348,9 +348,12 @@ as String,partnerOnline: null == partnerOnline ? _self.partnerOnline : partnerOn
 as bool,partnerTyping: null == partnerTyping ? _self.partnerTyping : partnerTyping // ignore: cast_nullable_to_non_nullable
 as bool,isUploading: null == isUploading ? _self.isUploading : isUploading // ignore: cast_nullable_to_non_nullable
 as bool,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
+as bool,isLoadingOlderMessages: null == isLoadingOlderMessages ? _self.isLoadingOlderMessages : isLoadingOlderMessages // ignore: cast_nullable_to_non_nullable
+as bool,hasMoreOlderMessages: null == hasMoreOlderMessages ? _self.hasMoreOlderMessages : hasMoreOlderMessages // ignore: cast_nullable_to_non_nullable
 as bool,closureInitiatedByMe: null == closureInitiatedByMe ? _self.closureInitiatedByMe : closureInitiatedByMe // ignore: cast_nullable_to_non_nullable
 as bool,lastAction: null == lastAction ? _self.lastAction : lastAction // ignore: cast_nullable_to_non_nullable
-as ChatAction,closedReason: freezed == closedReason ? _self.closedReason : closedReason // ignore: cast_nullable_to_non_nullable
+as ChatAction,oldestMessageId: freezed == oldestMessageId ? _self.oldestMessageId : oldestMessageId // ignore: cast_nullable_to_non_nullable
+as String?,closedReason: freezed == closedReason ? _self.closedReason : closedReason // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -434,10 +437,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ChatStatus status,  List<ChatMessage> messages,  String roomId,  String myAlias,  String myAvatar,  String partnerAlias,  String partnerAvatar,  String partnerUserId,  bool partnerOnline,  bool partnerTyping,  bool isUploading,  bool isSending,  bool closureInitiatedByMe,  ChatAction lastAction,  String? closedReason,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ChatStatus status,  List<ChatMessage> messages,  String roomId,  String myAlias,  String myAvatar,  String partnerAlias,  String partnerAvatar,  String partnerUserId,  bool partnerOnline,  bool partnerTyping,  bool isUploading,  bool isSending,  bool isLoadingOlderMessages,  bool hasMoreOlderMessages,  bool closureInitiatedByMe,  ChatAction lastAction,  String? oldestMessageId,  String? closedReason,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myAvatar,_that.partnerAlias,_that.partnerAvatar,_that.partnerUserId,_that.partnerOnline,_that.partnerTyping,_that.isUploading,_that.isSending,_that.closureInitiatedByMe,_that.lastAction,_that.closedReason,_that.errorMessage);case _:
+return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myAvatar,_that.partnerAlias,_that.partnerAvatar,_that.partnerUserId,_that.partnerOnline,_that.partnerTyping,_that.isUploading,_that.isSending,_that.isLoadingOlderMessages,_that.hasMoreOlderMessages,_that.closureInitiatedByMe,_that.lastAction,_that.oldestMessageId,_that.closedReason,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -455,10 +458,10 @@ return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ChatStatus status,  List<ChatMessage> messages,  String roomId,  String myAlias,  String myAvatar,  String partnerAlias,  String partnerAvatar,  String partnerUserId,  bool partnerOnline,  bool partnerTyping,  bool isUploading,  bool isSending,  bool closureInitiatedByMe,  ChatAction lastAction,  String? closedReason,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ChatStatus status,  List<ChatMessage> messages,  String roomId,  String myAlias,  String myAvatar,  String partnerAlias,  String partnerAvatar,  String partnerUserId,  bool partnerOnline,  bool partnerTyping,  bool isUploading,  bool isSending,  bool isLoadingOlderMessages,  bool hasMoreOlderMessages,  bool closureInitiatedByMe,  ChatAction lastAction,  String? oldestMessageId,  String? closedReason,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _ChatState():
-return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myAvatar,_that.partnerAlias,_that.partnerAvatar,_that.partnerUserId,_that.partnerOnline,_that.partnerTyping,_that.isUploading,_that.isSending,_that.closureInitiatedByMe,_that.lastAction,_that.closedReason,_that.errorMessage);}
+return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myAvatar,_that.partnerAlias,_that.partnerAvatar,_that.partnerUserId,_that.partnerOnline,_that.partnerTyping,_that.isUploading,_that.isSending,_that.isLoadingOlderMessages,_that.hasMoreOlderMessages,_that.closureInitiatedByMe,_that.lastAction,_that.oldestMessageId,_that.closedReason,_that.errorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -472,10 +475,10 @@ return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ChatStatus status,  List<ChatMessage> messages,  String roomId,  String myAlias,  String myAvatar,  String partnerAlias,  String partnerAvatar,  String partnerUserId,  bool partnerOnline,  bool partnerTyping,  bool isUploading,  bool isSending,  bool closureInitiatedByMe,  ChatAction lastAction,  String? closedReason,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ChatStatus status,  List<ChatMessage> messages,  String roomId,  String myAlias,  String myAvatar,  String partnerAlias,  String partnerAvatar,  String partnerUserId,  bool partnerOnline,  bool partnerTyping,  bool isUploading,  bool isSending,  bool isLoadingOlderMessages,  bool hasMoreOlderMessages,  bool closureInitiatedByMe,  ChatAction lastAction,  String? oldestMessageId,  String? closedReason,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myAvatar,_that.partnerAlias,_that.partnerAvatar,_that.partnerUserId,_that.partnerOnline,_that.partnerTyping,_that.isUploading,_that.isSending,_that.closureInitiatedByMe,_that.lastAction,_that.closedReason,_that.errorMessage);case _:
+return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myAvatar,_that.partnerAlias,_that.partnerAvatar,_that.partnerUserId,_that.partnerOnline,_that.partnerTyping,_that.isUploading,_that.isSending,_that.isLoadingOlderMessages,_that.hasMoreOlderMessages,_that.closureInitiatedByMe,_that.lastAction,_that.oldestMessageId,_that.closedReason,_that.errorMessage);case _:
   return null;
 
 }
@@ -487,7 +490,7 @@ return $default(_that.status,_that.messages,_that.roomId,_that.myAlias,_that.myA
 
 
 class _ChatState implements ChatState {
-  const _ChatState({this.status = ChatStatus.connecting, final  List<ChatMessage> messages = const [], this.roomId = '', this.myAlias = '', this.myAvatar = '', this.partnerAlias = 'Stranger', this.partnerAvatar = '', this.partnerUserId = '', this.partnerOnline = false, this.partnerTyping = false, this.isUploading = false, this.isSending = false, this.closureInitiatedByMe = false, this.lastAction = ChatAction.none, this.closedReason, this.errorMessage}): _messages = messages;
+  const _ChatState({this.status = ChatStatus.connecting, final  List<ChatMessage> messages = const [], this.roomId = '', this.myAlias = '', this.myAvatar = '', this.partnerAlias = 'Stranger', this.partnerAvatar = '', this.partnerUserId = '', this.partnerOnline = false, this.partnerTyping = false, this.isUploading = false, this.isSending = false, this.isLoadingOlderMessages = false, this.hasMoreOlderMessages = false, this.closureInitiatedByMe = false, this.lastAction = ChatAction.none, this.oldestMessageId, this.closedReason, this.errorMessage}): _messages = messages;
   
 
 @override@JsonKey() final  ChatStatus status;
@@ -508,8 +511,11 @@ class _ChatState implements ChatState {
 @override@JsonKey() final  bool partnerTyping;
 @override@JsonKey() final  bool isUploading;
 @override@JsonKey() final  bool isSending;
+@override@JsonKey() final  bool isLoadingOlderMessages;
+@override@JsonKey() final  bool hasMoreOlderMessages;
 @override@JsonKey() final  bool closureInitiatedByMe;
 @override@JsonKey() final  ChatAction lastAction;
+@override final  String? oldestMessageId;
 @override final  String? closedReason;
 @override final  String? errorMessage;
 
@@ -523,16 +529,16 @@ _$ChatStateCopyWith<_ChatState> get copyWith => __$ChatStateCopyWithImpl<_ChatSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.myAlias, myAlias) || other.myAlias == myAlias)&&(identical(other.myAvatar, myAvatar) || other.myAvatar == myAvatar)&&(identical(other.partnerAlias, partnerAlias) || other.partnerAlias == partnerAlias)&&(identical(other.partnerAvatar, partnerAvatar) || other.partnerAvatar == partnerAvatar)&&(identical(other.partnerUserId, partnerUserId) || other.partnerUserId == partnerUserId)&&(identical(other.partnerOnline, partnerOnline) || other.partnerOnline == partnerOnline)&&(identical(other.partnerTyping, partnerTyping) || other.partnerTyping == partnerTyping)&&(identical(other.isUploading, isUploading) || other.isUploading == isUploading)&&(identical(other.isSending, isSending) || other.isSending == isSending)&&(identical(other.closureInitiatedByMe, closureInitiatedByMe) || other.closureInitiatedByMe == closureInitiatedByMe)&&(identical(other.lastAction, lastAction) || other.lastAction == lastAction)&&(identical(other.closedReason, closedReason) || other.closedReason == closedReason)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.roomId, roomId) || other.roomId == roomId)&&(identical(other.myAlias, myAlias) || other.myAlias == myAlias)&&(identical(other.myAvatar, myAvatar) || other.myAvatar == myAvatar)&&(identical(other.partnerAlias, partnerAlias) || other.partnerAlias == partnerAlias)&&(identical(other.partnerAvatar, partnerAvatar) || other.partnerAvatar == partnerAvatar)&&(identical(other.partnerUserId, partnerUserId) || other.partnerUserId == partnerUserId)&&(identical(other.partnerOnline, partnerOnline) || other.partnerOnline == partnerOnline)&&(identical(other.partnerTyping, partnerTyping) || other.partnerTyping == partnerTyping)&&(identical(other.isUploading, isUploading) || other.isUploading == isUploading)&&(identical(other.isSending, isSending) || other.isSending == isSending)&&(identical(other.isLoadingOlderMessages, isLoadingOlderMessages) || other.isLoadingOlderMessages == isLoadingOlderMessages)&&(identical(other.hasMoreOlderMessages, hasMoreOlderMessages) || other.hasMoreOlderMessages == hasMoreOlderMessages)&&(identical(other.closureInitiatedByMe, closureInitiatedByMe) || other.closureInitiatedByMe == closureInitiatedByMe)&&(identical(other.lastAction, lastAction) || other.lastAction == lastAction)&&(identical(other.oldestMessageId, oldestMessageId) || other.oldestMessageId == oldestMessageId)&&(identical(other.closedReason, closedReason) || other.closedReason == closedReason)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_messages),roomId,myAlias,myAvatar,partnerAlias,partnerAvatar,partnerUserId,partnerOnline,partnerTyping,isUploading,isSending,closureInitiatedByMe,lastAction,closedReason,errorMessage);
+int get hashCode => Object.hashAll([runtimeType,status,const DeepCollectionEquality().hash(_messages),roomId,myAlias,myAvatar,partnerAlias,partnerAvatar,partnerUserId,partnerOnline,partnerTyping,isUploading,isSending,isLoadingOlderMessages,hasMoreOlderMessages,closureInitiatedByMe,lastAction,oldestMessageId,closedReason,errorMessage]);
 
 @override
 String toString() {
-  return 'ChatState(status: $status, messages: $messages, roomId: $roomId, myAlias: $myAlias, myAvatar: $myAvatar, partnerAlias: $partnerAlias, partnerAvatar: $partnerAvatar, partnerUserId: $partnerUserId, partnerOnline: $partnerOnline, partnerTyping: $partnerTyping, isUploading: $isUploading, isSending: $isSending, closureInitiatedByMe: $closureInitiatedByMe, lastAction: $lastAction, closedReason: $closedReason, errorMessage: $errorMessage)';
+  return 'ChatState(status: $status, messages: $messages, roomId: $roomId, myAlias: $myAlias, myAvatar: $myAvatar, partnerAlias: $partnerAlias, partnerAvatar: $partnerAvatar, partnerUserId: $partnerUserId, partnerOnline: $partnerOnline, partnerTyping: $partnerTyping, isUploading: $isUploading, isSending: $isSending, isLoadingOlderMessages: $isLoadingOlderMessages, hasMoreOlderMessages: $hasMoreOlderMessages, closureInitiatedByMe: $closureInitiatedByMe, lastAction: $lastAction, oldestMessageId: $oldestMessageId, closedReason: $closedReason, errorMessage: $errorMessage)';
 }
 
 
@@ -543,7 +549,7 @@ abstract mixin class _$ChatStateCopyWith<$Res> implements $ChatStateCopyWith<$Re
   factory _$ChatStateCopyWith(_ChatState value, $Res Function(_ChatState) _then) = __$ChatStateCopyWithImpl;
 @override @useResult
 $Res call({
- ChatStatus status, List<ChatMessage> messages, String roomId, String myAlias, String myAvatar, String partnerAlias, String partnerAvatar, String partnerUserId, bool partnerOnline, bool partnerTyping, bool isUploading, bool isSending, bool closureInitiatedByMe, ChatAction lastAction, String? closedReason, String? errorMessage
+ ChatStatus status, List<ChatMessage> messages, String roomId, String myAlias, String myAvatar, String partnerAlias, String partnerAvatar, String partnerUserId, bool partnerOnline, bool partnerTyping, bool isUploading, bool isSending, bool isLoadingOlderMessages, bool hasMoreOlderMessages, bool closureInitiatedByMe, ChatAction lastAction, String? oldestMessageId, String? closedReason, String? errorMessage
 });
 
 
@@ -560,7 +566,7 @@ class __$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? messages = null,Object? roomId = null,Object? myAlias = null,Object? myAvatar = null,Object? partnerAlias = null,Object? partnerAvatar = null,Object? partnerUserId = null,Object? partnerOnline = null,Object? partnerTyping = null,Object? isUploading = null,Object? isSending = null,Object? closureInitiatedByMe = null,Object? lastAction = null,Object? closedReason = freezed,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? messages = null,Object? roomId = null,Object? myAlias = null,Object? myAvatar = null,Object? partnerAlias = null,Object? partnerAvatar = null,Object? partnerUserId = null,Object? partnerOnline = null,Object? partnerTyping = null,Object? isUploading = null,Object? isSending = null,Object? isLoadingOlderMessages = null,Object? hasMoreOlderMessages = null,Object? closureInitiatedByMe = null,Object? lastAction = null,Object? oldestMessageId = freezed,Object? closedReason = freezed,Object? errorMessage = freezed,}) {
   return _then(_ChatState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ChatStatus,messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
@@ -574,9 +580,12 @@ as String,partnerOnline: null == partnerOnline ? _self.partnerOnline : partnerOn
 as bool,partnerTyping: null == partnerTyping ? _self.partnerTyping : partnerTyping // ignore: cast_nullable_to_non_nullable
 as bool,isUploading: null == isUploading ? _self.isUploading : isUploading // ignore: cast_nullable_to_non_nullable
 as bool,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
+as bool,isLoadingOlderMessages: null == isLoadingOlderMessages ? _self.isLoadingOlderMessages : isLoadingOlderMessages // ignore: cast_nullable_to_non_nullable
+as bool,hasMoreOlderMessages: null == hasMoreOlderMessages ? _self.hasMoreOlderMessages : hasMoreOlderMessages // ignore: cast_nullable_to_non_nullable
 as bool,closureInitiatedByMe: null == closureInitiatedByMe ? _self.closureInitiatedByMe : closureInitiatedByMe // ignore: cast_nullable_to_non_nullable
 as bool,lastAction: null == lastAction ? _self.lastAction : lastAction // ignore: cast_nullable_to_non_nullable
-as ChatAction,closedReason: freezed == closedReason ? _self.closedReason : closedReason // ignore: cast_nullable_to_non_nullable
+as ChatAction,oldestMessageId: freezed == oldestMessageId ? _self.oldestMessageId : oldestMessageId // ignore: cast_nullable_to_non_nullable
+as String?,closedReason: freezed == closedReason ? _self.closedReason : closedReason // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/moderation_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/room_remote_datasource.dart';
@@ -13,6 +14,10 @@ abstract class RegisterModule {
   @lazySingleton
   AuthRemoteDatasource authRemoteDatasource(Dio dio) =>
       AuthRemoteDatasource(dio);
+
+  @lazySingleton
+  ChatRemoteDatasource chatRemoteDatasource(Dio dio) =>
+      ChatRemoteDatasource(dio);
 
   @lazySingleton
   UserRemoteDatasource userRemoteDatasource(Dio dio) =>

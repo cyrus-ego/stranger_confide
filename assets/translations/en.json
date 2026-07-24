@@ -113,6 +113,7 @@
     "report_failed": "Failed to submit report. Please try again.",
     "moderation_blocked": "Your message violates community guidelines.",
     "spam_detected": "You're sending messages too quickly. Please slow down.",
+    "socket_error_fallback": "Something went wrong.",
     "room_closed_title": "Room closed",
     "room_closed_partner_left": "Your partner has left the room.",
     "room_closed_blocked": "User has been blocked.",
@@ -125,6 +126,7 @@
   "common": {
     "error_title": "Error",
     "close": "Close",
+    "retry": "Retry",
     "connection_error": "Connection failed. Please retry.",
     "settings": "Settings",
     "language": "Language",

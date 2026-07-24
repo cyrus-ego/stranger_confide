@@ -1,0 +1,18 @@
+import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
+import 'package:stranger_confide/data/models/response/chat_messages_response.dart';
+
+part 'chat_remote_datasource.g.dart';
+
+@RestApi()
+abstract class ChatRemoteDatasource {
+  factory ChatRemoteDatasource(Dio dio, {String baseUrl}) =
+      _ChatRemoteDatasource;
+
+  @GET('/chat/{roomId}/messages')
+  Future<ChatMessagesResponse> getMessages(
+    @Path('roomId') String roomId,
+    @Query('beforeMessageId') String beforeMessageId,
+    @Query('limit') int limit,
+  );
+}

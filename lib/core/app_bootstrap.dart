@@ -1,13 +1,19 @@
 import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'auth_refresh_interceptor.dart';
 import 'network_inspector.dart';
 import 'token_storage.dart';
 
-const _defaultApiBaseUrl =
-    'https://api.chatvn.online/api';
+const _defaultApiBaseUrl = 'https://api.chatvn.online/api';
+const _defaultHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true',
+};
 
 late final TokenStorage _tokenStorage;
 
@@ -15,18 +21,21 @@ Future<void> bootstrapAppCore() async {
   _tokenStorage = TokenStorage();
   await _tokenStorage.load();
   final chuckInterceptor = networkInspectorInterceptor;
+  final baseUrl = dotenv.env['API_BASE_URL'] ?? _defaultApiBaseUrl;
+  final authRefreshInterceptor = AuthRefreshInterceptor(
+    tokenStorage: _tokenStorage,
+    baseUrl: baseUrl,
+    defaultHeaders: _defaultHeaders,
+  );
 
   final config = CoreConfig(
     network: NetworkConfig(
-      baseUrl: dotenv.env['API_BASE_URL'] ?? _defaultApiBaseUrl,
+      baseUrl: baseUrl,
       enableLogging: false,
-      defaultHeaders: const {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-      },
+      defaultHeaders: _defaultHeaders,
       headerProvider: _authHeaders,
       extraInterceptors: [
+        authRefreshInterceptor,
         if (chuckInterceptor != null) chuckInterceptor,
         if (kDebugMode) CurlLoggerDioInterceptor(printOnSuccess: true),
       ],
@@ -42,6 +51,7 @@ Future<void> bootstrapAppCore() async {
     config,
     setup: (locator) {
       registerHttpClient(config.network, locator: locator);
+      authRefreshInterceptor.attach(locator<Dio>());
       registerLazySingletonOverride<TokenStorage>(
         () => _tokenStorage,
         locator: locator,

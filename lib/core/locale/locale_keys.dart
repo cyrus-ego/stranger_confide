@@ -116,6 +116,7 @@ abstract final class LocaleKeys {
   static const chatReportFailed = 'chat.report_failed';
   static const chatModerationBlocked = 'chat.moderation_blocked';
   static const chatSpamDetected = 'chat.spam_detected';
+  static const chatSocketErrorFallback = 'chat.socket_error_fallback';
   static const chatRoomClosedTitle = 'chat.room_closed_title';
   static const chatRoomClosedPartnerLeft = 'chat.room_closed_partner_left';
   static const chatRoomClosedBlocked = 'chat.room_closed_blocked';
@@ -128,6 +129,7 @@ abstract final class LocaleKeys {
   // Common
   static const commonErrorTitle = 'common.error_title';
   static const commonClose = 'common.close';
+  static const commonRetry = 'common.retry';
   static const commonConnectionError = 'common.connection_error';
   static const commonSettings = 'common.settings';
   static const commonLanguage = 'common.language';

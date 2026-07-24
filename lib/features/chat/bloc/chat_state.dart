@@ -2,18 +2,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_state.freezed.dart';
 
-enum ChatStatus {
-  connecting,
-  active,
-  closed,
-  error,
-}
+enum ChatStatus { connecting, active, closed, error }
 
-enum MessageType {
-  text,
-  image,
-  system,
-}
+enum MessageType { text, image, system }
 
 @freezed
 sealed class ChatMessage with _$ChatMessage {
@@ -52,8 +43,11 @@ sealed class ChatState with _$ChatState {
     @Default(false) bool partnerTyping,
     @Default(false) bool isUploading,
     @Default(false) bool isSending,
+    @Default(false) bool isLoadingOlderMessages,
+    @Default(false) bool hasMoreOlderMessages,
     @Default(false) bool closureInitiatedByMe,
     @Default(ChatAction.none) ChatAction lastAction,
+    String? oldestMessageId,
     String? closedReason,
     String? errorMessage,
   }) = _ChatState;

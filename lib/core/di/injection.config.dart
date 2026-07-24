@@ -16,6 +16,8 @@ import 'package:stranger_confide/core/di/register_module.dart' as _i661;
 import 'package:stranger_confide/core/token_storage.dart' as _i670;
 import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
+import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart'
+    as _i1068;
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart'
     as _i854;
 import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dart'
@@ -30,6 +32,8 @@ import 'package:stranger_confide/data/datasources/user_remote_datasource.dart'
     as _i510;
 import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
     as _i1019;
+import 'package:stranger_confide/data/repositories/chat_repository_impl.dart'
+    as _i236;
 import 'package:stranger_confide/data/repositories/matchmaking_repository_impl.dart'
     as _i433;
 import 'package:stranger_confide/data/repositories/moderation_repository_impl.dart'
@@ -42,6 +46,8 @@ import 'package:stranger_confide/data/repositories/user_repository_impl.dart'
     as _i263;
 import 'package:stranger_confide/domain/repositories/auth_repository.dart'
     as _i982;
+import 'package:stranger_confide/domain/repositories/chat_repository.dart'
+    as _i926;
 import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart'
     as _i304;
 import 'package:stranger_confide/domain/repositories/moderation_repository.dart'
@@ -58,6 +64,8 @@ import 'package:stranger_confide/domain/usecases/create_profile_usecase.dart'
     as _i115;
 import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
     as _i990;
+import 'package:stranger_confide/domain/usecases/get_chat_messages_usecase.dart'
+    as _i720;
 import 'package:stranger_confide/domain/usecases/get_current_user_usecase.dart'
     as _i1047;
 import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
@@ -105,6 +113,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i999.AuthRemoteDatasource>(
       () => registerModule.authRemoteDatasource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i1068.ChatRemoteDatasource>(
+      () => registerModule.chatRemoteDatasource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i510.UserRemoteDatasource>(
       () => registerModule.userRemoteDatasource(gh<_i361.Dio>()),
     );
@@ -130,6 +141,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i34.ProfileRepository>(
       () => _i412.ProfileRepositoryImpl(gh<_i962.ProfileRemoteDatasource>()),
+    );
+    gh.lazySingleton<_i926.ChatRepository>(
+      () => _i236.ChatRepositoryImpl(gh<_i1068.ChatRemoteDatasource>()),
     );
     gh.lazySingleton<_i982.AuthRepository>(
       () => _i1019.AuthRepositoryImpl(gh<_i999.AuthRemoteDatasource>()),
@@ -187,6 +201,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i691.ReportUserUseCase>(
       () => _i691.ReportUserUseCase(gh<_i396.ModerationRepository>()),
     );
+    gh.factory<_i720.GetChatMessagesUseCase>(
+      () => _i720.GetChatMessagesUseCase(gh<_i926.ChatRepository>()),
+    );
     gh.factory<_i1047.GetCurrentUserUseCase>(
       () => _i1047.GetCurrentUserUseCase(gh<_i687.UserRepository>()),
     );
@@ -198,14 +215,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i853.UpdateProfileUseCase>(),
         gh<_i247.PatchProfileUseCase>(),
         gh<_i670.TokenStorage>(),
-      ),
-    );
-    gh.factory<_i460.ChatBloc>(
-      () => _i460.ChatBloc(
-        gh<_i670.TokenStorage>(),
-        gh<_i212.LeaveRoomUseCase>(),
-        gh<_i851.BlockRoomUseCase>(),
-        gh<_i691.ReportUserUseCase>(),
       ),
     );
     gh.factory<_i987.MatchmakingBloc>(
@@ -223,6 +232,16 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i225.ResendOtpUseCase>(),
         gh<_i29.VerifyEmailUseCase>(),
         gh<_i670.TokenStorage>(),
+      ),
+    );
+    gh.factory<_i460.ChatBloc>(
+      () => _i460.ChatBloc(
+        gh<_i670.TokenStorage>(),
+        gh<_i990.GetActiveRoomUseCase>(),
+        gh<_i212.LeaveRoomUseCase>(),
+        gh<_i851.BlockRoomUseCase>(),
+        gh<_i691.ReportUserUseCase>(),
+        gh<_i720.GetChatMessagesUseCase>(),
       ),
     );
     return this;

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
+import '../../core/network_inspector.dart';
 import '../../router/app_router.dart';
 import '../../shared/widgets/app_snack_bar.dart';
 import '../../theme/app_colors.dart';
@@ -28,9 +30,29 @@ class ChatPage extends BlocHostPage {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends BlocHostPageState<ChatPage> {
+class _ChatPageState extends BlocHostPageState<ChatPage>
+    with WidgetsBindingObserver {
   @override
   Stream<String> get errorStream => context.read<ChatBloc>().errorStream;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      context.read<ChatBloc>().add(const ChatAppResumed());
+    }
+  }
 
   @override
   Widget buildPage(BuildContext context) {
@@ -89,6 +111,24 @@ class _ChatPageState extends BlocHostPageState<ChatPage> {
               case ChatAction.none:
                 break;
             }
+          },
+        ),
+        BlocListener<ChatBloc, ChatState>(
+          listenWhen: (prev, curr) =>
+              curr.status == ChatStatus.active &&
+              curr.errorMessage != null &&
+              curr.errorMessage != prev.errorMessage,
+          listener: (context, state) {
+            final message = state.errorMessage?.trim();
+            AppSnackBar.show(
+              context,
+              message: message == null || message.isEmpty
+                  ? tr(LocaleKeys.chatSocketErrorFallback)
+                  : message,
+              type: SnackBarType.error,
+              duration: const Duration(seconds: 5),
+              position: SnackBarPosition.top,
+            );
           },
         ),
       ],
@@ -192,6 +232,14 @@ class _ChatScaffold extends StatelessWidget {
         },
       ),
       actions: [
+        if (kDebugMode)
+          IconButton(
+            onPressed: showNetworkInspector,
+            icon: Icon(
+              Icons.bug_report_outlined,
+              color: theme.colorScheme.onSurface.withAlpha(180),
+            ),
+          ),
         IconButton(
           onPressed: () => context.push(AppRoutes.profile),
           icon: Icon(
@@ -207,8 +255,9 @@ class _ChatScaffold extends StatelessWidget {
               enabled: isActive,
               icon: Icon(
                 Icons.more_vert_rounded,
-                color: theme.colorScheme.onSurface
-                    .withAlpha(isActive ? 180 : 60),
+                color: theme.colorScheme.onSurface.withAlpha(
+                  isActive ? 180 : 60,
+                ),
               ),
               onSelected: (value) => _onMenuAction(context, value),
               itemBuilder: (_) => [
@@ -216,8 +265,11 @@ class _ChatScaffold extends StatelessWidget {
                   value: 'report',
                   child: Row(
                     children: [
-                      const Icon(Icons.flag_outlined,
-                          size: 20, color: AppColors.tertiary),
+                      const Icon(
+                        Icons.flag_outlined,
+                        size: 20,
+                        color: AppColors.tertiary,
+                      ),
                       const Gap(AppSpacing.md),
                       Text(tr(LocaleKeys.chatReport)),
                     ],
@@ -227,8 +279,11 @@ class _ChatScaffold extends StatelessWidget {
                   value: 'block',
                   child: Row(
                     children: [
-                      const Icon(Icons.block_rounded,
-                          size: 20, color: AppColors.error),
+                      const Icon(
+                        Icons.block_rounded,
+                        size: 20,
+                        color: AppColors.error,
+                      ),
                       const Gap(AppSpacing.md),
                       Text(tr(LocaleKeys.chatBlock)),
                     ],
@@ -238,9 +293,11 @@ class _ChatScaffold extends StatelessWidget {
                   value: 'leave',
                   child: Row(
                     children: [
-                      Icon(Icons.exit_to_app_rounded,
-                          size: 20,
-                          color: theme.colorScheme.onSurface.withAlpha(150)),
+                      Icon(
+                        Icons.exit_to_app_rounded,
+                        size: 20,
+                        color: theme.colorScheme.onSurface.withAlpha(150),
+                      ),
                       const Gap(AppSpacing.md),
                       Text(tr(LocaleKeys.chatLeave)),
                     ],
@@ -293,10 +350,8 @@ class _ConnectingBanner extends StatelessWidget {
       buildWhen: (p, c) => p.status != c.status,
       builder: (context, state) {
         if (state.status == ChatStatus.connecting) {
-          return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            color: AppColors.primary.withAlpha(30),
+          return _ChatStatusBanner(
+            backgroundColor: AppColors.primary.withAlpha(30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -314,8 +369,59 @@ class _ConnectingBanner extends StatelessWidget {
             ),
           );
         }
+
+        if (state.status == ChatStatus.error) {
+          return _ChatStatusBanner(
+            backgroundColor: AppColors.error.withAlpha(34),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.wifi_off_rounded,
+                  size: 16,
+                  color: theme.colorScheme.error,
+                ),
+                const Gap(AppSpacing.sm),
+                Flexible(
+                  child: Text(
+                    state.errorMessage ?? tr(LocaleKeys.commonConnectionError),
+                    style: theme.textTheme.bodySmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Gap(AppSpacing.sm),
+                TextButton(
+                  onPressed: () {
+                    context.read<ChatBloc>().add(const ChatAppResumed());
+                  },
+                  child: Text(tr(LocaleKeys.commonRetry)),
+                ),
+              ],
+            ),
+          );
+        }
         return const SizedBox.shrink();
       },
+    );
+  }
+}
+
+class _ChatStatusBanner extends StatelessWidget {
+  const _ChatStatusBanner({required this.backgroundColor, required this.child});
+
+  final Color backgroundColor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.sm,
+      ),
+      color: backgroundColor,
+      child: child,
     );
   }
 }
@@ -384,11 +490,31 @@ class _MessageList extends StatefulWidget {
 
 class _MessageListState extends State<_MessageList> {
   final _scrollController = ScrollController();
+  bool _lastMessageUpdateWasPrepend = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_maybeLoadOlderMessages);
+  }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _maybeLoadOlderMessages() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.pixels > 80) return;
+
+    final bloc = context.read<ChatBloc>();
+    final state = bloc.state;
+    if (state.status == ChatStatus.active &&
+        state.hasMoreOlderMessages &&
+        !state.isLoadingOlderMessages) {
+      bloc.add(const ChatLoadOlderMessages());
+    }
   }
 
   void _scrollToBottom() {
@@ -403,15 +529,49 @@ class _MessageListState extends State<_MessageList> {
     });
   }
 
+  void _preserveOffsetAfterPrepend() {
+    if (!_scrollController.hasClients) return;
+    final oldMaxExtent = _scrollController.position.maxScrollExtent;
+    final oldPixels = _scrollController.position.pixels;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      final position = _scrollController.position;
+      final delta = position.maxScrollExtent - oldMaxExtent;
+      final target = (oldPixels + delta).clamp(
+        position.minScrollExtent,
+        position.maxScrollExtent,
+      );
+      position.jumpTo(target);
+    });
+  }
+
+  bool _didPrependMessages(ChatState previous, ChatState current) {
+    if (previous.messages.isEmpty || current.messages.isEmpty) return false;
+    if (current.messages.length <= previous.messages.length) return false;
+    return current.messages.last.id == previous.messages.last.id &&
+        current.messages.first.id != previous.messages.first.id;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatBloc, ChatState>(
-      listenWhen: (p, c) => c.messages.length > p.messages.length,
+      listenWhen: (p, c) {
+        _lastMessageUpdateWasPrepend = _didPrependMessages(p, c);
+        return c.messages.length > p.messages.length;
+      },
       listener: (_, __) {
+        if (_lastMessageUpdateWasPrepend) {
+          _preserveOffsetAfterPrepend();
+          return;
+        }
+
         _scrollToBottom();
         HapticFeedback.lightImpact();
       },
-      buildWhen: (p, c) => p.messages != c.messages,
+      buildWhen: (p, c) =>
+          p.messages != c.messages ||
+          p.isLoadingOlderMessages != c.isLoadingOlderMessages,
       builder: (context, state) {
         if (state.messages.isEmpty) {
           return Center(
@@ -421,20 +581,16 @@ class _MessageListState extends State<_MessageList> {
                 Icon(
                   Icons.chat_bubble_outline_rounded,
                   size: 48,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withAlpha(60),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(60),
                 ),
                 const Gap(AppSpacing.md),
                 Text(
                   tr(LocaleKeys.chatInputHint),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(100),
-                      ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withAlpha(100),
+                  ),
                 ),
               ],
             ),
@@ -447,12 +603,28 @@ class _MessageListState extends State<_MessageList> {
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.md,
           ),
-          itemCount: state.messages.length,
+          itemCount:
+              state.messages.length + (state.isLoadingOlderMessages ? 1 : 0),
           itemBuilder: (context, i) {
-            final msg = state.messages[i];
-            final showTimestamp = i == 0 ||
+            if (state.isLoadingOlderMessages && i == 0) {
+              return const Padding(
+                padding: EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Center(
+                  child: SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              );
+            }
+
+            final messageIndex = state.isLoadingOlderMessages ? i - 1 : i;
+            final msg = state.messages[messageIndex];
+            final showTimestamp =
+                messageIndex == 0 ||
                 msg.createdAt
-                        .difference(state.messages[i - 1].createdAt)
+                        .difference(state.messages[messageIndex - 1].createdAt)
                         .inMinutes >
                     5;
 
@@ -466,12 +638,11 @@ class _MessageListState extends State<_MessageList> {
                     child: Text(
                       _formatTime(msg.createdAt),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withAlpha(80),
-                            fontSize: 11,
-                          ),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withAlpha(80),
+                        fontSize: 11,
+                      ),
                     ),
                   ),
                 _MessageBubble(message: msg),
@@ -485,9 +656,8 @@ class _MessageListState extends State<_MessageList> {
 
   String _formatTime(DateTime dt) {
     final now = DateTime.now();
-    final isToday = dt.year == now.year &&
-        dt.month == now.month &&
-        dt.day == now.day;
+    final isToday =
+        dt.year == now.year && dt.month == now.month && dt.day == now.day;
     if (isToday) {
       return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
     }
@@ -515,16 +685,17 @@ class _MessageBubble extends StatelessWidget {
     final bubbleColor = isMine
         ? AppColors.primary
         : isDark
-            ? AppColors.darkSurfaceBright
-            : AppColors.lightSurfaceVariant;
+        ? AppColors.darkSurfaceBright
+        : AppColors.lightSurfaceVariant;
 
     final textColor = isMine ? Colors.white : theme.colorScheme.onSurface;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: Row(
-        mainAxisAlignment:
-            isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isMine
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: [
           if (isMine) const Spacer(flex: 2),
           Flexible(
@@ -576,9 +747,7 @@ class _ImageContent extends StatelessWidget {
       return const SizedBox(
         width: 120,
         height: 120,
-        child: Center(
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
+        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
       );
     }
 
@@ -597,8 +766,10 @@ class _ImageContent extends StatelessWidget {
             width: 200,
             height: 80,
             child: Center(
-              child: Icon(Icons.broken_image_rounded,
-                  color: textColor.withAlpha(120)),
+              child: Icon(
+                Icons.broken_image_rounded,
+                color: textColor.withAlpha(120),
+              ),
             ),
           ),
         ),
@@ -616,11 +787,7 @@ class _ImageContent extends StatelessWidget {
             iconTheme: const IconThemeData(color: Colors.white),
           ),
           extendBodyBehindAppBar: true,
-          body: Center(
-            child: InteractiveViewer(
-              child: Image.network(url),
-            ),
-          ),
+          body: Center(child: InteractiveViewer(child: Image.network(url))),
         ),
       ),
     );
@@ -642,11 +809,10 @@ class _SystemMessage extends StatelessWidget {
         child: Text(
           text,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontStyle: FontStyle.italic,
-                color:
-                    Theme.of(context).colorScheme.onSurface.withAlpha(100),
-                fontSize: 12,
-              ),
+            fontStyle: FontStyle.italic,
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
+            fontSize: 12,
+          ),
           textAlign: TextAlign.center,
         ),
       ),
@@ -677,15 +843,14 @@ class _TypingIndicator extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                tr(LocaleKeys.chatTyping,
-                    namedArgs: {'name': state.partnerAlias}),
+                tr(
+                  LocaleKeys.chatTyping,
+                  namedArgs: {'name': state.partnerAlias},
+                ),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withAlpha(120),
-                      fontStyle: FontStyle.italic,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(120),
+                  fontStyle: FontStyle.italic,
+                ),
               ),
               const Gap(AppSpacing.xs),
               const _AnimatedDots(),
@@ -804,8 +969,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
           return _FindSomeoneNewBar(isDark: isDark);
         }
 
-        final disabled =
-            state.status != ChatStatus.active || state.isSending;
+        final disabled = state.status != ChatStatus.active || state.isSending;
 
         return Container(
           padding: EdgeInsets.only(
@@ -857,18 +1021,15 @@ class _ChatInputBarState extends State<_ChatInputBar> {
                   decoration: InputDecoration(
                     hintText: tr(LocaleKeys.chatInputHint),
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusXl),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                       borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusXl),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                       borderSide: BorderSide.none,
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusXl),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,

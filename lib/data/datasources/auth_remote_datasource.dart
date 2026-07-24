@@ -17,6 +17,9 @@ abstract class AuthRemoteDatasource {
   @POST('/auth/login')
   Future<AuthTokens> login(@Body() LoginRequest body);
 
+  @POST('/auth/refresh')
+  Future<AuthTokens> refresh(@Body() Map<String, dynamic> body);
+
   @POST('/auth/register')
   Future<RegisterResponse> register(@Body() RegisterRequest body);
 

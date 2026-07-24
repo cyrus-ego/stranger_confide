@@ -42,10 +42,10 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
               curr.status == MatchmakingStatus.matched &&
               prev.status != MatchmakingStatus.matched,
           listener: (context, state) {
-            AppSnackBar.show(
-              context,
-              message: tr(LocaleKeys.matchmakingMatchFound),
-            );
+            // AppSnackBar.show(
+            //   context,
+            //   message: tr(LocaleKeys.matchmakingMatchFound),
+            // );
             if (state.roomId != null && state.roomId!.isNotEmpty) {
               context.go('${AppRoutes.chat}/${state.roomId}');
             }
