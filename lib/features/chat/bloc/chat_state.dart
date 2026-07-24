@@ -52,6 +52,7 @@ sealed class ChatState with _$ChatState {
     @Default(false) bool partnerTyping,
     @Default(false) bool isUploading,
     @Default(false) bool isSending,
+    @Default(false) bool closureInitiatedByMe,
     @Default(ChatAction.none) ChatAction lastAction,
     String? closedReason,
     String? errorMessage,

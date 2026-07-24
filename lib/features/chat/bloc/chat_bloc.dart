@@ -80,6 +80,8 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   }
 
   void _onTyping(ChatTyping event, Emitter<ChatState> emit) {
+    if (state.status != ChatStatus.active) return;
+
     if (!_isTypingEmitted) {
       _isTypingEmitted = true;
       _socket?.emit('chat:typing', {
@@ -106,8 +108,11 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   Future<void> _onLeaveRoom(
     ChatLeaveRoom event,
     Emitter<ChatState> emit,
-  ) =>
-      guard(() async {
+  ) {
+    emit(state.copyWith(closureInitiatedByMe: true));
+
+    return guard(
+      () async {
         final result = await _leaveRoomUseCase(state.roomId);
         if (result.isSuccess) {
           _socket?.emit('room:leave', {'roomId': state.roomId});
@@ -119,15 +124,22 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
         } else {
           throw result.errorOrNull!;
         }
-      });
+      },
+      onError: (_) {
+        emit(state.copyWith(closureInitiatedByMe: false));
+      },
+    );
+  }
 
   Future<void> _onBlockPartner(
     ChatBlockPartner event,
     Emitter<ChatState> emit,
-  ) =>
-      guard(() async {
-        if (state.partnerUserId.isEmpty) return;
+  ) {
+    if (state.partnerUserId.isEmpty) return Future.value();
+    emit(state.copyWith(closureInitiatedByMe: true));
 
+    return guard(
+      () async {
         final result = await _blockRoomUseCase(
           state.roomId,
           state.partnerUserId,
@@ -145,7 +157,12 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
         } else {
           throw result.errorOrNull!;
         }
-      });
+      },
+      onError: (_) {
+        emit(state.copyWith(closureInitiatedByMe: false));
+      },
+    );
+  }
 
   Future<void> _onReportPartner(
     ChatReportPartner event,
@@ -202,6 +219,8 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
       partnerUserId: partnerUserId,
       partnerOnline: partnerOnline,
       messages: messages,
+      closureInitiatedByMe: false,
+      closedReason: null,
     ));
   }
 
@@ -240,6 +259,10 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     emit(state.copyWith(
       status: ChatStatus.closed,
       closedReason: event.reason,
+      partnerOnline: false,
+      partnerTyping: false,
+      isUploading: false,
+      isSending: false,
     ));
   }
 

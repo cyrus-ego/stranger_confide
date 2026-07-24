@@ -168,6 +168,7 @@ class _ReportSheetState extends State<_ReportSheet> {
 Future<void> showRoomClosedDialog(
   BuildContext context, {
   required String reason,
+  required bool canDismiss,
 }) {
   final message = switch (reason) {
     'partner_left' => tr(LocaleKeys.chatRoomClosedPartnerLeft),
@@ -177,7 +178,7 @@ Future<void> showRoomClosedDialog(
 
   return showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: canDismiss,
     builder: (ctx) {
       final theme = Theme.of(ctx);
 
@@ -189,7 +190,13 @@ Future<void> showRoomClosedDialog(
               color: theme.colorScheme.onSurface.withAlpha(150),
             ),
             const Gap(AppSpacing.sm),
-            Text(tr(LocaleKeys.chatRoomClosedTitle)),
+            Expanded(child: Text(tr(LocaleKeys.chatRoomClosedTitle))),
+            if (canDismiss)
+              IconButton(
+                tooltip: tr(LocaleKeys.commonClose),
+                onPressed: () => Navigator.pop(ctx),
+                icon: const Icon(Icons.close_rounded),
+              ),
           ],
         ),
         content: Text(message),

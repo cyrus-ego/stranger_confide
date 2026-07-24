@@ -53,6 +53,7 @@ class _ChatPageState extends BlocHostPageState<ChatPage> {
             showRoomClosedDialog(
               context,
               reason: state.closedReason ?? 'closed',
+              canDismiss: !state.closureInitiatedByMe,
             );
           },
         ),
@@ -796,8 +797,13 @@ class _ChatInputBarState extends State<_ChatInputBar> {
       buildWhen: (p, c) =>
           p.status != c.status ||
           p.isUploading != c.isUploading ||
-          p.isSending != c.isSending,
+          p.isSending != c.isSending ||
+          p.closureInitiatedByMe != c.closureInitiatedByMe,
       builder: (context, state) {
+        if (state.status == ChatStatus.closed && !state.closureInitiatedByMe) {
+          return _FindSomeoneNewBar(isDark: isDark);
+        }
+
         final disabled =
             state.status != ChatStatus.active || state.isSending;
 
@@ -921,6 +927,39 @@ class _ChatInputBarState extends State<_ChatInputBar> {
           ),
         );
       },
+    );
+  }
+}
+
+class _FindSomeoneNewBar extends StatelessWidget {
+  const _FindSomeoneNewBar({required this.isDark});
+
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        left: AppSpacing.lg,
+        right: AppSpacing.lg,
+        top: AppSpacing.md,
+        bottom: MediaQuery.of(context).padding.bottom + AppSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: FilledButton.icon(
+        onPressed: () => context.go(AppRoutes.matchmaking),
+        icon: const Icon(Icons.person_search_rounded),
+        label: Text(tr(LocaleKeys.chatFindNew)),
+      ),
     );
   }
 }
