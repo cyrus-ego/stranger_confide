@@ -3,15 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:stranger_confide/core/token_storage.dart';
 import 'package:stranger_confide/data/models/response/active_room_response.dart';
 import 'package:stranger_confide/data/models/response/chat_message_dto.dart';
+import 'package:stranger_confide/data/models/response/chat_image_upload_response.dart';
 import 'package:stranger_confide/data/models/response/chat_messages_response.dart';
 import 'package:stranger_confide/domain/repositories/chat_repository.dart';
 import 'package:stranger_confide/domain/repositories/moderation_repository.dart';
 import 'package:stranger_confide/domain/repositories/room_repository.dart';
-import 'package:stranger_confide/domain/usecases/block_room_usecase.dart';
 import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart';
 import 'package:stranger_confide/domain/usecases/get_chat_messages_usecase.dart';
 import 'package:stranger_confide/domain/usecases/leave_room_usecase.dart';
 import 'package:stranger_confide/domain/usecases/report_user_usecase.dart';
+import 'package:stranger_confide/domain/usecases/upload_chat_image_usecase.dart';
 import 'package:stranger_confide/features/chat/bloc/chat_bloc.dart';
 import 'package:stranger_confide/features/chat/bloc/chat_event.dart';
 import 'package:stranger_confide/features/chat/bloc/chat_state.dart';
@@ -28,9 +29,9 @@ void main() {
       TokenStorage(),
       GetActiveRoomUseCase(roomRepository),
       LeaveRoomUseCase(roomRepository),
-      BlockRoomUseCase(roomRepository),
       ReportUserUseCase(_SuccessfulModerationRepository()),
       GetChatMessagesUseCase(chatRepository),
+      UploadChatImageUseCase(chatRepository),
     );
   });
 
@@ -81,6 +82,8 @@ void main() {
     expect(state.partnerOnline, isFalse);
     expect(state.partnerTyping, isFalse);
     expect(state.isSending, isFalse);
+    expect(state.roomId, isEmpty);
+    expect(state.messages, isEmpty);
   });
 
   test(
@@ -205,6 +208,88 @@ void main() {
     final state = await deniedState;
 
     expect(state.errorMessage, 'Không có quyền truy cập');
+    expect(state.roomId, isEmpty);
+    expect(state.partnerUserId, isEmpty);
+  });
+
+  test('presence only updates for the current partner', () async {
+    final joinedState = bloc.stream.firstWhere(
+      (state) => state.status == ChatStatus.active,
+    );
+    bloc.add(
+      const ChatRoomJoined({
+        'session': {'roomId': 'room-1', 'partnerOnline': true},
+        'partnerUserId': 'partner-1',
+      }),
+    );
+    await joinedState;
+
+    bloc.add(const ChatPartnerOnlineChanged(false, userId: 'different-user'));
+    await Future<void>.delayed(Duration.zero);
+    expect(bloc.state.partnerOnline, isTrue);
+
+    final offlineState = bloc.stream.firstWhere(
+      (state) => !state.partnerOnline,
+    );
+    bloc.add(const ChatPartnerOnlineChanged(false, userId: 'partner-1'));
+    expect((await offlineState).partnerOnline, isFalse);
+  });
+
+  test(
+    'chat errors are handled by stable code instead of message text',
+    () async {
+      final joinedState = bloc.stream.firstWhere(
+        (state) => state.status == ChatStatus.active,
+      );
+      bloc.add(const ChatRoomJoined({'session': <String, dynamic>{}}));
+      await joinedState;
+
+      final moderationState = bloc.stream.firstWhere(
+        (state) => state.lastAction == ChatAction.moderationBlocked,
+      );
+      bloc.add(
+        const ChatSocketError(
+          'Arbitrary localized text',
+          code: 'MODERATION_BLOCKED',
+        ),
+      );
+      expect((await moderationState).status, ChatStatus.active);
+
+      final closedState = bloc.stream.firstWhere(
+        (state) => state.status == ChatStatus.closed,
+      );
+      bloc.add(
+        const ChatSocketError('Arbitrary localized text', code: 'ROOM_CLOSED'),
+      );
+      expect((await closedState).roomId, isEmpty);
+    },
+  );
+
+  test('image messages are uploaded through REST and merged by id', () async {
+    final joinedState = bloc.stream.firstWhere(
+      (state) => state.status == ChatStatus.active,
+    );
+    bloc.add(
+      const ChatRoomJoined({
+        'session': {'roomId': 'room-1', 'myAlias': 'Me'},
+      }),
+    );
+    await joinedState;
+
+    final uploadedState = bloc.stream.firstWhere(
+      (state) =>
+          !state.isUploading &&
+          state.messages.any((message) => message.id == 'image-1'),
+    );
+    bloc.add(const ChatSendImage('/tmp/image.jpg'));
+    final state = await uploadedState;
+
+    expect(chatRepository.uploadedRoomId, 'room-1');
+    expect(chatRepository.uploadedFilePath, '/tmp/image.jpg');
+    expect(
+      state.messages.where((message) => message.id == 'image-1'),
+      hasLength(1),
+    );
   });
 
   test('load older messages prepends, dedupes, and updates cursor', () async {
@@ -317,11 +402,6 @@ class _SuccessfulRoomRepository implements RoomRepository {
   ActiveRoomResponse activeRoomResponse = const ActiveRoomResponse();
 
   @override
-  Future<AppResult<void>> blockRoom(String roomId, String targetUserId) async {
-    return const AppSuccess<void>(null);
-  }
-
-  @override
   Future<AppResult<ActiveRoomResponse>> getActiveRoom() async {
     return AppSuccess(activeRoomResponse);
   }
@@ -349,6 +429,28 @@ class _SuccessfulChatRepository implements ChatRepository {
   String? roomId;
   String? beforeMessageId;
   int? limit;
+  String? uploadedRoomId;
+  String? uploadedFilePath;
+
+  @override
+  Future<AppResult<ChatImageUploadResponse>> uploadImage({
+    required String roomId,
+    required String filePath,
+  }) async {
+    uploadedRoomId = roomId;
+    uploadedFilePath = filePath;
+    return const AppSuccess(
+      ChatImageUploadResponse(
+        message: ChatMessageDto(
+          id: 'image-1',
+          senderAlias: 'Me',
+          type: 'image',
+          imageUrl: 'https://example.com/image.jpg',
+          createdAt: '2026-07-24T10:00:00.000Z',
+        ),
+      ),
+    );
+  }
 
   @override
   Future<AppResult<ChatMessagesResponse>> getMessages({

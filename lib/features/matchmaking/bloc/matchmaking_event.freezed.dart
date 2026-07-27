@@ -55,7 +55,7 @@ extension MatchmakingEventPatterns on MatchmakingEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchmakingStarted value)?  started,TResult Function( MatchmakingJoinQueue value)?  joinQueue,TResult Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult Function( MatchmakingUpdatePreference value)?  updatePreference,TResult Function( MatchmakingRestartSearch value)?  restartSearch,TResult Function( MatchmakingSocketConnected value)?  socketConnected,TResult Function( MatchmakingQueueJoined value)?  queueJoined,TResult Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult Function( MatchmakingMatchFound value)?  matchFound,TResult Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult Function( MatchmakingSocketError value)?  socketError,TResult Function( MatchmakingSocketDisconnected value)?  socketDisconnected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchmakingStarted value)?  started,TResult Function( MatchmakingJoinQueue value)?  joinQueue,TResult Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult Function( MatchmakingUpdatePreference value)?  updatePreference,TResult Function( MatchmakingRestartSearch value)?  restartSearch,TResult Function( MatchmakingQueueTimerTick value)?  queueTimerTick,TResult Function( MatchmakingAppResumed value)?  appResumed,TResult Function( MatchmakingSocketConnected value)?  socketConnected,TResult Function( MatchmakingQueueJoined value)?  queueJoined,TResult Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult Function( MatchmakingMatchFound value)?  matchFound,TResult Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult Function( MatchmakingQueueLeft value)?  queueLeft,TResult Function( MatchmakingSocketError value)?  socketError,TResult Function( MatchmakingSocketDisconnected value)?  socketDisconnected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
@@ -63,12 +63,15 @@ return started(_that);case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue(_that);case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue(_that);case MatchmakingUpdatePreference() when updatePreference != null:
 return updatePreference(_that);case MatchmakingRestartSearch() when restartSearch != null:
-return restartSearch(_that);case MatchmakingSocketConnected() when socketConnected != null:
+return restartSearch(_that);case MatchmakingQueueTimerTick() when queueTimerTick != null:
+return queueTimerTick(_that);case MatchmakingAppResumed() when appResumed != null:
+return appResumed(_that);case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected(_that);case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that);case MatchmakingPositionUpdated() when positionUpdated != null:
 return positionUpdated(_that);case MatchmakingMatchFound() when matchFound != null:
 return matchFound(_that);case MatchmakingQueueTimeout() when queueTimeout != null:
-return queueTimeout(_that);case MatchmakingSocketError() when socketError != null:
+return queueTimeout(_that);case MatchmakingQueueLeft() when queueLeft != null:
+return queueLeft(_that);case MatchmakingSocketError() when socketError != null:
 return socketError(_that);case MatchmakingSocketDisconnected() when socketDisconnected != null:
 return socketDisconnected(_that);case _:
   return orElse();
@@ -88,7 +91,7 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchmakingStarted value)  started,required TResult Function( MatchmakingJoinQueue value)  joinQueue,required TResult Function( MatchmakingLeaveQueue value)  leaveQueue,required TResult Function( MatchmakingUpdatePreference value)  updatePreference,required TResult Function( MatchmakingRestartSearch value)  restartSearch,required TResult Function( MatchmakingSocketConnected value)  socketConnected,required TResult Function( MatchmakingQueueJoined value)  queueJoined,required TResult Function( MatchmakingPositionUpdated value)  positionUpdated,required TResult Function( MatchmakingMatchFound value)  matchFound,required TResult Function( MatchmakingQueueTimeout value)  queueTimeout,required TResult Function( MatchmakingSocketError value)  socketError,required TResult Function( MatchmakingSocketDisconnected value)  socketDisconnected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchmakingStarted value)  started,required TResult Function( MatchmakingJoinQueue value)  joinQueue,required TResult Function( MatchmakingLeaveQueue value)  leaveQueue,required TResult Function( MatchmakingUpdatePreference value)  updatePreference,required TResult Function( MatchmakingRestartSearch value)  restartSearch,required TResult Function( MatchmakingQueueTimerTick value)  queueTimerTick,required TResult Function( MatchmakingAppResumed value)  appResumed,required TResult Function( MatchmakingSocketConnected value)  socketConnected,required TResult Function( MatchmakingQueueJoined value)  queueJoined,required TResult Function( MatchmakingPositionUpdated value)  positionUpdated,required TResult Function( MatchmakingMatchFound value)  matchFound,required TResult Function( MatchmakingQueueTimeout value)  queueTimeout,required TResult Function( MatchmakingQueueLeft value)  queueLeft,required TResult Function( MatchmakingSocketError value)  socketError,required TResult Function( MatchmakingSocketDisconnected value)  socketDisconnected,}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted():
@@ -96,12 +99,15 @@ return started(_that);case MatchmakingJoinQueue():
 return joinQueue(_that);case MatchmakingLeaveQueue():
 return leaveQueue(_that);case MatchmakingUpdatePreference():
 return updatePreference(_that);case MatchmakingRestartSearch():
-return restartSearch(_that);case MatchmakingSocketConnected():
+return restartSearch(_that);case MatchmakingQueueTimerTick():
+return queueTimerTick(_that);case MatchmakingAppResumed():
+return appResumed(_that);case MatchmakingSocketConnected():
 return socketConnected(_that);case MatchmakingQueueJoined():
 return queueJoined(_that);case MatchmakingPositionUpdated():
 return positionUpdated(_that);case MatchmakingMatchFound():
 return matchFound(_that);case MatchmakingQueueTimeout():
-return queueTimeout(_that);case MatchmakingSocketError():
+return queueTimeout(_that);case MatchmakingQueueLeft():
+return queueLeft(_that);case MatchmakingSocketError():
 return socketError(_that);case MatchmakingSocketDisconnected():
 return socketDisconnected(_that);}
 }
@@ -117,7 +123,7 @@ return socketDisconnected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchmakingStarted value)?  started,TResult? Function( MatchmakingJoinQueue value)?  joinQueue,TResult? Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult? Function( MatchmakingUpdatePreference value)?  updatePreference,TResult? Function( MatchmakingRestartSearch value)?  restartSearch,TResult? Function( MatchmakingSocketConnected value)?  socketConnected,TResult? Function( MatchmakingQueueJoined value)?  queueJoined,TResult? Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult? Function( MatchmakingMatchFound value)?  matchFound,TResult? Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult? Function( MatchmakingSocketError value)?  socketError,TResult? Function( MatchmakingSocketDisconnected value)?  socketDisconnected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchmakingStarted value)?  started,TResult? Function( MatchmakingJoinQueue value)?  joinQueue,TResult? Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult? Function( MatchmakingUpdatePreference value)?  updatePreference,TResult? Function( MatchmakingRestartSearch value)?  restartSearch,TResult? Function( MatchmakingQueueTimerTick value)?  queueTimerTick,TResult? Function( MatchmakingAppResumed value)?  appResumed,TResult? Function( MatchmakingSocketConnected value)?  socketConnected,TResult? Function( MatchmakingQueueJoined value)?  queueJoined,TResult? Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult? Function( MatchmakingMatchFound value)?  matchFound,TResult? Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult? Function( MatchmakingQueueLeft value)?  queueLeft,TResult? Function( MatchmakingSocketError value)?  socketError,TResult? Function( MatchmakingSocketDisconnected value)?  socketDisconnected,}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
@@ -125,12 +131,15 @@ return started(_that);case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue(_that);case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue(_that);case MatchmakingUpdatePreference() when updatePreference != null:
 return updatePreference(_that);case MatchmakingRestartSearch() when restartSearch != null:
-return restartSearch(_that);case MatchmakingSocketConnected() when socketConnected != null:
+return restartSearch(_that);case MatchmakingQueueTimerTick() when queueTimerTick != null:
+return queueTimerTick(_that);case MatchmakingAppResumed() when appResumed != null:
+return appResumed(_that);case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected(_that);case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that);case MatchmakingPositionUpdated() when positionUpdated != null:
 return positionUpdated(_that);case MatchmakingMatchFound() when matchFound != null:
 return matchFound(_that);case MatchmakingQueueTimeout() when queueTimeout != null:
-return queueTimeout(_that);case MatchmakingSocketError() when socketError != null:
+return queueTimeout(_that);case MatchmakingQueueLeft() when queueLeft != null:
+return queueLeft(_that);case MatchmakingSocketError() when socketError != null:
 return socketError(_that);case MatchmakingSocketDisconnected() when socketDisconnected != null:
 return socketDisconnected(_that);case _:
   return null;
@@ -149,19 +158,22 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function()?  restartSearch,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function()?  restartSearch,TResult Function()?  queueTimerTick,TResult Function()?  appResumed,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function()?  queueLeft,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue();case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue();case MatchmakingUpdatePreference() when updatePreference != null:
 return updatePreference(_that.preference);case MatchmakingRestartSearch() when restartSearch != null:
-return restartSearch();case MatchmakingSocketConnected() when socketConnected != null:
+return restartSearch();case MatchmakingQueueTimerTick() when queueTimerTick != null:
+return queueTimerTick();case MatchmakingAppResumed() when appResumed != null:
+return appResumed();case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected();case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that.data);case MatchmakingPositionUpdated() when positionUpdated != null:
 return positionUpdated(_that.data);case MatchmakingMatchFound() when matchFound != null:
 return matchFound(_that.roomId,_that.partnerId);case MatchmakingQueueTimeout() when queueTimeout != null:
-return queueTimeout();case MatchmakingSocketError() when socketError != null:
+return queueTimeout();case MatchmakingQueueLeft() when queueLeft != null:
+return queueLeft();case MatchmakingSocketError() when socketError != null:
 return socketError(_that.message);case MatchmakingSocketDisconnected() when socketDisconnected != null:
 return socketDisconnected(_that.reason);case _:
   return orElse();
@@ -181,19 +193,22 @@ return socketDisconnected(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function()  restartSearch,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function()  restartSearch,required TResult Function()  queueTimerTick,required TResult Function()  appResumed,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function()  queueLeft,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted():
 return started();case MatchmakingJoinQueue():
 return joinQueue();case MatchmakingLeaveQueue():
 return leaveQueue();case MatchmakingUpdatePreference():
 return updatePreference(_that.preference);case MatchmakingRestartSearch():
-return restartSearch();case MatchmakingSocketConnected():
+return restartSearch();case MatchmakingQueueTimerTick():
+return queueTimerTick();case MatchmakingAppResumed():
+return appResumed();case MatchmakingSocketConnected():
 return socketConnected();case MatchmakingQueueJoined():
 return queueJoined(_that.data);case MatchmakingPositionUpdated():
 return positionUpdated(_that.data);case MatchmakingMatchFound():
 return matchFound(_that.roomId,_that.partnerId);case MatchmakingQueueTimeout():
-return queueTimeout();case MatchmakingSocketError():
+return queueTimeout();case MatchmakingQueueLeft():
+return queueLeft();case MatchmakingSocketError():
 return socketError(_that.message);case MatchmakingSocketDisconnected():
 return socketDisconnected(_that.reason);}
 }
@@ -209,19 +224,22 @@ return socketDisconnected(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function()?  restartSearch,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function()?  restartSearch,TResult? Function()?  queueTimerTick,TResult? Function()?  appResumed,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function()?  queueLeft,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue();case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue();case MatchmakingUpdatePreference() when updatePreference != null:
 return updatePreference(_that.preference);case MatchmakingRestartSearch() when restartSearch != null:
-return restartSearch();case MatchmakingSocketConnected() when socketConnected != null:
+return restartSearch();case MatchmakingQueueTimerTick() when queueTimerTick != null:
+return queueTimerTick();case MatchmakingAppResumed() when appResumed != null:
+return appResumed();case MatchmakingSocketConnected() when socketConnected != null:
 return socketConnected();case MatchmakingQueueJoined() when queueJoined != null:
 return queueJoined(_that.data);case MatchmakingPositionUpdated() when positionUpdated != null:
 return positionUpdated(_that.data);case MatchmakingMatchFound() when matchFound != null:
 return matchFound(_that.roomId,_that.partnerId);case MatchmakingQueueTimeout() when queueTimeout != null:
-return queueTimeout();case MatchmakingSocketError() when socketError != null:
+return queueTimeout();case MatchmakingQueueLeft() when queueLeft != null:
+return queueLeft();case MatchmakingSocketError() when socketError != null:
 return socketError(_that.message);case MatchmakingSocketDisconnected() when socketDisconnected != null:
 return socketDisconnected(_that.reason);case _:
   return null;
@@ -236,7 +254,7 @@ return socketDisconnected(_that.reason);case _:
 
 class MatchmakingStarted extends MatchmakingEvent {
   const MatchmakingStarted(): super._();
-  
+
 
 
 
@@ -268,7 +286,7 @@ String toString() {
 
 class MatchmakingJoinQueue extends MatchmakingEvent {
   const MatchmakingJoinQueue(): super._();
-  
+
 
 
 
@@ -300,7 +318,7 @@ String toString() {
 
 class MatchmakingLeaveQueue extends MatchmakingEvent {
   const MatchmakingLeaveQueue(): super._();
-  
+
 
 
 
@@ -417,6 +435,70 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'MatchmakingEvent.restartSearch()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class MatchmakingQueueTimerTick extends MatchmakingEvent {
+  const MatchmakingQueueTimerTick(): super._();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingQueueTimerTick);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'MatchmakingEvent.queueTimerTick()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class MatchmakingAppResumed extends MatchmakingEvent {
+  const MatchmakingAppResumed(): super._();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingAppResumed);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'MatchmakingEvent.appResumed()';
 }
 
 
@@ -699,6 +781,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'MatchmakingEvent.queueTimeout()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class MatchmakingQueueLeft extends MatchmakingEvent {
+  const MatchmakingQueueLeft(): super._();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingQueueLeft);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'MatchmakingEvent.queueLeft()';
 }
 
 

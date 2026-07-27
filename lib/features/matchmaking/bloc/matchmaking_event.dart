@@ -16,6 +16,8 @@ sealed class MatchmakingEvent extends BlocEvent with _$MatchmakingEvent {
   const factory MatchmakingEvent.updatePreference(ChatPreference preference) =
       MatchmakingUpdatePreference;
   const factory MatchmakingEvent.restartSearch() = MatchmakingRestartSearch;
+  const factory MatchmakingEvent.queueTimerTick() = MatchmakingQueueTimerTick;
+  const factory MatchmakingEvent.appResumed() = MatchmakingAppResumed;
 
   // Socket events
   const factory MatchmakingEvent.socketConnected() = MatchmakingSocketConnected;
@@ -26,6 +28,7 @@ sealed class MatchmakingEvent extends BlocEvent with _$MatchmakingEvent {
   const factory MatchmakingEvent.matchFound(String roomId, String? partnerId) =
       MatchmakingMatchFound;
   const factory MatchmakingEvent.queueTimeout() = MatchmakingQueueTimeout;
+  const factory MatchmakingEvent.queueLeft() = MatchmakingQueueLeft;
   const factory MatchmakingEvent.socketError(String message) =
       MatchmakingSocketError;
   const factory MatchmakingEvent.socketDisconnected(String reason) =

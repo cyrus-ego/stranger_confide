@@ -5,6 +5,8 @@
     "email": "Email",
     "password": "Password",
     "submit": "Sign in",
+    "google": "Continue with Google",
+    "or": "or",
     "email_required": "Enter email",
     "password_required": "Enter password",
     "confirm_password": "Confirm password",

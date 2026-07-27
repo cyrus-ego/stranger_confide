@@ -8,6 +8,8 @@ abstract class AuthRepository {
     required String password,
   });
 
+  Future<AppResult<AuthTokens>> googleLogin({required String idToken});
+
   Future<AppResult<RegisterResponse>> register({
     required String email,
     required String password,

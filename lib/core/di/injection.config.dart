@@ -18,6 +18,8 @@ import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
 import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart'
     as _i1068;
+import 'package:stranger_confide/data/datasources/google_sign_in_service.dart'
+    as _i370;
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart'
     as _i854;
 import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dart'
@@ -58,8 +60,8 @@ import 'package:stranger_confide/domain/repositories/room_repository.dart'
     as _i133;
 import 'package:stranger_confide/domain/repositories/user_repository.dart'
     as _i687;
-import 'package:stranger_confide/domain/usecases/block_room_usecase.dart'
-    as _i851;
+import 'package:stranger_confide/domain/services/google_sign_in_service.dart'
+    as _i942;
 import 'package:stranger_confide/domain/usecases/create_profile_usecase.dart'
     as _i115;
 import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
@@ -72,6 +74,8 @@ import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
     as _i669;
 import 'package:stranger_confide/domain/usecases/get_queue_status_usecase.dart'
     as _i438;
+import 'package:stranger_confide/domain/usecases/google_login_usecase.dart'
+    as _i762;
 import 'package:stranger_confide/domain/usecases/join_queue_usecase.dart'
     as _i443;
 import 'package:stranger_confide/domain/usecases/leave_queue_usecase.dart'
@@ -89,6 +93,8 @@ import 'package:stranger_confide/domain/usecases/resend_otp_usecase.dart'
     as _i225;
 import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
     as _i853;
+import 'package:stranger_confide/domain/usecases/upload_chat_image_usecase.dart'
+    as _i167;
 import 'package:stranger_confide/domain/usecases/verify_email_usecase.dart'
     as _i29;
 import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
@@ -109,6 +115,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i910.MatchmakingSocketService>(
       () => _i910.MatchmakingSocketService(gh<_i670.TokenStorage>()),
       dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i942.GoogleSignInService>(
+      () => _i370.GoogleSignInServiceImpl(),
     );
     gh.lazySingleton<_i999.AuthRemoteDatasource>(
       () => registerModule.authRemoteDatasource(gh<_i361.Dio>()),
@@ -151,9 +160,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i687.UserRepository>(
       () => _i263.UserRepositoryImpl(gh<_i510.UserRemoteDatasource>()),
     );
-    gh.factory<_i851.BlockRoomUseCase>(
-      () => _i851.BlockRoomUseCase(gh<_i133.RoomRepository>()),
-    );
     gh.factory<_i990.GetActiveRoomUseCase>(
       () => _i990.GetActiveRoomUseCase(gh<_i133.RoomRepository>()),
     );
@@ -186,6 +192,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i708.ModerationRemoteDatasource>(),
       ),
     );
+    gh.factory<_i762.GoogleLoginUseCase>(
+      () => _i762.GoogleLoginUseCase(gh<_i982.AuthRepository>()),
+    );
     gh.factory<_i878.LoginUseCase>(
       () => _i878.LoginUseCase(gh<_i982.AuthRepository>()),
     );
@@ -204,8 +213,42 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i720.GetChatMessagesUseCase>(
       () => _i720.GetChatMessagesUseCase(gh<_i926.ChatRepository>()),
     );
+    gh.factory<_i167.UploadChatImageUseCase>(
+      () => _i167.UploadChatImageUseCase(gh<_i926.ChatRepository>()),
+    );
     gh.factory<_i1047.GetCurrentUserUseCase>(
       () => _i1047.GetCurrentUserUseCase(gh<_i687.UserRepository>()),
+    );
+    gh.factory<_i209.LoginBloc>(
+      () => _i209.LoginBloc(
+        gh<_i878.LoginUseCase>(),
+        gh<_i762.GoogleLoginUseCase>(),
+        gh<_i942.GoogleSignInService>(),
+        gh<_i419.RegisterUseCase>(),
+        gh<_i225.ResendOtpUseCase>(),
+        gh<_i29.VerifyEmailUseCase>(),
+        gh<_i670.TokenStorage>(),
+      ),
+    );
+    gh.factory<_i987.MatchmakingBloc>(
+      () => _i987.MatchmakingBloc(
+        gh<_i443.JoinQueueUseCase>(),
+        gh<_i569.LeaveQueueUseCase>(),
+        gh<_i669.GetProfileUseCase>(),
+        gh<_i990.GetActiveRoomUseCase>(),
+        gh<_i438.GetQueueStatusUseCase>(),
+        gh<_i910.MatchmakingSocketService>(),
+      ),
+    );
+    gh.factory<_i460.ChatBloc>(
+      () => _i460.ChatBloc(
+        gh<_i670.TokenStorage>(),
+        gh<_i990.GetActiveRoomUseCase>(),
+        gh<_i212.LeaveRoomUseCase>(),
+        gh<_i691.ReportUserUseCase>(),
+        gh<_i720.GetChatMessagesUseCase>(),
+        gh<_i167.UploadChatImageUseCase>(),
+      ),
     );
     gh.factory<_i162.ProfileBloc>(
       () => _i162.ProfileBloc(
@@ -215,33 +258,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i853.UpdateProfileUseCase>(),
         gh<_i247.PatchProfileUseCase>(),
         gh<_i670.TokenStorage>(),
-      ),
-    );
-    gh.factory<_i987.MatchmakingBloc>(
-      () => _i987.MatchmakingBloc(
-        gh<_i443.JoinQueueUseCase>(),
-        gh<_i569.LeaveQueueUseCase>(),
-        gh<_i669.GetProfileUseCase>(),
-        gh<_i910.MatchmakingSocketService>(),
-      ),
-    );
-    gh.factory<_i209.LoginBloc>(
-      () => _i209.LoginBloc(
-        gh<_i878.LoginUseCase>(),
-        gh<_i419.RegisterUseCase>(),
-        gh<_i225.ResendOtpUseCase>(),
-        gh<_i29.VerifyEmailUseCase>(),
-        gh<_i670.TokenStorage>(),
-      ),
-    );
-    gh.factory<_i460.ChatBloc>(
-      () => _i460.ChatBloc(
-        gh<_i670.TokenStorage>(),
-        gh<_i990.GetActiveRoomUseCase>(),
-        gh<_i212.LeaveRoomUseCase>(),
-        gh<_i851.BlockRoomUseCase>(),
-        gh<_i691.ReportUserUseCase>(),
-        gh<_i720.GetChatMessagesUseCase>(),
+        gh<_i942.GoogleSignInService>(),
       ),
     );
     return this;

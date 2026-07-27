@@ -8,7 +8,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import '../../core/token_storage.dart';
 import '../models/response/queue_status_response.dart';
 
-const _defaultBaseUrl = 'https://c44e-1-54-23-149.ngrok-free.app';
+const _defaultBaseUrl = 'https://api.chatvn.online';
 
 sealed class MatchmakingSocketEvent {}
 
@@ -30,6 +30,8 @@ class SocketMatchFound extends MatchmakingSocketEvent {
 
 class SocketQueueTimeout extends MatchmakingSocketEvent {}
 
+class SocketQueueLeft extends MatchmakingSocketEvent {}
+
 class SocketError extends MatchmakingSocketEvent {
   SocketError(this.message);
   final String message;
@@ -49,8 +51,7 @@ class MatchmakingSocketService {
   final TokenStorage _tokenStorage;
 
   io.Socket? _socket;
-  final _eventController =
-      StreamController<MatchmakingSocketEvent>.broadcast();
+  final _eventController = StreamController<MatchmakingSocketEvent>.broadcast();
 
   Stream<MatchmakingSocketEvent> get events => _eventController.stream;
 
@@ -61,13 +62,14 @@ class MatchmakingSocketService {
       disconnect();
     }
 
-    final rawBaseUrl =
-        dotenv.env['API_BASE_URL'] ?? '$_defaultBaseUrl/api';
+    final rawBaseUrl = dotenv.env['API_BASE_URL'] ?? '$_defaultBaseUrl/api';
     final serverUrl = rawBaseUrl.replaceAll(RegExp(r'/api/?$'), '');
     final token = _tokenStorage.accessToken ?? '';
 
-    log('MatchmakingSocket: connecting to $serverUrl/matchmaking',
-        name: 'Socket');
+    log(
+      'MatchmakingSocket: connecting to $serverUrl/matchmaking',
+      name: 'Socket',
+    );
 
     _socket = io.io(
       '$serverUrl/matchmaking',
@@ -75,10 +77,9 @@ class MatchmakingSocketService {
           .setTransports(['websocket'])
           .setAuth({'token': token})
           .disableAutoConnect()
-          .enableReconnection()
-          .setReconnectionAttempts(10)
-          .setReconnectionDelay(2000)
-          .setReconnectionDelayMax(10000)
+          // Matchmaking disconnect removes the queue entry immediately on the
+          // backend, so reconnecting this socket must not imply still queued.
+          .disableReconnection()
           .build(),
     );
 
@@ -116,18 +117,26 @@ class MatchmakingSocketService {
       ..on('match:found', (data) {
         log('MatchmakingSocket: match:found $data', name: 'Socket');
         final map = data is Map<String, dynamic> ? data : <String, dynamic>{};
-        _eventController.add(SocketMatchFound(
-          (map['roomId'] ?? '').toString(),
-          map['partnerId']?.toString(),
-        ));
+        _eventController.add(
+          SocketMatchFound(
+            (map['roomId'] ?? '').toString(),
+            map['partnerId']?.toString(),
+          ),
+        );
       })
       ..on('queue:timeout', (_) {
         log('MatchmakingSocket: queue:timeout', name: 'Socket');
         _eventController.add(SocketQueueTimeout());
       })
+      ..on('queue:left', (_) {
+        log('MatchmakingSocket: queue:left', name: 'Socket');
+        _eventController.add(SocketQueueLeft());
+      })
       ..on('error', (data) {
         log('MatchmakingSocket: server error $data', name: 'Socket');
-        final msg = data is Map ? (data['message'] ?? data.toString()) : '$data';
+        final msg = data is Map
+            ? (data['message'] ?? data.toString())
+            : '$data';
         _eventController.add(SocketError(msg.toString()));
       });
 

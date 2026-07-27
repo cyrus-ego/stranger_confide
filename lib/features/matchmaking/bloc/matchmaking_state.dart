@@ -23,6 +23,8 @@ sealed class MatchmakingState with _$MatchmakingState {
     QueueStatusResponse? queueData,
     @Default(ChatPreference.defaultPreference)
     ChatPreference selectedPreference,
+    @Default(0) int localWaitSeconds,
+    @Default(0) int localExpiresInSeconds,
     String? errorMessage,
     String? roomId,
     String? partnerId,

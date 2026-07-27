@@ -1,5 +1,6 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:stranger_confide/data/models/request/google_auth_request.dart';
 import 'package:stranger_confide/data/models/request/login_request.dart';
 import 'package:stranger_confide/data/models/request/register_request.dart';
 import 'package:stranger_confide/data/models/request/resend_otp_request.dart';
@@ -26,6 +27,15 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
         _remoteDatasource.login(LoginRequest(email: email, password: password)),
     onError: (e) => AppFailure(ApiError.fromDioException(e)),
   );
+
+  @override
+  Future<AppResult<AuthTokens>> googleLogin({required String idToken}) =>
+      safeApiCall(
+        () => _remoteDatasource.googleLogin(
+          GoogleAuthRequest(idToken: idToken),
+        ),
+        onError: (e) => AppFailure(ApiError.fromDioException(e)),
+      );
 
   @override
   Future<AppResult<RegisterResponse>> register({

@@ -23,9 +23,29 @@ class MatchmakingPage extends BlocHostPage {
   State<MatchmakingPage> createState() => _MatchmakingPageState();
 }
 
-class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage> {
+class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage>
+    with WidgetsBindingObserver {
   @override
   Stream<String> get errorStream => context.read<MatchmakingBloc>().errorStream;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      context.read<MatchmakingBloc>().add(const MatchmakingAppResumed());
+    }
+  }
 
   @override
   Widget buildPage(BuildContext context) {
@@ -166,6 +186,8 @@ class _SearchingView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final queue = state.queueData;
+    final waitSeconds = state.localWaitSeconds;
+    final expiresInSeconds = state.localExpiresInSeconds;
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xl),
@@ -224,14 +246,14 @@ class _SearchingView extends StatelessWidget {
                     _QueueInfoRow(
                       icon: Icons.timer_outlined,
                       label: tr(LocaleKeys.matchmakingWaitTime),
-                      value: _formatDuration(queue.waitSeconds ?? 0),
+                      value: _formatDuration(waitSeconds),
                     ),
                     const Divider(),
                     _QueueInfoRow(
                       icon: Icons.hourglass_bottom_rounded,
                       label: tr(LocaleKeys.matchmakingTimeLeft),
-                      value: _formatDuration(queue.expiresInSeconds ?? 0),
-                      valueColor: (queue.expiresInSeconds ?? 0) < 60
+                      value: _formatDuration(expiresInSeconds),
+                      valueColor: expiresInSeconds < 60
                           ? AppColors.error
                           : null,
                     ),
@@ -580,8 +602,7 @@ class _PreferenceSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<MatchmakingBloc, MatchmakingState>(
-      buildWhen: (p, c) =>
-          p.selectedPreference != c.selectedPreference,
+      buildWhen: (p, c) => p.selectedPreference != c.selectedPreference,
       builder: (context, state) {
         return Padding(
           padding: EdgeInsets.only(

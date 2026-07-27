@@ -9,6 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/locale/locale_keys.dart';
 import '../../core/network_inspector.dart';
@@ -932,6 +933,7 @@ class _ChatInputBar extends StatefulWidget {
 
 class _ChatInputBarState extends State<_ChatInputBar> {
   final _controller = TextEditingController();
+  final _imagePicker = ImagePicker();
 
   @override
   void dispose() {
@@ -953,12 +955,23 @@ class _ChatInputBarState extends State<_ChatInputBar> {
     HapticFeedback.lightImpact();
   }
 
+  Future<void> _pickImage() async {
+    final image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null && mounted) {
+      context.read<ChatBloc>().add(ChatSendImage(image.path));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return BlocBuilder<ChatBloc, ChatState>(
+    return BlocConsumer<ChatBloc, ChatState>(
+      listenWhen: (previous, current) =>
+          previous.status != ChatStatus.closed &&
+          current.status == ChatStatus.closed,
+      listener: (_, __) => _controller.clear(),
       buildWhen: (p, c) =>
           p.status != c.status ||
           p.isUploading != c.isUploading ||
@@ -990,11 +1003,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
           child: Row(
             children: [
               IconButton(
-                onPressed: disabled || state.isUploading
-                    ? null
-                    : () {
-                        // TODO: image_picker integration (phase sau)
-                      },
+                onPressed: disabled || state.isUploading ? null : _pickImage,
                 icon: state.isUploading
                     ? const SizedBox(
                         width: 20,

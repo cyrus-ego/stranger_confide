@@ -8,6 +8,8 @@ abstract final class LocaleKeys {
   static const loginEmail = 'login.email';
   static const loginPassword = 'login.password';
   static const loginSubmit = 'login.submit';
+  static const loginGoogle = 'login.google';
+  static const loginOr = 'login.or';
   static const loginEmailRequired = 'login.email_required';
   static const loginPasswordRequired = 'login.password_required';
   static const loginConfirmPassword = 'login.confirm_password';

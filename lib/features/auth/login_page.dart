@@ -351,6 +351,53 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                           .animate()
                           .fadeIn(duration: 500.ms, delay: 600.ms)
                           .slideY(begin: 0.2),
+                      if (!_isRegisterMode) ...[
+                        const Gap(AppSpacing.lg),
+                        Row(
+                          children: [
+                            Expanded(child: Divider(color: colors.outline)),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md,
+                              ),
+                              child: Text(
+                                tr(LocaleKeys.loginOr),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colors.onSurface.withAlpha(153),
+                                ),
+                              ),
+                            ),
+                            Expanded(child: Divider(color: colors.outline)),
+                          ],
+                        ),
+                        const Gap(AppSpacing.lg),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: BlocBuilder<LoginBloc, LoginState>(
+                            builder: (context, state) {
+                              final isLoading =
+                                  state.status == LoginStatus.loading;
+                              return OutlinedButton.icon(
+                                onPressed: isLoading
+                                    ? null
+                                    : () => context.read<LoginBloc>().add(
+                                          const GoogleLoginSubmitted(),
+                                        ),
+                                icon: const Text(
+                                  'G',
+                                  style: TextStyle(
+                                    color: Color(0xFF4285F4),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                label: Text(tr(LocaleKeys.loginGoogle)),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                       const Gap(AppSpacing.lg),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

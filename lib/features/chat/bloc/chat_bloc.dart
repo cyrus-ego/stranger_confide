@@ -8,15 +8,15 @@ import 'package:injectable/injectable.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../core/token_storage.dart';
-import '../../../domain/usecases/block_room_usecase.dart';
 import '../../../domain/usecases/get_active_room_usecase.dart';
 import '../../../domain/usecases/get_chat_messages_usecase.dart';
 import '../../../domain/usecases/leave_room_usecase.dart';
 import '../../../domain/usecases/report_user_usecase.dart';
+import '../../../domain/usecases/upload_chat_image_usecase.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 
-const _defaultBaseUrl = 'https://c44e-1-54-23-149.ngrok-free.app';
+const _defaultBaseUrl = 'https://api.chatvn.online';
 
 @injectable
 class ChatBloc extends AppBloc<ChatEvent, ChatState> {
@@ -24,9 +24,9 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     this._tokenStorage,
     this._getActiveRoomUseCase,
     this._leaveRoomUseCase,
-    this._blockRoomUseCase,
     this._reportUserUseCase,
     this._getChatMessagesUseCase,
+    this._uploadChatImageUseCase,
   ) : super(const ChatState()) {
     on<ChatStarted>(_onStarted);
     on<ChatSendMessage>(_onSendMessage);
@@ -42,6 +42,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     on<ChatPartnerTyping>(_onPartnerTyping);
     on<ChatRoomClosed>(_onRoomClosed);
     on<ChatSocketConnected>(_onSocketConnected);
+    on<ChatSocketDisconnected>(_onSocketDisconnected);
     on<ChatSocketError>(_onSocketError);
     on<ChatErrorCleared>(_onErrorCleared);
     on<ChatRoomJoined>(_onRoomJoined);
@@ -52,9 +53,9 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   final TokenStorage _tokenStorage;
   final GetActiveRoomUseCase _getActiveRoomUseCase;
   final LeaveRoomUseCase _leaveRoomUseCase;
-  final BlockRoomUseCase _blockRoomUseCase;
   final ReportUserUseCase _reportUserUseCase;
   final GetChatMessagesUseCase _getChatMessagesUseCase;
+  final UploadChatImageUseCase _uploadChatImageUseCase;
   io.Socket? _socket;
   Timer? _typingDebounce;
   Timer? _errorClearTimer;
@@ -87,13 +88,66 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
 
     _cancelTyping();
     _errorClearTimer?.cancel();
-    emit(state.copyWith(isSending: true, errorMessage: null));
+    emit(
+      state.copyWith(
+        isSending: true,
+        errorMessage: null,
+        lastAction: ChatAction.none,
+      ),
+    );
   }
 
-  void _onSendImage(ChatSendImage event, Emitter<ChatState> emit) {
+  Future<void> _onSendImage(
+    ChatSendImage event,
+    Emitter<ChatState> emit,
+  ) async {
     if (state.status != ChatStatus.active) return;
-    // TODO: POST /chat/:roomId/image multipart upload (phase sau)
-    emit(state.copyWith(isUploading: true));
+
+    final pendingMessage = ChatMessage(
+      id: 'upload_${DateTime.now().microsecondsSinceEpoch}',
+      senderAlias: state.myAlias,
+      type: MessageType.image,
+      content: '',
+      createdAt: DateTime.now(),
+      isMine: true,
+      isUploading: true,
+    );
+    emit(
+      state.copyWith(
+        messages: [...state.messages, pendingMessage],
+        isUploading: true,
+        errorMessage: null,
+        lastAction: ChatAction.none,
+      ),
+    );
+
+    final result = await _uploadChatImageUseCase(
+      roomId: state.roomId,
+      filePath: event.filePath,
+    );
+
+    switch (result) {
+      case AppSuccess(:final value):
+        final uploaded = _parseMessage(value.message.toJson(), state.myAlias);
+        emit(
+          state.copyWith(
+            messages: _mergeMessages([uploaded]),
+            isUploading: false,
+          ),
+        );
+      case AppFailure(:final error):
+        final messages = state.messages
+            .where((message) => message.id != pendingMessage.id)
+            .toList();
+        emit(
+          state.copyWith(
+            messages: messages,
+            isUploading: false,
+            errorMessage: error.message,
+            lastAction: _chatActionForCode(error.code),
+          ),
+        );
+    }
   }
 
   Future<void> _onLoadOlderMessages(
@@ -166,20 +220,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
       final activeRoomId = value.roomId;
       if (!value.hasActiveRoom || activeRoomId == null) {
         _disconnectSocket();
-        emit(
-          state.copyWith(
-            status: ChatStatus.closed,
-            closedReason: 'closed',
-            closureInitiatedByMe: false,
-            partnerOnline: false,
-            partnerTyping: false,
-            isUploading: false,
-            isSending: false,
-            isLoadingOlderMessages: false,
-            hasMoreOlderMessages: false,
-            oldestMessageId: null,
-          ),
-        );
+        emit(_terminalState(reason: 'closed', initiatedByMe: false));
         return;
       }
 
@@ -242,13 +283,17 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   Future<void> _onLeaveRoom(ChatLeaveRoom event, Emitter<ChatState> emit) {
     emit(state.copyWith(closureInitiatedByMe: true));
 
+    if (_socket?.connected == true) {
+      _socket!.emit('room:leave', {'roomId': state.roomId});
+      return Future.value();
+    }
+
     return guard(
       () async {
         final result = await _leaveRoomUseCase(state.roomId);
         if (result.isSuccess) {
-          _socket?.emit('room:leave', {'roomId': state.roomId});
           _disconnectSocket();
-          emit(state.copyWith(status: ChatStatus.closed, closedReason: 'left'));
+          emit(_terminalState(reason: 'left', initiatedByMe: true));
         } else {
           throw result.errorOrNull!;
         }
@@ -266,29 +311,21 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     if (state.partnerUserId.isEmpty) return Future.value();
     emit(state.copyWith(closureInitiatedByMe: true));
 
-    return guard(
-      () async {
-        final result = await _blockRoomUseCase(
-          state.roomId,
-          state.partnerUserId,
-        );
-        if (result.isSuccess) {
-          _socket?.emit('room:block', {
-            'roomId': state.roomId,
-            'targetUserId': state.partnerUserId,
-          });
-          _disconnectSocket();
-          emit(
-            state.copyWith(status: ChatStatus.closed, closedReason: 'blocked'),
-          );
-        } else {
-          throw result.errorOrNull!;
-        }
-      },
-      onError: (_) {
-        emit(state.copyWith(closureInitiatedByMe: false));
-      },
-    );
+    if (_socket?.connected != true) {
+      emit(
+        state.copyWith(
+          closureInitiatedByMe: false,
+          errorMessage: 'Mất kết nối. Vui lòng thử lại.',
+        ),
+      );
+      return Future.value();
+    }
+
+    _socket!.emit('room:block', {
+      'roomId': state.roomId,
+      'targetUserId': state.partnerUserId,
+    });
+    return Future.value();
   }
 
   Future<void> _onReportPartner(
@@ -401,48 +438,36 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   void _onRoomClosed(ChatRoomClosed event, Emitter<ChatState> emit) {
     _disconnectSocket();
     emit(
-      state.copyWith(
-        status: ChatStatus.closed,
-        closedReason: event.reason,
-        partnerOnline: false,
-        partnerTyping: false,
-        isUploading: false,
-        isSending: false,
-        isLoadingOlderMessages: false,
+      _terminalState(
+        reason: event.reason,
+        initiatedByMe: state.closureInitiatedByMe,
       ),
     );
   }
 
   void _onSocketError(ChatSocketError event, Emitter<ChatState> emit) {
-    final msg = event.message.toLowerCase();
-
-    if (msg.contains('vi phạm') || msg.contains('nội quy')) {
-      emit(
-        state.copyWith(
-          isSending: false,
-          lastAction: ChatAction.moderationBlocked,
-        ),
-      );
-      return;
-    }
-
-    if (msg.contains('quá nhanh') || msg.contains('spam')) {
-      emit(
-        state.copyWith(isSending: false, lastAction: ChatAction.spamDetected),
-      );
-      return;
-    }
-
-    if (msg.contains('không thể gửi')) {
-      _disconnectSocket();
-      emit(
-        state.copyWith(
-          status: ChatStatus.closed,
-          closedReason: 'blocked',
-          isSending: false,
-        ),
-      );
-      return;
+    switch (event.code) {
+      case 'MODERATION_BLOCKED' || 'CHAT_MODERATION_BLOCKED':
+        emit(
+          state.copyWith(
+            isSending: false,
+            lastAction: ChatAction.moderationBlocked,
+          ),
+        );
+        return;
+      case 'SPAM_DETECTED' || 'CHAT_SPAM_DETECTED':
+        emit(
+          state.copyWith(isSending: false, lastAction: ChatAction.spamDetected),
+        );
+        return;
+      case 'ROOM_CLOSED':
+        _disconnectSocket();
+        emit(_terminalState(reason: 'ROOM_CLOSED', initiatedByMe: false));
+        return;
+      case 'ACCESS_DENIED' || 'MESSAGE_SEND_FAILED' || null:
+        break;
+      default:
+        break;
     }
 
     if (state.status == ChatStatus.active) {
@@ -474,16 +499,33 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     ChatPartnerOnlineChanged event,
     Emitter<ChatState> emit,
   ) {
+    if (event.userId == null || event.userId != state.partnerUserId) return;
     emit(state.copyWith(partnerOnline: event.online));
   }
 
   void _onAccessDenied(ChatAccessDenied event, Emitter<ChatState> emit) {
     _disconnectSocket();
     emit(
-      state.copyWith(
-        status: ChatStatus.closed,
+      _terminalState(
+        reason: 'access_denied',
         errorMessage: event.message,
-        closedReason: 'access_denied',
+        initiatedByMe: false,
+      ),
+    );
+  }
+
+  void _onSocketDisconnected(
+    ChatSocketDisconnected event,
+    Emitter<ChatState> emit,
+  ) {
+    if (state.status == ChatStatus.closed || state.roomId.isEmpty) return;
+    _cancelTyping();
+    emit(
+      state.copyWith(
+        status: ChatStatus.connecting,
+        partnerTyping: false,
+        isSending: false,
+        errorMessage: null,
       ),
     );
   }
@@ -519,6 +561,10 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
         log('ChatSocket: connect error $error', name: 'Socket');
         if (!isClosed) add(ChatSocketError(error.toString()));
       })
+      ..onDisconnect((reason) {
+        log('ChatSocket: disconnected ($reason)', name: 'Socket');
+        if (!isClosed) add(ChatSocketDisconnected(reason.toString()));
+      })
       ..on('room:joined', (data) {
         if (data is Map<String, dynamic> && !isClosed) {
           add(ChatRoomJoined(data));
@@ -538,7 +584,12 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
       ..on('room:presence', (data) {
         if (data is Map && !isClosed) {
           final online = data['online'] == true;
-          add(ChatPartnerOnlineChanged(online));
+          add(
+            ChatPartnerOnlineChanged(
+              online,
+              userId: data['userId']?.toString(),
+            ),
+          );
         }
       })
       ..on('room:closed', (data) {
@@ -560,7 +611,8 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
       ..on('error', (data) {
         if (!isClosed) {
           final rawMessage = data is Map ? data['message'] : data;
-          add(ChatSocketError(rawMessage?.toString() ?? ''));
+          final code = data is Map ? data['code']?.toString() : null;
+          add(ChatSocketError(rawMessage?.toString() ?? '', code: code));
         }
       });
 
@@ -611,6 +663,43 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
           DateTime.now(),
       isMine: isMine,
     );
+  }
+
+  ChatState _terminalState({
+    required String reason,
+    required bool initiatedByMe,
+    String? errorMessage,
+  }) {
+    return state.copyWith(
+      status: ChatStatus.closed,
+      messages: const [],
+      roomId: '',
+      myAlias: '',
+      myAvatar: '',
+      partnerAlias: 'Stranger',
+      partnerAvatar: '',
+      partnerUserId: '',
+      partnerOnline: false,
+      partnerTyping: false,
+      isUploading: false,
+      isSending: false,
+      isLoadingOlderMessages: false,
+      hasMoreOlderMessages: false,
+      oldestMessageId: null,
+      closedReason: reason,
+      errorMessage: errorMessage,
+      closureInitiatedByMe: initiatedByMe,
+      lastAction: ChatAction.none,
+    );
+  }
+
+  ChatAction _chatActionForCode(String? code) {
+    return switch (code) {
+      'MODERATION_BLOCKED' ||
+      'CHAT_MODERATION_BLOCKED' => ChatAction.moderationBlocked,
+      'SPAM_DETECTED' || 'CHAT_SPAM_DETECTED' => ChatAction.spamDetected,
+      _ => ChatAction.none,
+    };
   }
 
   void _disconnectSocket() {

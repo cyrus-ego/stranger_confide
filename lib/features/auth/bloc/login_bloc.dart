@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/token_storage.dart';
+import '../../../domain/services/google_sign_in_service.dart';
+import '../../../domain/usecases/google_login_usecase.dart';
 import '../../../domain/usecases/login_usecase.dart';
 import '../../../domain/usecases/register_usecase.dart';
 import '../../../domain/usecases/resend_otp_usecase.dart';
@@ -14,18 +16,23 @@ import 'login_state.dart';
 class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   LoginBloc(
     this._loginUseCase,
+    this._googleLoginUseCase,
+    this._googleSignInService,
     this._registerUseCase,
     this._resendOtpUseCase,
     this._verifyEmailUseCase,
     this._tokenStorage,
   ) : super(const LoginState()) {
     on<LoginSubmitted>(_onSubmitted);
+    on<GoogleLoginSubmitted>(_onGoogleSubmitted);
     on<RegisterSubmitted>(_onRegisterSubmitted);
     on<OtpSubmitted>(_onOtpSubmitted);
     on<ResendOtpSubmitted>(_onResendOtpSubmitted);
   }
 
   final LoginUseCase _loginUseCase;
+  final GoogleLoginUseCase _googleLoginUseCase;
+  final GoogleSignInService _googleSignInService;
   final RegisterUseCase _registerUseCase;
   final ResendOtpUseCase _resendOtpUseCase;
   final VerifyEmailUseCase _verifyEmailUseCase;
@@ -40,12 +47,44 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
         ))
             .orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
 
-        await _tokenStorage.save(
-          accessToken: tokens.accessToken ?? '',
-          refreshToken: tokens.refreshToken ?? '',
-        );
+        await _saveTokens(tokens.accessToken, tokens.refreshToken);
         emit(state.copyWith(status: LoginStatus.success));
       });
+
+  Future<void> _onGoogleSubmitted(
+    GoogleLoginSubmitted event,
+    Emitter<LoginState> emit,
+  ) =>
+      guard(() async {
+        emit(state.copyWith(status: LoginStatus.loading));
+
+        String? idToken;
+        try {
+          idToken = await _googleSignInService.signIn();
+        } catch (_) {
+          emit(state.copyWith(status: LoginStatus.failure));
+          rethrow;
+        }
+
+        if (idToken == null) {
+          emit(state.copyWith(status: LoginStatus.initial));
+          return;
+        }
+
+        final tokens = (await _googleLoginUseCase(idToken)).orThrow(
+          (_) => emit(state.copyWith(status: LoginStatus.failure)),
+        );
+
+        await _saveTokens(tokens.accessToken, tokens.refreshToken);
+        emit(state.copyWith(status: LoginStatus.success));
+      });
+
+  Future<void> _saveTokens(String? accessToken, String? refreshToken) {
+    return _tokenStorage.save(
+      accessToken: accessToken ?? '',
+      refreshToken: refreshToken ?? '',
+    );
+  }
 
   Future<void> _onRegisterSubmitted(
     RegisterSubmitted event,

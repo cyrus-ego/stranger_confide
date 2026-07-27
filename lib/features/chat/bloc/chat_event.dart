@@ -25,11 +25,14 @@ sealed class ChatEvent extends BlocEvent with _$ChatEvent {
   const factory ChatEvent.partnerTyping(bool isTyping) = ChatPartnerTyping;
   const factory ChatEvent.roomClosed(String reason) = ChatRoomClosed;
   const factory ChatEvent.socketConnected() = ChatSocketConnected;
-  const factory ChatEvent.socketError(String message) = ChatSocketError;
+  const factory ChatEvent.socketDisconnected(String reason) =
+      ChatSocketDisconnected;
+  const factory ChatEvent.socketError(String message, {String? code}) =
+      ChatSocketError;
   const factory ChatEvent.errorCleared() = ChatErrorCleared;
   const factory ChatEvent.roomJoined(Map<String, dynamic> data) =
       ChatRoomJoined;
-  const factory ChatEvent.partnerOnlineChanged(bool online) =
+  const factory ChatEvent.partnerOnlineChanged(bool online, {String? userId}) =
       ChatPartnerOnlineChanged;
   const factory ChatEvent.accessDenied(String message) = ChatAccessDenied;
 }

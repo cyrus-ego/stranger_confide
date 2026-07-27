@@ -14,61 +14,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginEvent {
 
- String get email;
-/// Create a copy of LoginEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$LoginEventCopyWith<LoginEvent> get copyWith => _$LoginEventCopyWithImpl<LoginEvent>(this as LoginEvent, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginEvent&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginEvent);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,email);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'LoginEvent(email: $email)';
+  return 'LoginEvent()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $LoginEventCopyWith<$Res>  {
-  factory $LoginEventCopyWith(LoginEvent value, $Res Function(LoginEvent) _then) = _$LoginEventCopyWithImpl;
-@useResult
-$Res call({
- String email
-});
-
-
-
-
-}
-/// @nodoc
-class _$LoginEventCopyWithImpl<$Res>
-    implements $LoginEventCopyWith<$Res> {
-  _$LoginEventCopyWithImpl(this._self, this._then);
-
-  final LoginEvent _self;
-  final $Res Function(LoginEvent) _then;
-
-/// Create a copy of LoginEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,}) {
-  return _then(_self.copyWith(
-email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
+class $LoginEventCopyWith<$Res>  {
+$LoginEventCopyWith(LoginEvent _, $Res Function(LoginEvent) __);
 }
 
 
@@ -86,11 +55,12 @@ extension LoginEventPatterns on LoginEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LoginSubmitted value)?  submitted,TResult Function( RegisterSubmitted value)?  registerSubmitted,TResult Function( OtpSubmitted value)?  otpSubmitted,TResult Function( ResendOtpSubmitted value)?  resendOtpSubmitted,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LoginSubmitted value)?  submitted,TResult Function( GoogleLoginSubmitted value)?  googleSubmitted,TResult Function( RegisterSubmitted value)?  registerSubmitted,TResult Function( OtpSubmitted value)?  otpSubmitted,TResult Function( ResendOtpSubmitted value)?  resendOtpSubmitted,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
-return submitted(_that);case RegisterSubmitted() when registerSubmitted != null:
+return submitted(_that);case GoogleLoginSubmitted() when googleSubmitted != null:
+return googleSubmitted(_that);case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that);case _:
@@ -111,11 +81,12 @@ return resendOtpSubmitted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LoginSubmitted value)  submitted,required TResult Function( RegisterSubmitted value)  registerSubmitted,required TResult Function( OtpSubmitted value)  otpSubmitted,required TResult Function( ResendOtpSubmitted value)  resendOtpSubmitted,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LoginSubmitted value)  submitted,required TResult Function( GoogleLoginSubmitted value)  googleSubmitted,required TResult Function( RegisterSubmitted value)  registerSubmitted,required TResult Function( OtpSubmitted value)  otpSubmitted,required TResult Function( ResendOtpSubmitted value)  resendOtpSubmitted,}){
 final _that = this;
 switch (_that) {
 case LoginSubmitted():
-return submitted(_that);case RegisterSubmitted():
+return submitted(_that);case GoogleLoginSubmitted():
+return googleSubmitted(_that);case RegisterSubmitted():
 return registerSubmitted(_that);case OtpSubmitted():
 return otpSubmitted(_that);case ResendOtpSubmitted():
 return resendOtpSubmitted(_that);}
@@ -132,11 +103,12 @@ return resendOtpSubmitted(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LoginSubmitted value)?  submitted,TResult? Function( RegisterSubmitted value)?  registerSubmitted,TResult? Function( OtpSubmitted value)?  otpSubmitted,TResult? Function( ResendOtpSubmitted value)?  resendOtpSubmitted,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LoginSubmitted value)?  submitted,TResult? Function( GoogleLoginSubmitted value)?  googleSubmitted,TResult? Function( RegisterSubmitted value)?  registerSubmitted,TResult? Function( OtpSubmitted value)?  otpSubmitted,TResult? Function( ResendOtpSubmitted value)?  resendOtpSubmitted,}){
 final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
-return submitted(_that);case RegisterSubmitted() when registerSubmitted != null:
+return submitted(_that);case GoogleLoginSubmitted() when googleSubmitted != null:
+return googleSubmitted(_that);case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that);case _:
@@ -156,10 +128,11 @@ return resendOtpSubmitted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String email,  String password)?  submitted,TResult Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult Function( String email,  String otp)?  otpSubmitted,TResult Function( String email)?  resendOtpSubmitted,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String email,  String password)?  submitted,TResult Function()?  googleSubmitted,TResult Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult Function( String email,  String otp)?  otpSubmitted,TResult Function( String email)?  resendOtpSubmitted,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
-return submitted(_that.email,_that.password);case RegisterSubmitted() when registerSubmitted != null:
+return submitted(_that.email,_that.password);case GoogleLoginSubmitted() when googleSubmitted != null:
+return googleSubmitted();case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that.email,_that.password,_that.displayName,_that.gender);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that.email,_that.otp);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that.email);case _:
@@ -180,10 +153,11 @@ return resendOtpSubmitted(_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String email,  String password)  submitted,required TResult Function( String email,  String password,  String displayName,  String gender)  registerSubmitted,required TResult Function( String email,  String otp)  otpSubmitted,required TResult Function( String email)  resendOtpSubmitted,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String email,  String password)  submitted,required TResult Function()  googleSubmitted,required TResult Function( String email,  String password,  String displayName,  String gender)  registerSubmitted,required TResult Function( String email,  String otp)  otpSubmitted,required TResult Function( String email)  resendOtpSubmitted,}) {final _that = this;
 switch (_that) {
 case LoginSubmitted():
-return submitted(_that.email,_that.password);case RegisterSubmitted():
+return submitted(_that.email,_that.password);case GoogleLoginSubmitted():
+return googleSubmitted();case RegisterSubmitted():
 return registerSubmitted(_that.email,_that.password,_that.displayName,_that.gender);case OtpSubmitted():
 return otpSubmitted(_that.email,_that.otp);case ResendOtpSubmitted():
 return resendOtpSubmitted(_that.email);}
@@ -200,10 +174,11 @@ return resendOtpSubmitted(_that.email);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String email,  String password)?  submitted,TResult? Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult? Function( String email,  String otp)?  otpSubmitted,TResult? Function( String email)?  resendOtpSubmitted,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String email,  String password)?  submitted,TResult? Function()?  googleSubmitted,TResult? Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult? Function( String email,  String otp)?  otpSubmitted,TResult? Function( String email)?  resendOtpSubmitted,}) {final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
-return submitted(_that.email,_that.password);case RegisterSubmitted() when registerSubmitted != null:
+return submitted(_that.email,_that.password);case GoogleLoginSubmitted() when googleSubmitted != null:
+return googleSubmitted();case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that.email,_that.password,_that.displayName,_that.gender);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that.email,_that.otp);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that.email);case _:
@@ -219,14 +194,14 @@ return resendOtpSubmitted(_that.email);case _:
 
 class LoginSubmitted extends LoginEvent {
   const LoginSubmitted({required this.email, required this.password}): super._();
-  
 
-@override final  String email;
+
+ final  String email;
  final  String password;
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $LoginSubmittedCopyWith<LoginSubmitted> get copyWith => _$LoginSubmittedCopyWithImpl<LoginSubmitted>(this, _$identity);
 
@@ -252,7 +227,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $LoginSubmittedCopyWith<$Res> implements $LoginEventCopyWith<$Res> {
   factory $LoginSubmittedCopyWith(LoginSubmitted value, $Res Function(LoginSubmitted) _then) = _$LoginSubmittedCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  String email, String password
 });
@@ -271,7 +246,7 @@ class _$LoginSubmittedCopyWithImpl<$Res>
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
   return _then(LoginSubmitted(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
@@ -285,18 +260,50 @@ as String,
 /// @nodoc
 
 
+class GoogleLoginSubmitted extends LoginEvent {
+  const GoogleLoginSubmitted(): super._();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoogleLoginSubmitted);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LoginEvent.googleSubmitted()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
 class RegisterSubmitted extends LoginEvent {
   const RegisterSubmitted({required this.email, required this.password, required this.displayName, required this.gender}): super._();
   
 
-@override final  String email;
+ final  String email;
  final  String password;
  final  String displayName;
  final  String gender;
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $RegisterSubmittedCopyWith<RegisterSubmitted> get copyWith => _$RegisterSubmittedCopyWithImpl<RegisterSubmitted>(this, _$identity);
 
@@ -322,7 +329,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $RegisterSubmittedCopyWith<$Res> implements $LoginEventCopyWith<$Res> {
   factory $RegisterSubmittedCopyWith(RegisterSubmitted value, $Res Function(RegisterSubmitted) _then) = _$RegisterSubmittedCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  String email, String password, String displayName, String gender
 });
@@ -341,7 +348,7 @@ class _$RegisterSubmittedCopyWithImpl<$Res>
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,Object? displayName = null,Object? gender = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,Object? displayName = null,Object? gender = null,}) {
   return _then(RegisterSubmitted(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
@@ -361,12 +368,12 @@ class OtpSubmitted extends LoginEvent {
   const OtpSubmitted({required this.email, required this.otp}): super._();
   
 
-@override final  String email;
+ final  String email;
  final  String otp;
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $OtpSubmittedCopyWith<OtpSubmitted> get copyWith => _$OtpSubmittedCopyWithImpl<OtpSubmitted>(this, _$identity);
 
@@ -392,7 +399,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $OtpSubmittedCopyWith<$Res> implements $LoginEventCopyWith<$Res> {
   factory $OtpSubmittedCopyWith(OtpSubmitted value, $Res Function(OtpSubmitted) _then) = _$OtpSubmittedCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  String email, String otp
 });
@@ -411,7 +418,7 @@ class _$OtpSubmittedCopyWithImpl<$Res>
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? otp = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? email = null,Object? otp = null,}) {
   return _then(OtpSubmitted(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,otp: null == otp ? _self.otp : otp // ignore: cast_nullable_to_non_nullable
@@ -429,11 +436,11 @@ class ResendOtpSubmitted extends LoginEvent {
   const ResendOtpSubmitted({required this.email}): super._();
   
 
-@override final  String email;
+ final  String email;
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $ResendOtpSubmittedCopyWith<ResendOtpSubmitted> get copyWith => _$ResendOtpSubmittedCopyWithImpl<ResendOtpSubmitted>(this, _$identity);
 
@@ -459,7 +466,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $ResendOtpSubmittedCopyWith<$Res> implements $LoginEventCopyWith<$Res> {
   factory $ResendOtpSubmittedCopyWith(ResendOtpSubmitted value, $Res Function(ResendOtpSubmitted) _then) = _$ResendOtpSubmittedCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  String email
 });
@@ -478,7 +485,7 @@ class _$ResendOtpSubmittedCopyWithImpl<$Res>
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? email = null,}) {
   return _then(ResendOtpSubmitted(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,

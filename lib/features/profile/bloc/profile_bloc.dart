@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/token_storage.dart';
+import '../../../domain/services/google_sign_in_service.dart';
 import '../../../domain/usecases/create_profile_usecase.dart';
 import '../../../domain/usecases/get_current_user_usecase.dart';
 import '../../../domain/usecases/get_profile_usecase.dart';
@@ -20,6 +21,7 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
     this._updateProfileUseCase,
     this._patchProfileUseCase,
     this._tokenStorage,
+    this._googleSignInService,
   ) : super(const ProfileState()) {
     on<ProfileLoad>(_onLoad);
     on<ProfileLoadMe>(_onLoadMe);
@@ -35,6 +37,7 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
   final UpdateProfileUseCase _updateProfileUseCase;
   final PatchProfileUseCase _patchProfileUseCase;
   final TokenStorage _tokenStorage;
+  final GoogleSignInService _googleSignInService;
 
   Future<void> _onLoad(
     ProfileLoad event,
@@ -118,6 +121,12 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
 
   Future<void> _onLogout(ProfileLogout event, Emitter<ProfileState> emit) async {
     await _tokenStorage.clear();
+    try {
+      await _googleSignInService.signOut();
+    } catch (_) {
+      // The app session is already cleared; a provider sign-out failure must
+      // not prevent the user from logging out locally.
+    }
     emit(state.copyWith(loggedOut: true));
   }
 }

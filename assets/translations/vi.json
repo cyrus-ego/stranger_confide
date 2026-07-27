@@ -5,6 +5,8 @@
     "email": "Email",
     "password": "Mật khẩu",
     "submit": "Đăng nhập",
+    "google": "Tiếp tục với Google",
+    "or": "hoặc",
     "email_required": "Nhập email",
     "password_required": "Nhập mật khẩu",
     "confirm_password": "Xác nhận mật khẩu",
