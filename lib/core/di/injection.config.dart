@@ -13,6 +13,7 @@ import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:stranger_confide/core/di/register_module.dart' as _i661;
+import 'package:stranger_confide/core/push_notification_service.dart' as _i65;
 import 'package:stranger_confide/core/token_storage.dart' as _i670;
 import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
@@ -160,6 +161,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i687.UserRepository>(
       () => _i263.UserRepositoryImpl(gh<_i510.UserRemoteDatasource>()),
     );
+    gh.lazySingleton<_i65.PushNotificationService>(
+      () => _i65.PushNotificationService(
+        gh<_i670.TokenStorage>(),
+        gh<_i510.UserRemoteDatasource>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
     gh.factory<_i990.GetActiveRoomUseCase>(
       () => _i990.GetActiveRoomUseCase(gh<_i133.RoomRepository>()),
     );
@@ -210,15 +218,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i691.ReportUserUseCase>(
       () => _i691.ReportUserUseCase(gh<_i396.ModerationRepository>()),
     );
-    gh.factory<_i720.GetChatMessagesUseCase>(
-      () => _i720.GetChatMessagesUseCase(gh<_i926.ChatRepository>()),
-    );
-    gh.factory<_i167.UploadChatImageUseCase>(
-      () => _i167.UploadChatImageUseCase(gh<_i926.ChatRepository>()),
-    );
-    gh.factory<_i1047.GetCurrentUserUseCase>(
-      () => _i1047.GetCurrentUserUseCase(gh<_i687.UserRepository>()),
-    );
     gh.factory<_i209.LoginBloc>(
       () => _i209.LoginBloc(
         gh<_i878.LoginUseCase>(),
@@ -228,7 +227,17 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i225.ResendOtpUseCase>(),
         gh<_i29.VerifyEmailUseCase>(),
         gh<_i670.TokenStorage>(),
+        gh<_i65.PushNotificationService>(),
       ),
+    );
+    gh.factory<_i720.GetChatMessagesUseCase>(
+      () => _i720.GetChatMessagesUseCase(gh<_i926.ChatRepository>()),
+    );
+    gh.factory<_i167.UploadChatImageUseCase>(
+      () => _i167.UploadChatImageUseCase(gh<_i926.ChatRepository>()),
+    );
+    gh.factory<_i1047.GetCurrentUserUseCase>(
+      () => _i1047.GetCurrentUserUseCase(gh<_i687.UserRepository>()),
     );
     gh.factory<_i987.MatchmakingBloc>(
       () => _i987.MatchmakingBloc(
@@ -240,16 +249,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i910.MatchmakingSocketService>(),
       ),
     );
-    gh.factory<_i460.ChatBloc>(
-      () => _i460.ChatBloc(
-        gh<_i670.TokenStorage>(),
-        gh<_i990.GetActiveRoomUseCase>(),
-        gh<_i212.LeaveRoomUseCase>(),
-        gh<_i691.ReportUserUseCase>(),
-        gh<_i720.GetChatMessagesUseCase>(),
-        gh<_i167.UploadChatImageUseCase>(),
-      ),
-    );
     gh.factory<_i162.ProfileBloc>(
       () => _i162.ProfileBloc(
         gh<_i669.GetProfileUseCase>(),
@@ -259,6 +258,17 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i247.PatchProfileUseCase>(),
         gh<_i670.TokenStorage>(),
         gh<_i942.GoogleSignInService>(),
+        gh<_i65.PushNotificationService>(),
+      ),
+    );
+    gh.factory<_i460.ChatBloc>(
+      () => _i460.ChatBloc(
+        gh<_i670.TokenStorage>(),
+        gh<_i990.GetActiveRoomUseCase>(),
+        gh<_i212.LeaveRoomUseCase>(),
+        gh<_i691.ReportUserUseCase>(),
+        gh<_i720.GetChatMessagesUseCase>(),
+        gh<_i167.UploadChatImageUseCase>(),
       ),
     );
     return this;

@@ -32,6 +32,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
     on<MatchmakingRestartSearch>(_onRestartSearch);
     on<MatchmakingQueueTimerTick>(_onQueueTimerTick);
     on<MatchmakingAppResumed>(_onAppResumed);
+    on<MatchmakingVisibilityChanged>(_onVisibilityChanged);
 
     on<MatchmakingSocketConnected>(_onSocketConnected);
     on<MatchmakingQueueJoined>(_onQueueJoined);
@@ -52,6 +53,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
 
   StreamSubscription<MatchmakingSocketEvent>? _socketSub;
   Timer? _queueTimer;
+  bool _isAppForeground = true;
 
   Future<void> _onStarted(
     MatchmakingStarted event,
@@ -121,6 +123,14 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
         );
     }
   });
+
+  void _onVisibilityChanged(
+    MatchmakingVisibilityChanged event,
+    Emitter<MatchmakingState> emit,
+  ) {
+    _isAppForeground = event.visible;
+    _socketService.emitQueueVisibility(event.visible);
+  }
 
   Future<void> _onJoinQueue(
     MatchmakingJoinQueue event,
@@ -291,6 +301,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
     Emitter<MatchmakingState> emit,
   ) {
     _socketService.emitQueueSync();
+    _socketService.emitQueueVisibility(_isAppForeground);
   }
 
   void _onQueueJoined(

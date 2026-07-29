@@ -42,8 +42,21 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && mounted) {
-      context.read<MatchmakingBloc>().add(const MatchmakingAppResumed());
+    if (!mounted) return;
+
+    final bloc = context.read<MatchmakingBloc>();
+    if (state == AppLifecycleState.resumed) {
+      bloc
+        ..add(const MatchmakingVisibilityChanged(true))
+        ..add(const MatchmakingAppResumed());
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      bloc.add(const MatchmakingVisibilityChanged(false));
     }
   }
 

@@ -8,7 +8,8 @@ final appNavigatorKey = GlobalKey<NavigatorState>();
 final Chuck? _networkInspector = kDebugMode
     ? Chuck(
         navigatorKey: appNavigatorKey,
-        showNotification: kDebugMode?true:false,
+        showNotification: false,
+        // showNotification: kDebugMode ? true : false,
         showInspectorOnShake: true,
         maxCallsCount: 200,
       )

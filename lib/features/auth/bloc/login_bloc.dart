@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/token_storage.dart';
+import '../../../core/push_notification_service.dart';
 import '../../../domain/services/google_sign_in_service.dart';
 import '../../../domain/usecases/google_login_usecase.dart';
 import '../../../domain/usecases/login_usecase.dart';
@@ -22,6 +23,7 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
     this._resendOtpUseCase,
     this._verifyEmailUseCase,
     this._tokenStorage,
+    this._pushNotificationService,
   ) : super(const LoginState()) {
     on<LoginSubmitted>(_onSubmitted);
     on<GoogleLoginSubmitted>(_onGoogleSubmitted);
@@ -37,6 +39,7 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   final ResendOtpUseCase _resendOtpUseCase;
   final VerifyEmailUseCase _verifyEmailUseCase;
   final TokenStorage _tokenStorage;
+  final PushNotificationService _pushNotificationService;
 
   Future<void> _onSubmitted(LoginSubmitted event, Emitter<LoginState> emit) =>
       guard(() async {
@@ -44,8 +47,7 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
 
         final tokens = (await _loginUseCase(
           LoginParams(email: event.email, password: event.password),
-        ))
-            .orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
+        )).orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
 
         await _saveTokens(tokens.accessToken, tokens.refreshToken);
         emit(state.copyWith(status: LoginStatus.success));
@@ -54,100 +56,94 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   Future<void> _onGoogleSubmitted(
     GoogleLoginSubmitted event,
     Emitter<LoginState> emit,
-  ) =>
-      guard(() async {
-        emit(state.copyWith(status: LoginStatus.loading));
+  ) => guard(() async {
+    emit(state.copyWith(status: LoginStatus.loading));
 
-        String? idToken;
-        try {
-          idToken = await _googleSignInService.signIn();
-        } catch (_) {
-          emit(state.copyWith(status: LoginStatus.failure));
-          rethrow;
-        }
+    String? idToken;
+    try {
+      idToken = await _googleSignInService.signIn();
+    } catch (_) {
+      emit(state.copyWith(status: LoginStatus.failure));
+      rethrow;
+    }
 
-        if (idToken == null) {
-          emit(state.copyWith(status: LoginStatus.initial));
-          return;
-        }
+    if (idToken == null) {
+      emit(state.copyWith(status: LoginStatus.initial));
+      return;
+    }
 
-        final tokens = (await _googleLoginUseCase(idToken)).orThrow(
-          (_) => emit(state.copyWith(status: LoginStatus.failure)),
-        );
+    final tokens = (await _googleLoginUseCase(
+      idToken,
+    )).orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
 
-        await _saveTokens(tokens.accessToken, tokens.refreshToken);
-        emit(state.copyWith(status: LoginStatus.success));
-      });
+    await _saveTokens(tokens.accessToken, tokens.refreshToken);
+    emit(state.copyWith(status: LoginStatus.success));
+  });
 
-  Future<void> _saveTokens(String? accessToken, String? refreshToken) {
-    return _tokenStorage.save(
+  Future<void> _saveTokens(String? accessToken, String? refreshToken) async {
+    await _tokenStorage.save(
       accessToken: accessToken ?? '',
       refreshToken: refreshToken ?? '',
     );
+    await _pushNotificationService.syncToken();
   }
 
   Future<void> _onRegisterSubmitted(
     RegisterSubmitted event,
     Emitter<LoginState> emit,
-  ) =>
-      guard(() async {
-        emit(state.copyWith(registerStatus: RegisterStatus.loading));
+  ) => guard(() async {
+    emit(state.copyWith(registerStatus: RegisterStatus.loading));
 
-        final response = (await _registerUseCase(
+    final response =
+        (await _registerUseCase(
           RegisterParams(
             email: event.email,
             password: event.password,
             displayName: event.displayName,
             gender: event.gender,
           ),
-        ))
-            .orThrow(
+        )).orThrow(
           (_) => emit(state.copyWith(registerStatus: RegisterStatus.failure)),
         );
 
-        emit(state.copyWith(
-          registerStatus: RegisterStatus.success,
-          registerMessage: response.message,
-          pendingEmail: event.email,
-        ));
-      });
+    emit(
+      state.copyWith(
+        registerStatus: RegisterStatus.success,
+        registerMessage: response.message,
+        pendingEmail: event.email,
+      ),
+    );
+  });
 
-  Future<void> _onOtpSubmitted(
-    OtpSubmitted event,
-    Emitter<LoginState> emit,
-  ) =>
+  Future<void> _onOtpSubmitted(OtpSubmitted event, Emitter<LoginState> emit) =>
       guard(() async {
         emit(state.copyWith(otpStatus: OtpStatus.loading));
 
         final response = (await _verifyEmailUseCase(
           VerifyEmailParams(email: event.email, otp: event.otp),
-        ))
-            .orThrow(
-          (_) => emit(state.copyWith(otpStatus: OtpStatus.failure)),
-        );
+        )).orThrow((_) => emit(state.copyWith(otpStatus: OtpStatus.failure)));
 
-        emit(state.copyWith(
-          otpStatus: OtpStatus.success,
-          otpMessage: response.message,
-          pendingEmail: null,
-        ));
+        emit(
+          state.copyWith(
+            otpStatus: OtpStatus.success,
+            otpMessage: response.message,
+            pendingEmail: null,
+          ),
+        );
       });
 
   Future<void> _onResendOtpSubmitted(
     ResendOtpSubmitted event,
     Emitter<LoginState> emit,
-  ) =>
-      guard(() async {
-        emit(state.copyWith(resendOtpStatus: OtpStatus.loading));
+  ) => guard(() async {
+    emit(state.copyWith(resendOtpStatus: OtpStatus.loading));
 
-        final result = await _resendOtpUseCase(
-          ResendOtpParams(email: event.email),
-        );
-        result.orThrow(
-          (_) => emit(state.copyWith(resendOtpStatus: OtpStatus.failure)),
-        );
+    final result = await _resendOtpUseCase(ResendOtpParams(email: event.email));
+    result.orThrow(
+      (_) => emit(state.copyWith(resendOtpStatus: OtpStatus.failure)),
+    );
 
-        emit(state.copyWith(resendOtpStatus: OtpStatus.success));
-        emit(state.copyWith(resendOtpStatus: OtpStatus.initial));
-      });
+    emit(state.copyWith(resendOtpStatus: OtpStatus.success));
+    emit(state.copyWith(resendOtpStatus: OtpStatus.initial));
+  });
 }

@@ -18,6 +18,8 @@ sealed class MatchmakingEvent extends BlocEvent with _$MatchmakingEvent {
   const factory MatchmakingEvent.restartSearch() = MatchmakingRestartSearch;
   const factory MatchmakingEvent.queueTimerTick() = MatchmakingQueueTimerTick;
   const factory MatchmakingEvent.appResumed() = MatchmakingAppResumed;
+  const factory MatchmakingEvent.visibilityChanged(bool visible) =
+      MatchmakingVisibilityChanged;
 
   // Socket events
   const factory MatchmakingEvent.socketConnected() = MatchmakingSocketConnected;

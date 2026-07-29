@@ -38,6 +38,7 @@ File: `docs/api/chat.md`
 
 | Method | Path | Summary |
 |--------|------|---------|
+| GET | `/api/chat/{roomId}/messages` | Lấy thêm tin nhắn cũ hơn trong phòng chat |
 | POST | `/api/chat/{roomId}/image` | Upload ảnh trong phòng chat |
 
 ## Matchmaking
@@ -89,6 +90,8 @@ File: `docs/api/users.md`
 |--------|------|---------|
 | GET | `/api/users/me` | Thông tin tài khoản đang đăng nhập |
 | PATCH | `/api/users/me` | Cập nhật tên hiển thị / avatar URL |
+| POST | `/api/users/me/fcm-tokens` | Dang ky FCM token cua thiet bi hien tai |
+| DELETE | `/api/users/me/fcm-tokens` | Go FCM token khoi tai khoan hien tai |
 
 ## Common Schemas
 

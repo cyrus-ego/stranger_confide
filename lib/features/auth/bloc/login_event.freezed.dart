@@ -294,7 +294,7 @@ String toString() {
 
 class RegisterSubmitted extends LoginEvent {
   const RegisterSubmitted({required this.email, required this.password, required this.displayName, required this.gender}): super._();
-  
+
 
  final  String email;
  final  String password;
@@ -366,7 +366,7 @@ as String,
 
 class OtpSubmitted extends LoginEvent {
   const OtpSubmitted({required this.email, required this.otp}): super._();
-  
+
 
  final  String email;
  final  String otp;
@@ -434,7 +434,7 @@ as String,
 
 class ResendOtpSubmitted extends LoginEvent {
   const ResendOtpSubmitted({required this.email}): super._();
-  
+
 
  final  String email;
 

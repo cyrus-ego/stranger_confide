@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "610348462005",
+    "project_id": "stranger-confide",
+    "storage_bucket": "stranger-confide.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610348462005:android:172917f7d46ce4785833fc",
+        "android_client_info": {
+          "package_name": "com.cyr.stranger_confide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhfKx9TRuwHrPnMM7fUMPZIylTQc7WFhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

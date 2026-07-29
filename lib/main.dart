@@ -1,22 +1,31 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/app_bootstrap.dart';
 import 'core/di/injection.dart';
+import 'core/push_notification_service.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_cubit.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 const _supportedLocales = [Locale('vi'), Locale('en')];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await EasyLocalization.ensureInitialized();
   await dotenv.load();
   await bootstrapAppCore();
   configureDependencies();
+  unawaited(getIt<PushNotificationService>().initialize());
 
   runApp(
     EasyLocalization(

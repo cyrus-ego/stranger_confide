@@ -2,6 +2,7 @@ import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../core/push_notification_service.dart';
 import '../../../core/token_storage.dart';
 import '../../../domain/services/google_sign_in_service.dart';
 import '../../../domain/usecases/create_profile_usecase.dart';
@@ -22,6 +23,7 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
     this._patchProfileUseCase,
     this._tokenStorage,
     this._googleSignInService,
+    this._pushNotificationService,
   ) : super(const ProfileState()) {
     on<ProfileLoad>(_onLoad);
     on<ProfileLoadMe>(_onLoadMe);
@@ -38,88 +40,92 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
   final PatchProfileUseCase _patchProfileUseCase;
   final TokenStorage _tokenStorage;
   final GoogleSignInService _googleSignInService;
+  final PushNotificationService _pushNotificationService;
 
-  Future<void> _onLoad(
-    ProfileLoad event,
-    Emitter<ProfileState> emit,
-  ) =>
+  Future<void> _onLoad(ProfileLoad event, Emitter<ProfileState> emit) =>
       guard(() async {
         emit(state.copyWith(status: ProfileStatus.loading));
 
-        final data = (await _getProfileUseCase())
-            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
+        final data = (await _getProfileUseCase()).orThrow(
+          (_) => emit(state.copyWith(status: ProfileStatus.failure)),
+        );
 
         emit(state.copyWith(status: ProfileStatus.loaded, data: data));
       });
 
-  Future<void> _onLoadMe(
-    ProfileLoadMe event,
-    Emitter<ProfileState> emit,
-  ) =>
+  Future<void> _onLoadMe(ProfileLoadMe event, Emitter<ProfileState> emit) =>
       guard(() async {
         emit(state.copyWith(status: ProfileStatus.loading));
 
-        final user = (await _getCurrentUserUseCase())
-            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
+        final user = (await _getCurrentUserUseCase()).orThrow(
+          (_) => emit(state.copyWith(status: ProfileStatus.failure)),
+        );
 
-        emit(state.copyWith(
-          status: ProfileStatus.loaded,
-          currentUser: user,
-        ));
+        emit(state.copyWith(status: ProfileStatus.loaded, currentUser: user));
       });
 
-  Future<void> _onCreate(
-    ProfileCreate event,
-    Emitter<ProfileState> emit,
-  ) =>
+  Future<void> _onCreate(ProfileCreate event, Emitter<ProfileState> emit) =>
       guard(() async {
-        emit(state.copyWith(status: ProfileStatus.updating, createSuccess: false));
+        emit(
+          state.copyWith(status: ProfileStatus.updating, createSuccess: false),
+        );
 
-        final data = (await _createProfileUseCase(event.request))
-            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
+        final data = (await _createProfileUseCase(
+          event.request,
+        )).orThrow((_) => emit(state.copyWith(status: ProfileStatus.failure)));
 
-        emit(state.copyWith(
-          status: ProfileStatus.loaded,
-          data: data,
-          createSuccess: true,
-        ));
+        emit(
+          state.copyWith(
+            status: ProfileStatus.loaded,
+            data: data,
+            createSuccess: true,
+          ),
+        );
       });
 
-  Future<void> _onUpdate(
-    ProfileUpdate event,
-    Emitter<ProfileState> emit,
-  ) =>
+  Future<void> _onUpdate(ProfileUpdate event, Emitter<ProfileState> emit) =>
       guard(() async {
-        emit(state.copyWith(status: ProfileStatus.updating, updateSuccess: false));
+        emit(
+          state.copyWith(status: ProfileStatus.updating, updateSuccess: false),
+        );
 
-        final data = (await _updateProfileUseCase(event.request))
-            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.loaded)));
+        final data = (await _updateProfileUseCase(
+          event.request,
+        )).orThrow((_) => emit(state.copyWith(status: ProfileStatus.loaded)));
 
-        emit(state.copyWith(
-          status: ProfileStatus.loaded,
-          data: data,
-          updateSuccess: true,
-        ));
+        emit(
+          state.copyWith(
+            status: ProfileStatus.loaded,
+            data: data,
+            updateSuccess: true,
+          ),
+        );
       });
 
   Future<void> _onPatchField(
     ProfilePatchField event,
     Emitter<ProfileState> emit,
-  ) =>
-      guard(() async {
-        emit(state.copyWith(status: ProfileStatus.updating, updateSuccess: false));
+  ) => guard(() async {
+    emit(state.copyWith(status: ProfileStatus.updating, updateSuccess: false));
 
-        final data = (await _patchProfileUseCase(event.fields))
-            .orThrow((_) => emit(state.copyWith(status: ProfileStatus.loaded)));
+    final data = (await _patchProfileUseCase(
+      event.fields,
+    )).orThrow((_) => emit(state.copyWith(status: ProfileStatus.loaded)));
 
-        emit(state.copyWith(
-          status: ProfileStatus.loaded,
-          data: data,
-          updateSuccess: true,
-        ));
-      });
+    emit(
+      state.copyWith(
+        status: ProfileStatus.loaded,
+        data: data,
+        updateSuccess: true,
+      ),
+    );
+  });
 
-  Future<void> _onLogout(ProfileLogout event, Emitter<ProfileState> emit) async {
+  Future<void> _onLogout(
+    ProfileLogout event,
+    Emitter<ProfileState> emit,
+  ) async {
+    await _pushNotificationService.unregisterCurrentToken();
     await _tokenStorage.clear();
     try {
       await _googleSignInService.signOut();

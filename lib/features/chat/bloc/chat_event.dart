@@ -14,6 +14,8 @@ sealed class ChatEvent extends BlocEvent with _$ChatEvent {
       ChatLoadOlderMessages;
   const factory ChatEvent.typing() = ChatTyping;
   const factory ChatEvent.appResumed() = ChatAppResumed;
+  const factory ChatEvent.visibilityChanged(bool visible) =
+      ChatVisibilityChanged;
   const factory ChatEvent.leaveRoom() = ChatLeaveRoom;
   const factory ChatEvent.blockPartner() = ChatBlockPartner;
   const factory ChatEvent.reportPartner(String reason, String? description) =

@@ -153,6 +153,11 @@ class MatchmakingSocketService {
     log('MatchmakingSocket: emitted queue:leave', name: 'Socket');
   }
 
+  void emitQueueVisibility(bool visible) {
+    _socket?.emit('queue:visibility', {'visible': visible});
+    log('MatchmakingSocket: emitted queue:visibility=$visible', name: 'Socket');
+  }
+
   void disconnect() {
     _socket?.dispose();
     _socket = null;

@@ -11,4 +11,10 @@ abstract class UserRemoteDatasource {
 
   @GET('/users/me')
   Future<UserDto> getMe();
+
+  @POST('/users/me/fcm-tokens')
+  Future<void> registerFcmToken(@Body() Map<String, dynamic> body);
+
+  @DELETE('/users/me/fcm-tokens')
+  Future<void> unregisterFcmToken(@Body() Map<String, dynamic> body);
 }

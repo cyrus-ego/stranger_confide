@@ -239,6 +239,7 @@ class _FakeSocketService implements MatchmakingSocketService {
   int disconnectCount = 0;
   int emitQueueLeaveCount = 0;
   int emitQueueSyncCount = 0;
+  int emitQueueVisibilityCount = 0;
 
   @override
   Stream<MatchmakingSocketEvent> get events => _events.stream;
@@ -267,6 +268,11 @@ class _FakeSocketService implements MatchmakingSocketService {
   @override
   void emitQueueSync() {
     emitQueueSyncCount++;
+  }
+
+  @override
+  void emitQueueVisibility(bool visible) {
+    emitQueueVisibilityCount++;
   }
 
   @override

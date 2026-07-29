@@ -106,6 +106,98 @@ Schema: `ApiErrorResponseDto` (xem `common.md`)
 
 ---
 
+## POST `/api/users/me/fcm-tokens`
+
+**Dang ky FCM token cua thiet bi hien tai**
+
+### Request Body
+
+Content-Type: `application/json`
+
+#### `RegisterFcmTokenDto`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `token` | string | Yes | FCM registration token của thiết bị hiện tại |
+| `platform` | enum: android, ios, web, macos, windows, linux, unknown | No | android |
+| `deviceId` | string | No | pixel-8-pro |
+
+
+### Responses
+
+**200** — Phản hồi thành công
+
+Response data schema:
+
+#### `MessageResponseDto`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `message` | string | Yes | OTP đã được gửi lại. Kiểm tra hộp thư của bạn. |
+
+**400** — Dữ liệu không hợp lệ
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**401** — Chưa xác thực
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**403** — Không có quyền
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**404** — Không tìm thấy
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**429** — Quá nhiều yêu cầu
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+---
+
+## DELETE `/api/users/me/fcm-tokens`
+
+**Go FCM token khoi tai khoan hien tai**
+
+### Request Body
+
+Content-Type: `application/json`
+
+#### `UnregisterFcmTokenDto`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `token` | string | Yes | FCM registration token cần gỡ khỏi user hiện tại |
+
+
+### Responses
+
+**204** — 
+
+**400** — Dữ liệu không hợp lệ
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**401** — Chưa xác thực
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**403** — Không có quyền
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**404** — Không tìm thấy
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+**429** — Quá nhiều yêu cầu
+
+Schema: `ApiErrorResponseDto` (xem `common.md`)
+
+---
+
 ## Schemas
 
 #### `UserResponseDto`
@@ -129,4 +221,18 @@ Schema: `ApiErrorResponseDto` (xem `common.md`)
 |-------|------|----------|-------------|
 | `displayName` | string | No |  |
 | `avatar` | string | No |  |
+
+#### `RegisterFcmTokenDto`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `token` | string | Yes | FCM registration token của thiết bị hiện tại |
+| `platform` | enum: android, ios, web, macos, windows, linux, unknown | No | android |
+| `deviceId` | string | No | pixel-8-pro |
+
+#### `UnregisterFcmTokenDto`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `token` | string | Yes | FCM registration token cần gỡ khỏi user hiện tại |
 

@@ -1,6 +1,7 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stranger_confide/core/push_notification_service.dart';
 import 'package:stranger_confide/core/token_storage.dart';
 import 'package:stranger_confide/data/models/response/auth_tokens.dart';
 import 'package:stranger_confide/data/models/response/register_response.dart';
@@ -20,6 +21,7 @@ void main() {
 
   late _FakeAuthRepository repository;
   late _FakeGoogleSignInService googleSignInService;
+  late _FakePushNotificationService pushNotificationService;
   late TokenStorage tokenStorage;
   late LoginBloc bloc;
 
@@ -27,6 +29,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     repository = _FakeAuthRepository();
     googleSignInService = _FakeGoogleSignInService();
+    pushNotificationService = _FakePushNotificationService();
     tokenStorage = TokenStorage();
     bloc = LoginBloc(
       LoginUseCase(repository),
@@ -36,6 +39,7 @@ void main() {
       ResendOtpUseCase(repository),
       VerifyEmailUseCase(repository),
       tokenStorage,
+      pushNotificationService,
     );
   });
 
@@ -107,6 +111,24 @@ class _FakeGoogleSignInService implements GoogleSignInService {
 
   @override
   Future<void> signOut() async {}
+}
+
+class _FakePushNotificationService implements PushNotificationService {
+  int syncTokenCount = 0;
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> syncToken() async {
+    syncTokenCount++;
+  }
+
+  @override
+  Future<void> unregisterCurrentToken() async {}
+
+  @override
+  Future<void> dispose() async {}
 }
 
 class _FakeAuthRepository implements AuthRepository {

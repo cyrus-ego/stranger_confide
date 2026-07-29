@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
 
   cyr_flutter_core:
-    path: ../cyr_flutter_core
+    path: ../../cyr_flutter_core
 
   # Navigation
   go_router: ^14.6.3
@@ -31,7 +31,7 @@ dependencies:
   chuck_interceptor: ^2.4.0
 
   # Dependency injection
-  get_it: ^8.0.3
+  get_it: ^9.2.1
   injectable: ^2.5.0
 
   # UI
@@ -48,6 +48,8 @@ dependencies:
   easy_localization: ^3.0.7
   google_sign_in: ^7.2.0
   image_picker: ^1.2.1
+  firebase_core: ^4.12.1
+  firebase_messaging: ^16.2.0
 
 dev_dependencies:
   flutter_test:

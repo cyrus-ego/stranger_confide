@@ -34,6 +34,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     on<ChatLoadOlderMessages>(_onLoadOlderMessages);
     on<ChatTyping>(_onTyping);
     on<ChatAppResumed>(_onAppResumed);
+    on<ChatVisibilityChanged>(_onVisibilityChanged);
     on<ChatLeaveRoom>(_onLeaveRoom);
     on<ChatBlockPartner>(_onBlockPartner);
     on<ChatReportPartner>(_onReportPartner);
@@ -60,6 +61,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
   Timer? _typingDebounce;
   Timer? _errorClearTimer;
   bool _isTypingEmitted = false;
+  bool _isAppForeground = true;
 
   // ── User action handlers ──
 
@@ -272,6 +274,14 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     }
   }
 
+  void _onVisibilityChanged(
+    ChatVisibilityChanged event,
+    Emitter<ChatState> emit,
+  ) {
+    _isAppForeground = event.visible;
+    _emitChatVisibility(event.visible);
+  }
+
   void _cancelTyping() {
     if (_isTypingEmitted) {
       _isTypingEmitted = false;
@@ -406,6 +416,8 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
         closedReason: null,
       ),
     );
+
+    _emitChatVisibility(_isAppForeground);
   }
 
   void _onMessageReceived(ChatMessageReceived event, Emitter<ChatState> emit) {
@@ -623,6 +635,14 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     _socket?.emit('room:join', {'roomId': state.roomId});
   }
 
+  void _emitChatVisibility(bool visible) {
+    if (state.roomId.isEmpty || _socket?.connected != true) return;
+    _socket?.emit('chat:visibility', {
+      'roomId': state.roomId,
+      'visible': visible,
+    });
+  }
+
   List<ChatMessage> _mergeMessages(
     List<ChatMessage> incoming, {
     bool shouldMerge = true,
@@ -706,6 +726,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
     _cancelTyping();
     _errorClearTimer?.cancel();
     _errorClearTimer = null;
+    _emitChatVisibility(false);
     _socket?.dispose();
     _socket = null;
   }

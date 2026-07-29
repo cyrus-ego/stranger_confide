@@ -50,8 +50,21 @@ class _ChatPageState extends BlocHostPageState<ChatPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && mounted) {
-      context.read<ChatBloc>().add(const ChatAppResumed());
+    if (!mounted) return;
+
+    final bloc = context.read<ChatBloc>();
+    if (state == AppLifecycleState.resumed) {
+      bloc
+        ..add(const ChatVisibilityChanged(true))
+        ..add(const ChatAppResumed());
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      bloc.add(const ChatVisibilityChanged(false));
     }
   }
 
