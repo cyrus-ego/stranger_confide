@@ -37,6 +37,12 @@ class _ProfilePageState extends BlocHostPageState<ProfilePage> {
     return MultiBlocListener(
       listeners: [
         BlocListener<ProfileBloc, ProfileState>(
+          listenWhen: (prev, curr) =>
+              curr.status == ProfileStatus.failure &&
+              prev.status != ProfileStatus.failure,
+          listener: (context, state) => context.go(AppRoutes.login),
+        ),
+        BlocListener<ProfileBloc, ProfileState>(
           listenWhen: (prev, curr) => curr.loggedOut && !prev.loggedOut,
           listener: (context, state) => context.go(AppRoutes.login),
         ),
@@ -57,10 +63,7 @@ class _ProfilePageState extends BlocHostPageState<ProfilePage> {
             return switch (state.status) {
               ProfileStatus.initial ||
               ProfileStatus.loading => const _ProfileShimmer(),
-              ProfileStatus.failure => _ProfileError(
-                onRetry: () =>
-                    context.read<ProfileBloc>().add(const ProfileLoad()),
-              ),
+              ProfileStatus.failure => const _ProfileShimmer(),
               ProfileStatus.loaded || ProfileStatus.updating => _ProfileContent(
                 data: state.data!,
                 isUpdating: state.status == ProfileStatus.updating,
@@ -94,45 +97,6 @@ class _ProfileShimmer extends StatelessWidget {
               width: double.infinity,
               height: 360,
               radius: AppSpacing.radiusLg,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileError extends StatelessWidget {
-  const _ProfileError({required this.onRetry});
-
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.cloud_off_rounded,
-              size: 64,
-              color: theme.colorScheme.onSurface.withAlpha(100),
-            ),
-            const Gap(AppSpacing.lg),
-            Text(
-              tr(LocaleKeys.profileLoadError),
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withAlpha(153),
-              ),
-            ),
-            const Gap(AppSpacing.xl),
-            OutlinedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text(tr(LocaleKeys.profileRetry)),
             ),
           ],
         ),

@@ -120,20 +120,11 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                   }
                   if (state.status == ProfileStatus.failure &&
                       state.currentUser == null) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(tr(LocaleKeys.profileLoadError)),
-                          const Gap(AppSpacing.lg),
-                          FilledButton(
-                            onPressed: () => context
-                                .read<ProfileBloc>()
-                                .add(const ProfileLoadMe()),
-                            child: Text(tr(LocaleKeys.profileRetry)),
-                          ),
-                        ],
-                      ),
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (context.mounted) context.go(AppRoutes.login);
+                    });
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
                   }
 
