@@ -40,6 +40,8 @@
     "age": "Tuổi",
     "chat_with": "Muốn chat với",
     "chat_preference": "Muốn chat với",
+    "offline_matching": "Ghép đôi khi ngoại tuyến",
+    "offline_matching_hint": "Cho phép người phù hợp tìm thấy bạn khi bạn không mở ứng dụng",
     "role": "Vai trò",
     "bio": "Giới thiệu",
     "vip": "VIP",

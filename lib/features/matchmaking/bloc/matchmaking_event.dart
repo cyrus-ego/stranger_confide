@@ -15,6 +15,8 @@ sealed class MatchmakingEvent extends BlocEvent with _$MatchmakingEvent {
   const factory MatchmakingEvent.leaveQueue() = MatchmakingLeaveQueue;
   const factory MatchmakingEvent.updatePreference(ChatPreference preference) =
       MatchmakingUpdatePreference;
+  const factory MatchmakingEvent.offlineMatchingChanged(bool enabled) =
+      MatchmakingOfflineMatchingChanged;
   const factory MatchmakingEvent.restartSearch() = MatchmakingRestartSearch;
   const factory MatchmakingEvent.queueTimerTick() = MatchmakingQueueTimerTick;
   const factory MatchmakingEvent.appResumed() = MatchmakingAppResumed;

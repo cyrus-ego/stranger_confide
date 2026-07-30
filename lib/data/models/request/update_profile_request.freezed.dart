@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateProfileRequest {
 
- String get displayName; String get gender; int get age; String get bio; String get chatPreference;
+ String get displayName; String get gender; int get age; String get bio; String get chatPreference; bool get offlineMatchingEnabled;
 /// Create a copy of UpdateProfileRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UpdateProfileRequestCopyWith<UpdateProfileRequest> get copyWith => _$UpdateProf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateProfileRequest&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateProfileRequest&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference)&&(identical(other.offlineMatchingEnabled, offlineMatchingEnabled) || other.offlineMatchingEnabled == offlineMatchingEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,displayName,gender,age,bio,chatPreference);
+int get hashCode => Object.hash(runtimeType,displayName,gender,age,bio,chatPreference,offlineMatchingEnabled);
 
 @override
 String toString() {
-  return 'UpdateProfileRequest(displayName: $displayName, gender: $gender, age: $age, bio: $bio, chatPreference: $chatPreference)';
+  return 'UpdateProfileRequest(displayName: $displayName, gender: $gender, age: $age, bio: $bio, chatPreference: $chatPreference, offlineMatchingEnabled: $offlineMatchingEnabled)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UpdateProfileRequestCopyWith<$Res>  {
   factory $UpdateProfileRequestCopyWith(UpdateProfileRequest value, $Res Function(UpdateProfileRequest) _then) = _$UpdateProfileRequestCopyWithImpl;
 @useResult
 $Res call({
- String displayName, String gender, int age, String bio, String chatPreference
+ String displayName, String gender, int age, String bio, String chatPreference, bool offlineMatchingEnabled
 });
 
 
@@ -65,14 +65,15 @@ class _$UpdateProfileRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateProfileRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? displayName = null,Object? gender = null,Object? age = null,Object? bio = null,Object? chatPreference = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? displayName = null,Object? gender = null,Object? age = null,Object? bio = null,Object? chatPreference = null,Object? offlineMatchingEnabled = null,}) {
   return _then(_self.copyWith(
 displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
 as String,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
 as int,bio: null == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
 as String,chatPreference: null == chatPreference ? _self.chatPreference : chatPreference // ignore: cast_nullable_to_non_nullable
-as String,
+as String,offlineMatchingEnabled: null == offlineMatchingEnabled ? _self.offlineMatchingEnabled : offlineMatchingEnabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String displayName,  String gender,  int age,  String bio,  String chatPreference)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String displayName,  String gender,  int age,  String bio,  String chatPreference,  bool offlineMatchingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateProfileRequest() when $default != null:
-return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPreference);case _:
+return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPreference,_that.offlineMatchingEnabled);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPre
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String displayName,  String gender,  int age,  String bio,  String chatPreference)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String displayName,  String gender,  int age,  String bio,  String chatPreference,  bool offlineMatchingEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateProfileRequest():
-return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPreference);}
+return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPreference,_that.offlineMatchingEnabled);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -192,10 +193,10 @@ return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPre
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String displayName,  String gender,  int age,  String bio,  String chatPreference)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String displayName,  String gender,  int age,  String bio,  String chatPreference,  bool offlineMatchingEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateProfileRequest() when $default != null:
-return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPreference);case _:
+return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPreference,_that.offlineMatchingEnabled);case _:
   return null;
 
 }
@@ -207,7 +208,7 @@ return $default(_that.displayName,_that.gender,_that.age,_that.bio,_that.chatPre
 @JsonSerializable()
 
 class _UpdateProfileRequest implements UpdateProfileRequest {
-  const _UpdateProfileRequest({required this.displayName, required this.gender, required this.age, required this.bio, required this.chatPreference});
+  const _UpdateProfileRequest({required this.displayName, required this.gender, required this.age, required this.bio, required this.chatPreference, this.offlineMatchingEnabled = true});
   factory _UpdateProfileRequest.fromJson(Map<String, dynamic> json) => _$UpdateProfileRequestFromJson(json);
 
 @override final  String displayName;
@@ -215,6 +216,7 @@ class _UpdateProfileRequest implements UpdateProfileRequest {
 @override final  int age;
 @override final  String bio;
 @override final  String chatPreference;
+@override@JsonKey() final  bool offlineMatchingEnabled;
 
 /// Create a copy of UpdateProfileRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateProfileRequest&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateProfileRequest&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.age, age) || other.age == age)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.chatPreference, chatPreference) || other.chatPreference == chatPreference)&&(identical(other.offlineMatchingEnabled, offlineMatchingEnabled) || other.offlineMatchingEnabled == offlineMatchingEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,displayName,gender,age,bio,chatPreference);
+int get hashCode => Object.hash(runtimeType,displayName,gender,age,bio,chatPreference,offlineMatchingEnabled);
 
 @override
 String toString() {
-  return 'UpdateProfileRequest(displayName: $displayName, gender: $gender, age: $age, bio: $bio, chatPreference: $chatPreference)';
+  return 'UpdateProfileRequest(displayName: $displayName, gender: $gender, age: $age, bio: $bio, chatPreference: $chatPreference, offlineMatchingEnabled: $offlineMatchingEnabled)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$UpdateProfileRequestCopyWith<$Res> implements $UpdateProf
   factory _$UpdateProfileRequestCopyWith(_UpdateProfileRequest value, $Res Function(_UpdateProfileRequest) _then) = __$UpdateProfileRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String displayName, String gender, int age, String bio, String chatPreference
+ String displayName, String gender, int age, String bio, String chatPreference, bool offlineMatchingEnabled
 });
 
 
@@ -266,14 +268,15 @@ class __$UpdateProfileRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateProfileRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? displayName = null,Object? gender = null,Object? age = null,Object? bio = null,Object? chatPreference = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? displayName = null,Object? gender = null,Object? age = null,Object? bio = null,Object? chatPreference = null,Object? offlineMatchingEnabled = null,}) {
   return _then(_UpdateProfileRequest(
 displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
 as String,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
 as int,bio: null == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
 as String,chatPreference: null == chatPreference ? _self.chatPreference : chatPreference // ignore: cast_nullable_to_non_nullable
-as String,
+as String,offlineMatchingEnabled: null == offlineMatchingEnabled ? _self.offlineMatchingEnabled : offlineMatchingEnabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

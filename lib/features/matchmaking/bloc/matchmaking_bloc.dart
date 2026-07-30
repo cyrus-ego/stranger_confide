@@ -12,6 +12,7 @@ import '../../../domain/usecases/get_profile_usecase.dart';
 import '../../../domain/usecases/get_queue_status_usecase.dart';
 import '../../../domain/usecases/join_queue_usecase.dart';
 import '../../../domain/usecases/leave_queue_usecase.dart';
+import '../../../domain/usecases/patch_profile_usecase.dart';
 import 'matchmaking_event.dart';
 import 'matchmaking_state.dart';
 
@@ -23,12 +24,14 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
     this._getProfileUseCase,
     this._getActiveRoomUseCase,
     this._getQueueStatusUseCase,
+    this._patchProfileUseCase,
     this._socketService,
   ) : super(const MatchmakingState()) {
     on<MatchmakingStarted>(_onStarted);
     on<MatchmakingJoinQueue>(_onJoinQueue);
     on<MatchmakingLeaveQueue>(_onLeaveQueue);
     on<MatchmakingUpdatePreference>(_onUpdatePreference);
+    on<MatchmakingOfflineMatchingChanged>(_onOfflineMatchingChanged);
     on<MatchmakingRestartSearch>(_onRestartSearch);
     on<MatchmakingQueueTimerTick>(_onQueueTimerTick);
     on<MatchmakingAppResumed>(_onAppResumed);
@@ -49,6 +52,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
   final GetProfileUseCase _getProfileUseCase;
   final GetActiveRoomUseCase _getActiveRoomUseCase;
   final GetQueueStatusUseCase _getQueueStatusUseCase;
+  final PatchProfileUseCase _patchProfileUseCase;
   final MatchmakingSocketService _socketService;
 
   StreamSubscription<MatchmakingSocketEvent>? _socketSub;
@@ -72,6 +76,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
         selectedPreference: ChatPreference.tryParse(
           profile.profile?.chatPreference,
         ),
+        offlineMatchingEnabled: profile.profile?.offlineMatchingEnabled ?? true,
       ),
     );
 
@@ -217,6 +222,39 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
   ) {
     emit(state.copyWith(selectedPreference: event.preference));
   }
+
+  Future<void> _onOfflineMatchingChanged(
+    MatchmakingOfflineMatchingChanged event,
+    Emitter<MatchmakingState> emit,
+  ) => guard(() async {
+    final previousValue = state.offlineMatchingEnabled;
+    emit(
+      state.copyWith(
+        offlineMatchingEnabled: event.enabled,
+        isUpdatingOfflineMatching: true,
+      ),
+    );
+
+    final profile =
+        (await _patchProfileUseCase({
+          'offlineMatchingEnabled': event.enabled,
+        })).orThrow(
+          (_) => emit(
+            state.copyWith(
+              offlineMatchingEnabled: previousValue,
+              isUpdatingOfflineMatching: false,
+            ),
+          ),
+        );
+
+    emit(
+      state.copyWith(
+        offlineMatchingEnabled:
+            profile.profile?.offlineMatchingEnabled ?? event.enabled,
+        isUpdatingOfflineMatching: false,
+      ),
+    );
+  });
 
   Future<void> _onRestartSearch(
     MatchmakingRestartSearch event,

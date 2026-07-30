@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:go_router/go_router.dart';
+
 import 'auth_refresh_interceptor.dart';
 import 'network_inspector.dart';
 import 'token_storage.dart';
@@ -26,6 +28,12 @@ Future<void> bootstrapAppCore() async {
     tokenStorage: _tokenStorage,
     baseUrl: baseUrl,
     defaultHeaders: _defaultHeaders,
+    onSessionExpired: () {
+      final context = appNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        context.go('/login');
+      }
+    },
   );
 
   final config = CoreConfig(

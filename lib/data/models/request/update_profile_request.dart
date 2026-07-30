@@ -11,6 +11,7 @@ sealed class UpdateProfileRequest with _$UpdateProfileRequest {
     required int age,
     required String bio,
     required String chatPreference,
+    @Default(true) bool offlineMatchingEnabled,
   }) = _UpdateProfileRequest;
 
   factory UpdateProfileRequest.fromJson(Map<String, dynamic> json) =>

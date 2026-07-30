@@ -43,6 +43,8 @@ abstract final class LocaleKeys {
   static const profileAge = 'profile.age';
   static const profileChatWith = 'profile.chat_with';
   static const profileChatPreference = 'profile.chat_preference';
+  static const profileOfflineMatching = 'profile.offline_matching';
+  static const profileOfflineMatchingHint = 'profile.offline_matching_hint';
   static const profileRole = 'profile.role';
   static const profileBio = 'profile.bio';
   static const profileVip = 'profile.vip';

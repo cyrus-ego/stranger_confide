@@ -23,6 +23,8 @@ sealed class MatchmakingState with _$MatchmakingState {
     QueueStatusResponse? queueData,
     @Default(ChatPreference.defaultPreference)
     ChatPreference selectedPreference,
+    @Default(true) bool offlineMatchingEnabled,
+    @Default(false) bool isUpdatingOfflineMatching,
     @Default(0) int localWaitSeconds,
     @Default(0) int localExpiresInSeconds,
     String? errorMessage,

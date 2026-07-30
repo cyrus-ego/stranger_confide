@@ -55,14 +55,15 @@ extension MatchmakingEventPatterns on MatchmakingEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchmakingStarted value)?  started,TResult Function( MatchmakingJoinQueue value)?  joinQueue,TResult Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult Function( MatchmakingUpdatePreference value)?  updatePreference,TResult Function( MatchmakingRestartSearch value)?  restartSearch,TResult Function( MatchmakingQueueTimerTick value)?  queueTimerTick,TResult Function( MatchmakingAppResumed value)?  appResumed,TResult Function( MatchmakingVisibilityChanged value)?  visibilityChanged,TResult Function( MatchmakingSocketConnected value)?  socketConnected,TResult Function( MatchmakingQueueJoined value)?  queueJoined,TResult Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult Function( MatchmakingMatchFound value)?  matchFound,TResult Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult Function( MatchmakingQueueLeft value)?  queueLeft,TResult Function( MatchmakingSocketError value)?  socketError,TResult Function( MatchmakingSocketDisconnected value)?  socketDisconnected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchmakingStarted value)?  started,TResult Function( MatchmakingJoinQueue value)?  joinQueue,TResult Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult Function( MatchmakingUpdatePreference value)?  updatePreference,TResult Function( MatchmakingOfflineMatchingChanged value)?  offlineMatchingChanged,TResult Function( MatchmakingRestartSearch value)?  restartSearch,TResult Function( MatchmakingQueueTimerTick value)?  queueTimerTick,TResult Function( MatchmakingAppResumed value)?  appResumed,TResult Function( MatchmakingVisibilityChanged value)?  visibilityChanged,TResult Function( MatchmakingSocketConnected value)?  socketConnected,TResult Function( MatchmakingQueueJoined value)?  queueJoined,TResult Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult Function( MatchmakingMatchFound value)?  matchFound,TResult Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult Function( MatchmakingQueueLeft value)?  queueLeft,TResult Function( MatchmakingSocketError value)?  socketError,TResult Function( MatchmakingSocketDisconnected value)?  socketDisconnected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started(_that);case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue(_that);case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue(_that);case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that);case MatchmakingOfflineMatchingChanged() when offlineMatchingChanged != null:
+return offlineMatchingChanged(_that);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch(_that);case MatchmakingQueueTimerTick() when queueTimerTick != null:
 return queueTimerTick(_that);case MatchmakingAppResumed() when appResumed != null:
 return appResumed(_that);case MatchmakingVisibilityChanged() when visibilityChanged != null:
@@ -92,14 +93,15 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchmakingStarted value)  started,required TResult Function( MatchmakingJoinQueue value)  joinQueue,required TResult Function( MatchmakingLeaveQueue value)  leaveQueue,required TResult Function( MatchmakingUpdatePreference value)  updatePreference,required TResult Function( MatchmakingRestartSearch value)  restartSearch,required TResult Function( MatchmakingQueueTimerTick value)  queueTimerTick,required TResult Function( MatchmakingAppResumed value)  appResumed,required TResult Function( MatchmakingVisibilityChanged value)  visibilityChanged,required TResult Function( MatchmakingSocketConnected value)  socketConnected,required TResult Function( MatchmakingQueueJoined value)  queueJoined,required TResult Function( MatchmakingPositionUpdated value)  positionUpdated,required TResult Function( MatchmakingMatchFound value)  matchFound,required TResult Function( MatchmakingQueueTimeout value)  queueTimeout,required TResult Function( MatchmakingQueueLeft value)  queueLeft,required TResult Function( MatchmakingSocketError value)  socketError,required TResult Function( MatchmakingSocketDisconnected value)  socketDisconnected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchmakingStarted value)  started,required TResult Function( MatchmakingJoinQueue value)  joinQueue,required TResult Function( MatchmakingLeaveQueue value)  leaveQueue,required TResult Function( MatchmakingUpdatePreference value)  updatePreference,required TResult Function( MatchmakingOfflineMatchingChanged value)  offlineMatchingChanged,required TResult Function( MatchmakingRestartSearch value)  restartSearch,required TResult Function( MatchmakingQueueTimerTick value)  queueTimerTick,required TResult Function( MatchmakingAppResumed value)  appResumed,required TResult Function( MatchmakingVisibilityChanged value)  visibilityChanged,required TResult Function( MatchmakingSocketConnected value)  socketConnected,required TResult Function( MatchmakingQueueJoined value)  queueJoined,required TResult Function( MatchmakingPositionUpdated value)  positionUpdated,required TResult Function( MatchmakingMatchFound value)  matchFound,required TResult Function( MatchmakingQueueTimeout value)  queueTimeout,required TResult Function( MatchmakingQueueLeft value)  queueLeft,required TResult Function( MatchmakingSocketError value)  socketError,required TResult Function( MatchmakingSocketDisconnected value)  socketDisconnected,}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted():
 return started(_that);case MatchmakingJoinQueue():
 return joinQueue(_that);case MatchmakingLeaveQueue():
 return leaveQueue(_that);case MatchmakingUpdatePreference():
-return updatePreference(_that);case MatchmakingRestartSearch():
+return updatePreference(_that);case MatchmakingOfflineMatchingChanged():
+return offlineMatchingChanged(_that);case MatchmakingRestartSearch():
 return restartSearch(_that);case MatchmakingQueueTimerTick():
 return queueTimerTick(_that);case MatchmakingAppResumed():
 return appResumed(_that);case MatchmakingVisibilityChanged():
@@ -125,14 +127,15 @@ return socketDisconnected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchmakingStarted value)?  started,TResult? Function( MatchmakingJoinQueue value)?  joinQueue,TResult? Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult? Function( MatchmakingUpdatePreference value)?  updatePreference,TResult? Function( MatchmakingRestartSearch value)?  restartSearch,TResult? Function( MatchmakingQueueTimerTick value)?  queueTimerTick,TResult? Function( MatchmakingAppResumed value)?  appResumed,TResult? Function( MatchmakingVisibilityChanged value)?  visibilityChanged,TResult? Function( MatchmakingSocketConnected value)?  socketConnected,TResult? Function( MatchmakingQueueJoined value)?  queueJoined,TResult? Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult? Function( MatchmakingMatchFound value)?  matchFound,TResult? Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult? Function( MatchmakingQueueLeft value)?  queueLeft,TResult? Function( MatchmakingSocketError value)?  socketError,TResult? Function( MatchmakingSocketDisconnected value)?  socketDisconnected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchmakingStarted value)?  started,TResult? Function( MatchmakingJoinQueue value)?  joinQueue,TResult? Function( MatchmakingLeaveQueue value)?  leaveQueue,TResult? Function( MatchmakingUpdatePreference value)?  updatePreference,TResult? Function( MatchmakingOfflineMatchingChanged value)?  offlineMatchingChanged,TResult? Function( MatchmakingRestartSearch value)?  restartSearch,TResult? Function( MatchmakingQueueTimerTick value)?  queueTimerTick,TResult? Function( MatchmakingAppResumed value)?  appResumed,TResult? Function( MatchmakingVisibilityChanged value)?  visibilityChanged,TResult? Function( MatchmakingSocketConnected value)?  socketConnected,TResult? Function( MatchmakingQueueJoined value)?  queueJoined,TResult? Function( MatchmakingPositionUpdated value)?  positionUpdated,TResult? Function( MatchmakingMatchFound value)?  matchFound,TResult? Function( MatchmakingQueueTimeout value)?  queueTimeout,TResult? Function( MatchmakingQueueLeft value)?  queueLeft,TResult? Function( MatchmakingSocketError value)?  socketError,TResult? Function( MatchmakingSocketDisconnected value)?  socketDisconnected,}){
 final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started(_that);case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue(_that);case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue(_that);case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that);case MatchmakingOfflineMatchingChanged() when offlineMatchingChanged != null:
+return offlineMatchingChanged(_that);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch(_that);case MatchmakingQueueTimerTick() when queueTimerTick != null:
 return queueTimerTick(_that);case MatchmakingAppResumed() when appResumed != null:
 return appResumed(_that);case MatchmakingVisibilityChanged() when visibilityChanged != null:
@@ -161,13 +164,14 @@ return socketDisconnected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function()?  restartSearch,TResult Function()?  queueTimerTick,TResult Function()?  appResumed,TResult Function( bool visible)?  visibilityChanged,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function()?  queueLeft,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  joinQueue,TResult Function()?  leaveQueue,TResult Function( ChatPreference preference)?  updatePreference,TResult Function( bool enabled)?  offlineMatchingChanged,TResult Function()?  restartSearch,TResult Function()?  queueTimerTick,TResult Function()?  appResumed,TResult Function( bool visible)?  visibilityChanged,TResult Function()?  socketConnected,TResult Function( QueueStatusResponse data)?  queueJoined,TResult Function( QueueStatusResponse data)?  positionUpdated,TResult Function( String roomId,  String? partnerId)?  matchFound,TResult Function()?  queueTimeout,TResult Function()?  queueLeft,TResult Function( String message)?  socketError,TResult Function( String reason)?  socketDisconnected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue();case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue();case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that.preference);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that.preference);case MatchmakingOfflineMatchingChanged() when offlineMatchingChanged != null:
+return offlineMatchingChanged(_that.enabled);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch();case MatchmakingQueueTimerTick() when queueTimerTick != null:
 return queueTimerTick();case MatchmakingAppResumed() when appResumed != null:
 return appResumed();case MatchmakingVisibilityChanged() when visibilityChanged != null:
@@ -197,13 +201,14 @@ return socketDisconnected(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function()  restartSearch,required TResult Function()  queueTimerTick,required TResult Function()  appResumed,required TResult Function( bool visible)  visibilityChanged,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function()  queueLeft,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  joinQueue,required TResult Function()  leaveQueue,required TResult Function( ChatPreference preference)  updatePreference,required TResult Function( bool enabled)  offlineMatchingChanged,required TResult Function()  restartSearch,required TResult Function()  queueTimerTick,required TResult Function()  appResumed,required TResult Function( bool visible)  visibilityChanged,required TResult Function()  socketConnected,required TResult Function( QueueStatusResponse data)  queueJoined,required TResult Function( QueueStatusResponse data)  positionUpdated,required TResult Function( String roomId,  String? partnerId)  matchFound,required TResult Function()  queueTimeout,required TResult Function()  queueLeft,required TResult Function( String message)  socketError,required TResult Function( String reason)  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted():
 return started();case MatchmakingJoinQueue():
 return joinQueue();case MatchmakingLeaveQueue():
 return leaveQueue();case MatchmakingUpdatePreference():
-return updatePreference(_that.preference);case MatchmakingRestartSearch():
+return updatePreference(_that.preference);case MatchmakingOfflineMatchingChanged():
+return offlineMatchingChanged(_that.enabled);case MatchmakingRestartSearch():
 return restartSearch();case MatchmakingQueueTimerTick():
 return queueTimerTick();case MatchmakingAppResumed():
 return appResumed();case MatchmakingVisibilityChanged():
@@ -229,13 +234,14 @@ return socketDisconnected(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function()?  restartSearch,TResult? Function()?  queueTimerTick,TResult? Function()?  appResumed,TResult? Function( bool visible)?  visibilityChanged,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function()?  queueLeft,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  joinQueue,TResult? Function()?  leaveQueue,TResult? Function( ChatPreference preference)?  updatePreference,TResult? Function( bool enabled)?  offlineMatchingChanged,TResult? Function()?  restartSearch,TResult? Function()?  queueTimerTick,TResult? Function()?  appResumed,TResult? Function( bool visible)?  visibilityChanged,TResult? Function()?  socketConnected,TResult? Function( QueueStatusResponse data)?  queueJoined,TResult? Function( QueueStatusResponse data)?  positionUpdated,TResult? Function( String roomId,  String? partnerId)?  matchFound,TResult? Function()?  queueTimeout,TResult? Function()?  queueLeft,TResult? Function( String message)?  socketError,TResult? Function( String reason)?  socketDisconnected,}) {final _that = this;
 switch (_that) {
 case MatchmakingStarted() when started != null:
 return started();case MatchmakingJoinQueue() when joinQueue != null:
 return joinQueue();case MatchmakingLeaveQueue() when leaveQueue != null:
 return leaveQueue();case MatchmakingUpdatePreference() when updatePreference != null:
-return updatePreference(_that.preference);case MatchmakingRestartSearch() when restartSearch != null:
+return updatePreference(_that.preference);case MatchmakingOfflineMatchingChanged() when offlineMatchingChanged != null:
+return offlineMatchingChanged(_that.enabled);case MatchmakingRestartSearch() when restartSearch != null:
 return restartSearch();case MatchmakingQueueTimerTick() when queueTimerTick != null:
 return queueTimerTick();case MatchmakingAppResumed() when appResumed != null:
 return appResumed();case MatchmakingVisibilityChanged() when visibilityChanged != null:
@@ -411,6 +417,72 @@ class _$MatchmakingUpdatePreferenceCopyWithImpl<$Res>
   return _then(MatchmakingUpdatePreference(
 null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
 as ChatPreference,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class MatchmakingOfflineMatchingChanged extends MatchmakingEvent {
+  const MatchmakingOfflineMatchingChanged(this.enabled): super._();
+
+
+ final  bool enabled;
+
+/// Create a copy of MatchmakingEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MatchmakingOfflineMatchingChangedCopyWith<MatchmakingOfflineMatchingChanged> get copyWith => _$MatchmakingOfflineMatchingChangedCopyWithImpl<MatchmakingOfflineMatchingChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchmakingOfflineMatchingChanged&&(identical(other.enabled, enabled) || other.enabled == enabled));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,enabled);
+
+@override
+String toString() {
+  return 'MatchmakingEvent.offlineMatchingChanged(enabled: $enabled)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MatchmakingOfflineMatchingChangedCopyWith<$Res> implements $MatchmakingEventCopyWith<$Res> {
+  factory $MatchmakingOfflineMatchingChangedCopyWith(MatchmakingOfflineMatchingChanged value, $Res Function(MatchmakingOfflineMatchingChanged) _then) = _$MatchmakingOfflineMatchingChangedCopyWithImpl;
+@useResult
+$Res call({
+ bool enabled
+});
+
+
+
+
+}
+/// @nodoc
+class _$MatchmakingOfflineMatchingChangedCopyWithImpl<$Res>
+    implements $MatchmakingOfflineMatchingChangedCopyWith<$Res> {
+  _$MatchmakingOfflineMatchingChangedCopyWithImpl(this._self, this._then);
+
+  final MatchmakingOfflineMatchingChanged _self;
+  final $Res Function(MatchmakingOfflineMatchingChanged) _then;
+
+/// Create a copy of MatchmakingEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? enabled = null,}) {
+  return _then(MatchmakingOfflineMatchingChanged(
+null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

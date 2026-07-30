@@ -9,15 +9,18 @@ class AuthRefreshInterceptor extends Interceptor {
     required String baseUrl,
     required Map<String, String> defaultHeaders,
     Dio? refreshDio,
+    void Function()? onSessionExpired,
   }) : _tokenStorage = tokenStorage,
        _refreshDio =
            refreshDio ??
-           Dio(BaseOptions(baseUrl: baseUrl, headers: defaultHeaders));
+           Dio(BaseOptions(baseUrl: baseUrl, headers: defaultHeaders)),
+       _onSessionExpired = onSessionExpired;
 
   static const _retryExtraKey = 'auth_refresh_retry';
 
   final TokenStorage _tokenStorage;
   final Dio _refreshDio;
+  final void Function()? _onSessionExpired;
 
   Dio? _dio;
   Future<AuthTokens?>? _refreshing;
@@ -116,6 +119,7 @@ class AuthRefreshInterceptor extends Interceptor {
       final statusCode = e.response?.statusCode;
       if (statusCode == 401 || statusCode == 403) {
         await _tokenStorage.clear();
+        _onSessionExpired?.call();
       }
       return null;
     }

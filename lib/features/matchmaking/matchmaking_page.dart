@@ -615,7 +615,10 @@ class _PreferenceSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<MatchmakingBloc, MatchmakingState>(
-      buildWhen: (p, c) => p.selectedPreference != c.selectedPreference,
+      buildWhen: (p, c) =>
+          p.selectedPreference != c.selectedPreference ||
+          p.offlineMatchingEnabled != c.offlineMatchingEnabled ||
+          p.isUpdatingOfflineMatching != c.isUpdatingOfflineMatching,
       builder: (context, state) {
         return Padding(
           padding: EdgeInsets.only(
@@ -663,6 +666,18 @@ class _PreferenceSheet extends StatelessWidget {
                 onChanged: (v) => context.read<MatchmakingBloc>().add(
                   MatchmakingUpdatePreference(ChatPreference.tryParse(v)),
                 ),
+              ),
+              const Gap(AppSpacing.lg),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: Text(tr(LocaleKeys.profileOfflineMatching)),
+                subtitle: Text(tr(LocaleKeys.profileOfflineMatchingHint)),
+                value: state.offlineMatchingEnabled,
+                onChanged: state.isUpdatingOfflineMatching
+                    ? null
+                    : (value) => context.read<MatchmakingBloc>().add(
+                        MatchmakingOfflineMatchingChanged(value),
+                      ),
               ),
               const Gap(AppSpacing.xl),
 

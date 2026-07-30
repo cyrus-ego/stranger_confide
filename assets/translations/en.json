@@ -40,6 +40,8 @@
     "age": "Age",
     "chat_with": "Want to chat with",
     "chat_preference": "Want to chat with",
+    "offline_matching": "Match while offline",
+    "offline_matching_hint": "Let compatible people find you while the app is not open",
     "role": "Role",
     "bio": "Bio",
     "vip": "VIP",

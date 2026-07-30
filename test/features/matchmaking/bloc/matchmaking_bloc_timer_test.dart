@@ -6,6 +6,7 @@ import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dar
 import 'package:stranger_confide/data/models/request/join_queue_request.dart';
 import 'package:stranger_confide/data/models/request/update_profile_request.dart';
 import 'package:stranger_confide/data/models/response/profile_response.dart';
+import 'package:stranger_confide/data/models/response/profile_dto.dart';
 import 'package:stranger_confide/data/models/response/queue_status_response.dart';
 import 'package:stranger_confide/data/models/response/active_room_response.dart';
 import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart';
@@ -16,6 +17,7 @@ import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart';
 import 'package:stranger_confide/domain/usecases/get_queue_status_usecase.dart';
 import 'package:stranger_confide/domain/usecases/join_queue_usecase.dart';
 import 'package:stranger_confide/domain/usecases/leave_queue_usecase.dart';
+import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart';
 import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_bloc.dart';
 import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_event.dart';
 import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_state.dart';
@@ -24,18 +26,21 @@ void main() {
   late _FakeMatchmakingRepository matchmakingRepository;
   late _FakeSocketService socketService;
   late _FakeRoomRepository roomRepository;
+  late _FakeProfileRepository profileRepository;
   late MatchmakingBloc bloc;
 
   setUp(() {
     matchmakingRepository = _FakeMatchmakingRepository();
     socketService = _FakeSocketService();
     roomRepository = _FakeRoomRepository();
+    profileRepository = _FakeProfileRepository();
     bloc = MatchmakingBloc(
       JoinQueueUseCase(matchmakingRepository),
       LeaveQueueUseCase(matchmakingRepository),
-      GetProfileUseCase(_FakeProfileRepository()),
+      GetProfileUseCase(profileRepository),
       GetActiveRoomUseCase(roomRepository),
       GetQueueStatusUseCase(matchmakingRepository),
+      PatchProfileUseCase(profileRepository),
       socketService,
     );
   });
@@ -165,6 +170,21 @@ void main() {
     expect(matchmakingRepository.getStatusCount, 0);
     expect(socketService.connectCount, 0);
   });
+
+  test('updates offline matching preference through the profile API', () async {
+    final updatedState = bloc.stream.firstWhere(
+      (state) =>
+          !state.offlineMatchingEnabled && !state.isUpdatingOfflineMatching,
+    );
+
+    bloc.add(const MatchmakingOfflineMatchingChanged(false));
+    final state = await updatedState;
+
+    expect(state.offlineMatchingEnabled, isFalse);
+    expect(profileRepository.lastPatchedFields, {
+      'offlineMatchingEnabled': false,
+    });
+  });
 }
 
 class _FakeRoomRepository implements RoomRepository {
@@ -206,6 +226,8 @@ class _FakeMatchmakingRepository implements MatchmakingRepository {
 }
 
 class _FakeProfileRepository implements ProfileRepository {
+  Map<String, dynamic>? lastPatchedFields;
+
   @override
   Future<AppResult<ProfileResponse>> getProfile() async {
     return const AppSuccess(ProfileResponse());
@@ -229,7 +251,15 @@ class _FakeProfileRepository implements ProfileRepository {
   Future<AppResult<ProfileResponse>> patchProfile(
     Map<String, dynamic> fields,
   ) async {
-    return const AppSuccess(ProfileResponse());
+    lastPatchedFields = fields;
+    return AppSuccess(
+      ProfileResponse(
+        profile: ProfileDto(
+          offlineMatchingEnabled:
+              fields['offlineMatchingEnabled'] as bool? ?? true,
+        ),
+      ),
+    );
   }
 }
 

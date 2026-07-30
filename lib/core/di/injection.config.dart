@@ -246,6 +246,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i669.GetProfileUseCase>(),
         gh<_i990.GetActiveRoomUseCase>(),
         gh<_i438.GetQueueStatusUseCase>(),
+        gh<_i247.PatchProfileUseCase>(),
         gh<_i910.MatchmakingSocketService>(),
       ),
     );

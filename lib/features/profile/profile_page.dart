@@ -56,18 +56,15 @@ class _ProfilePageState extends BlocHostPageState<ProfilePage> {
           builder: (context, state) {
             return switch (state.status) {
               ProfileStatus.initial ||
-              ProfileStatus.loading =>
-                const _ProfileShimmer(),
+              ProfileStatus.loading => const _ProfileShimmer(),
               ProfileStatus.failure => _ProfileError(
-                  onRetry: () =>
-                      context.read<ProfileBloc>().add(const ProfileLoad()),
-                ),
-              ProfileStatus.loaded ||
-              ProfileStatus.updating =>
-                _ProfileContent(
-                  data: state.data!,
-                  isUpdating: state.status == ProfileStatus.updating,
-                ),
+                onRetry: () =>
+                    context.read<ProfileBloc>().add(const ProfileLoad()),
+              ),
+              ProfileStatus.loaded || ProfileStatus.updating => _ProfileContent(
+                data: state.data!,
+                isUpdating: state.status == ProfileStatus.updating,
+              ),
             };
           },
         ),
@@ -223,7 +220,20 @@ class _ProfileContent extends StatelessWidget {
                     label: tr(LocaleKeys.profileChatPreference),
                     value: _chatPrefLabel(profile?.chatPreference ?? ''),
                     onTap: () => _editChatPreference(
-                        context, profile?.chatPreference ?? ''),
+                      context,
+                      profile?.chatPreference ?? '',
+                    ),
+                  ),
+                  const Divider(),
+                  _ToggleInfoRow(
+                    icon: Icons.notifications_active_outlined,
+                    label: tr(LocaleKeys.profileOfflineMatching),
+                    description: tr(LocaleKeys.profileOfflineMatchingHint),
+                    value: profile?.offlineMatchingEnabled ?? true,
+                    enabled: !isUpdating,
+                    onChanged: (value) => context.read<ProfileBloc>().add(
+                      ProfilePatchField({'offlineMatchingEnabled': value}),
+                    ),
                   ),
                   const Divider(),
                   _InfoRow(
@@ -232,8 +242,9 @@ class _ProfileContent extends StatelessWidget {
                     value: (profile?.isVip == true)
                         ? tr(LocaleKeys.profileYes)
                         : tr(LocaleKeys.profileNo),
-                    valueColor:
-                        (profile?.isVip == true) ? AppColors.secondary : null,
+                    valueColor: (profile?.isVip == true)
+                        ? AppColors.secondary
+                        : null,
                   ),
                 ],
               ),
@@ -252,10 +263,7 @@ class _ProfileContent extends StatelessWidget {
                       duration: const Duration(milliseconds: 300),
                       transitionBuilder: (child, anim) => RotationTransition(
                         turns: anim,
-                        child: FadeTransition(
-                          opacity: anim,
-                          child: child,
-                        ),
+                        child: FadeTransition(opacity: anim, child: child),
                       ),
                       child: Icon(
                         isDarkMode
@@ -269,11 +277,7 @@ class _ProfileContent extends StatelessWidget {
                   );
                 },
               ),
-              Container(
-                width: 1,
-                height: 20,
-                color: theme.colorScheme.outline,
-              ),
+              Container(width: 1, height: 20, color: theme.colorScheme.outline),
               TextButton.icon(
                 onPressed: () {
                   final next = context.locale.languageCode == 'vi'
@@ -302,10 +306,7 @@ class _ProfileContent extends StatelessWidget {
             ),
           ),
           const Gap(AppSpacing.xl),
-        ]
-            .animate(interval: 80.ms)
-            .fadeIn(duration: 400.ms)
-            .slideY(begin: 0.05),
+        ].animate(interval: 80.ms).fadeIn(duration: 400.ms).slideY(begin: 0.05),
       ),
     );
   }
@@ -330,9 +331,7 @@ class _ProfileContent extends StatelessWidget {
         final age = int.tryParse(ctrl.text);
         if (age == null || age < 1) return;
         Navigator.of(context).pop();
-        context
-            .read<ProfileBloc>()
-            .add(ProfilePatchField({'age': age}));
+        context.read<ProfileBloc>().add(ProfilePatchField({'age': age}));
       },
     );
   }
@@ -354,27 +353,24 @@ class _ProfileContent extends StatelessWidget {
       ),
       onSave: () {
         Navigator.of(context).pop();
-        context
-            .read<ProfileBloc>()
-            .add(ProfilePatchField({'bio': ctrl.text.trim()}));
+        context.read<ProfileBloc>().add(
+          ProfilePatchField({'bio': ctrl.text.trim()}),
+        );
       },
     );
   }
 
-  static void _editChatPreference(
-      BuildContext context, String current) {
+  static void _editChatPreference(BuildContext context, String current) {
     _showOptionsDialog(
       context: context,
       title: tr(LocaleKeys.profileChatPreference),
-      options: {
-        for (final p in ChatPreference.values) p.value: tr(p.labelKey),
-      },
+      options: {for (final p in ChatPreference.values) p.value: tr(p.labelKey)},
       current: current,
       onSelect: (v) {
         Navigator.of(context).pop();
-        context
-            .read<ProfileBloc>()
-            .add(ProfilePatchField({'chatPreference': v}));
+        context.read<ProfileBloc>().add(
+          ProfilePatchField({'chatPreference': v}),
+        );
       },
     );
   }
@@ -497,7 +493,11 @@ class _InfoRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: theme.colorScheme.onSurface.withAlpha(100)),
+          Icon(
+            icon,
+            size: 20,
+            color: theme.colorScheme.onSurface.withAlpha(100),
+          ),
           const Gap(AppSpacing.md),
           SizedBox(
             width: 120,
@@ -549,7 +549,11 @@ class _EditableInfoRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: theme.colorScheme.onSurface.withAlpha(100)),
+            Icon(
+              icon,
+              size: 20,
+              color: theme.colorScheme.onSurface.withAlpha(100),
+            ),
             const Gap(AppSpacing.md),
             SizedBox(
               width: 120,
@@ -577,6 +581,62 @@ class _EditableInfoRow extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ToggleInfoRow extends StatelessWidget {
+  const _ToggleInfoRow({
+    required this.icon,
+    required this.label,
+    required this.description,
+    required this.value,
+    required this.enabled,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String label;
+  final String description;
+  final bool value;
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: theme.colorScheme.onSurface.withAlpha(100),
+          ),
+          const Gap(AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+                const Gap(AppSpacing.xs),
+                Text(
+                  description,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withAlpha(153),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Gap(AppSpacing.sm),
+          Switch.adaptive(value: value, onChanged: enabled ? onChanged : null),
+        ],
       ),
     );
   }

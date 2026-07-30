@@ -14,6 +14,7 @@ _UpdateProfileRequest _$UpdateProfileRequestFromJson(
   age: (json['age'] as num).toInt(),
   bio: json['bio'] as String,
   chatPreference: json['chatPreference'] as String,
+  offlineMatchingEnabled: json['offlineMatchingEnabled'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$UpdateProfileRequestToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$UpdateProfileRequestToJson(
   'age': instance.age,
   'bio': instance.bio,
   'chatPreference': instance.chatPreference,
+  'offlineMatchingEnabled': instance.offlineMatchingEnabled,
 };
