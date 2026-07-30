@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/locale/locale_keys.dart';
@@ -384,13 +385,10 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                                     : () => context.read<LoginBloc>().add(
                                           const GoogleLoginSubmitted(),
                                         ),
-                                icon: const Text(
-                                  'G',
-                                  style: TextStyle(
-                                    color: Color(0xFF4285F4),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/icons8-google.svg',
+                                  width: 22,
+                                  height: 22,
                                 ),
                                 label: Text(tr(LocaleKeys.loginGoogle)),
                               );
