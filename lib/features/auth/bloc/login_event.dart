@@ -14,6 +14,8 @@ sealed class LoginEvent extends BlocEvent with _$LoginEvent {
 
   const factory LoginEvent.googleSubmitted() = GoogleLoginSubmitted;
 
+  const factory LoginEvent.facebookSubmitted() = FacebookLoginSubmitted;
+
   const factory LoginEvent.registerSubmitted({
     required String email,
     required String password,

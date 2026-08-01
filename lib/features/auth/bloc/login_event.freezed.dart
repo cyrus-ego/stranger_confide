@@ -55,12 +55,13 @@ extension LoginEventPatterns on LoginEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LoginSubmitted value)?  submitted,TResult Function( GoogleLoginSubmitted value)?  googleSubmitted,TResult Function( RegisterSubmitted value)?  registerSubmitted,TResult Function( OtpSubmitted value)?  otpSubmitted,TResult Function( ResendOtpSubmitted value)?  resendOtpSubmitted,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LoginSubmitted value)?  submitted,TResult Function( GoogleLoginSubmitted value)?  googleSubmitted,TResult Function( FacebookLoginSubmitted value)?  facebookSubmitted,TResult Function( RegisterSubmitted value)?  registerSubmitted,TResult Function( OtpSubmitted value)?  otpSubmitted,TResult Function( ResendOtpSubmitted value)?  resendOtpSubmitted,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
 return submitted(_that);case GoogleLoginSubmitted() when googleSubmitted != null:
-return googleSubmitted(_that);case RegisterSubmitted() when registerSubmitted != null:
+return googleSubmitted(_that);case FacebookLoginSubmitted() when facebookSubmitted != null:
+return facebookSubmitted(_that);case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that);case _:
@@ -81,12 +82,13 @@ return resendOtpSubmitted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LoginSubmitted value)  submitted,required TResult Function( GoogleLoginSubmitted value)  googleSubmitted,required TResult Function( RegisterSubmitted value)  registerSubmitted,required TResult Function( OtpSubmitted value)  otpSubmitted,required TResult Function( ResendOtpSubmitted value)  resendOtpSubmitted,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LoginSubmitted value)  submitted,required TResult Function( GoogleLoginSubmitted value)  googleSubmitted,required TResult Function( FacebookLoginSubmitted value)  facebookSubmitted,required TResult Function( RegisterSubmitted value)  registerSubmitted,required TResult Function( OtpSubmitted value)  otpSubmitted,required TResult Function( ResendOtpSubmitted value)  resendOtpSubmitted,}){
 final _that = this;
 switch (_that) {
 case LoginSubmitted():
 return submitted(_that);case GoogleLoginSubmitted():
-return googleSubmitted(_that);case RegisterSubmitted():
+return googleSubmitted(_that);case FacebookLoginSubmitted():
+return facebookSubmitted(_that);case RegisterSubmitted():
 return registerSubmitted(_that);case OtpSubmitted():
 return otpSubmitted(_that);case ResendOtpSubmitted():
 return resendOtpSubmitted(_that);}
@@ -103,12 +105,13 @@ return resendOtpSubmitted(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LoginSubmitted value)?  submitted,TResult? Function( GoogleLoginSubmitted value)?  googleSubmitted,TResult? Function( RegisterSubmitted value)?  registerSubmitted,TResult? Function( OtpSubmitted value)?  otpSubmitted,TResult? Function( ResendOtpSubmitted value)?  resendOtpSubmitted,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LoginSubmitted value)?  submitted,TResult? Function( GoogleLoginSubmitted value)?  googleSubmitted,TResult? Function( FacebookLoginSubmitted value)?  facebookSubmitted,TResult? Function( RegisterSubmitted value)?  registerSubmitted,TResult? Function( OtpSubmitted value)?  otpSubmitted,TResult? Function( ResendOtpSubmitted value)?  resendOtpSubmitted,}){
 final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
 return submitted(_that);case GoogleLoginSubmitted() when googleSubmitted != null:
-return googleSubmitted(_that);case RegisterSubmitted() when registerSubmitted != null:
+return googleSubmitted(_that);case FacebookLoginSubmitted() when facebookSubmitted != null:
+return facebookSubmitted(_that);case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that);case _:
@@ -128,11 +131,12 @@ return resendOtpSubmitted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String email,  String password)?  submitted,TResult Function()?  googleSubmitted,TResult Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult Function( String email,  String otp)?  otpSubmitted,TResult Function( String email)?  resendOtpSubmitted,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String email,  String password)?  submitted,TResult Function()?  googleSubmitted,TResult Function()?  facebookSubmitted,TResult Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult Function( String email,  String otp)?  otpSubmitted,TResult Function( String email)?  resendOtpSubmitted,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
 return submitted(_that.email,_that.password);case GoogleLoginSubmitted() when googleSubmitted != null:
-return googleSubmitted();case RegisterSubmitted() when registerSubmitted != null:
+return googleSubmitted();case FacebookLoginSubmitted() when facebookSubmitted != null:
+return facebookSubmitted();case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that.email,_that.password,_that.displayName,_that.gender);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that.email,_that.otp);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that.email);case _:
@@ -153,11 +157,12 @@ return resendOtpSubmitted(_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String email,  String password)  submitted,required TResult Function()  googleSubmitted,required TResult Function( String email,  String password,  String displayName,  String gender)  registerSubmitted,required TResult Function( String email,  String otp)  otpSubmitted,required TResult Function( String email)  resendOtpSubmitted,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String email,  String password)  submitted,required TResult Function()  googleSubmitted,required TResult Function()  facebookSubmitted,required TResult Function( String email,  String password,  String displayName,  String gender)  registerSubmitted,required TResult Function( String email,  String otp)  otpSubmitted,required TResult Function( String email)  resendOtpSubmitted,}) {final _that = this;
 switch (_that) {
 case LoginSubmitted():
 return submitted(_that.email,_that.password);case GoogleLoginSubmitted():
-return googleSubmitted();case RegisterSubmitted():
+return googleSubmitted();case FacebookLoginSubmitted():
+return facebookSubmitted();case RegisterSubmitted():
 return registerSubmitted(_that.email,_that.password,_that.displayName,_that.gender);case OtpSubmitted():
 return otpSubmitted(_that.email,_that.otp);case ResendOtpSubmitted():
 return resendOtpSubmitted(_that.email);}
@@ -174,11 +179,12 @@ return resendOtpSubmitted(_that.email);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String email,  String password)?  submitted,TResult? Function()?  googleSubmitted,TResult? Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult? Function( String email,  String otp)?  otpSubmitted,TResult? Function( String email)?  resendOtpSubmitted,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String email,  String password)?  submitted,TResult? Function()?  googleSubmitted,TResult? Function()?  facebookSubmitted,TResult? Function( String email,  String password,  String displayName,  String gender)?  registerSubmitted,TResult? Function( String email,  String otp)?  otpSubmitted,TResult? Function( String email)?  resendOtpSubmitted,}) {final _that = this;
 switch (_that) {
 case LoginSubmitted() when submitted != null:
 return submitted(_that.email,_that.password);case GoogleLoginSubmitted() when googleSubmitted != null:
-return googleSubmitted();case RegisterSubmitted() when registerSubmitted != null:
+return googleSubmitted();case FacebookLoginSubmitted() when facebookSubmitted != null:
+return facebookSubmitted();case RegisterSubmitted() when registerSubmitted != null:
 return registerSubmitted(_that.email,_that.password,_that.displayName,_that.gender);case OtpSubmitted() when otpSubmitted != null:
 return otpSubmitted(_that.email,_that.otp);case ResendOtpSubmitted() when resendOtpSubmitted != null:
 return resendOtpSubmitted(_that.email);case _:
@@ -281,6 +287,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'LoginEvent.googleSubmitted()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class FacebookLoginSubmitted extends LoginEvent {
+  const FacebookLoginSubmitted(): super._();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FacebookLoginSubmitted);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LoginEvent.facebookSubmitted()';
 }
 
 

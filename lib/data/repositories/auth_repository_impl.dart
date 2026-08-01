@@ -1,5 +1,6 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:stranger_confide/data/models/request/facebook_auth_request.dart';
 import 'package:stranger_confide/data/models/request/google_auth_request.dart';
 import 'package:stranger_confide/data/models/request/login_request.dart';
 import 'package:stranger_confide/data/models/request/register_request.dart';
@@ -8,6 +9,7 @@ import 'package:stranger_confide/data/models/request/verify_email_request.dart';
 import 'package:stranger_confide/data/models/response/auth_tokens.dart';
 import 'package:stranger_confide/data/models/response/register_response.dart';
 
+import '../../domain/models/facebook_login_token.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 import 'base_repository.dart';
@@ -36,6 +38,20 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
         ),
         onError: (e) => AppFailure(ApiError.fromDioException(e)),
       );
+
+  @override
+  Future<AppResult<AuthTokens>> facebookLogin({
+    required FacebookLoginToken token,
+  }) => safeApiCall(
+    () => _remoteDatasource.facebookLogin(
+      FacebookAuthRequest(
+        accessToken: token.accessToken,
+        tokenType: token.type.name,
+        nonce: token.nonce,
+      ),
+    ),
+    onError: (e) => AppFailure(ApiError.fromDioException(e)),
+  );
 
   @override
   Future<AppResult<RegisterResponse>> register({

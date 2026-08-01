@@ -1,16 +1,18 @@
-# stranger_confide
+# Stranger Confide
 
-A new Flutter project.
+Flutter mobile app for anonymous one-to-one chat.
 
-## Getting Started
+## Local setup
 
-This project is a starting point for a Flutter application.
+Copy `.env.example` to `.env`, fill the required OAuth values, then run:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+dart run build_runner build
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Provider-specific setup:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Google Sign-In](docs/google-sign-in-setup.md)
+- [Facebook Sign-In](docs/facebook-sign-in-setup.md)

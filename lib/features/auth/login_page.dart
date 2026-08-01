@@ -395,6 +395,30 @@ class _LoginPageState extends BlocHostPageState<LoginPage> {
                             },
                           ),
                         ),
+                        const Gap(AppSpacing.sm),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: BlocBuilder<LoginBloc, LoginState>(
+                            builder: (context, state) {
+                              final isLoading =
+                                  state.status == LoginStatus.loading;
+                              return OutlinedButton.icon(
+                                onPressed: isLoading
+                                    ? null
+                                    : () => context.read<LoginBloc>().add(
+                                          const FacebookLoginSubmitted(),
+                                        ),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/facebook.svg',
+                                  width: 22,
+                                  height: 22,
+                                ),
+                                label: Text(tr(LocaleKeys.loginFacebook)),
+                              );
+                            },
+                          ),
+                        ),
                       ],
                       const Gap(AppSpacing.lg),
                       Row(

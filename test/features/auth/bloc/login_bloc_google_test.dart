@@ -5,8 +5,11 @@ import 'package:stranger_confide/core/push_notification_service.dart';
 import 'package:stranger_confide/core/token_storage.dart';
 import 'package:stranger_confide/data/models/response/auth_tokens.dart';
 import 'package:stranger_confide/data/models/response/register_response.dart';
+import 'package:stranger_confide/domain/models/facebook_login_token.dart';
 import 'package:stranger_confide/domain/repositories/auth_repository.dart';
+import 'package:stranger_confide/domain/services/facebook_sign_in_service.dart';
 import 'package:stranger_confide/domain/services/google_sign_in_service.dart';
+import 'package:stranger_confide/domain/usecases/facebook_login_usecase.dart';
 import 'package:stranger_confide/domain/usecases/google_login_usecase.dart';
 import 'package:stranger_confide/domain/usecases/login_usecase.dart';
 import 'package:stranger_confide/domain/usecases/register_usecase.dart';
@@ -21,6 +24,7 @@ void main() {
 
   late _FakeAuthRepository repository;
   late _FakeGoogleSignInService googleSignInService;
+  late _FakeFacebookSignInService facebookSignInService;
   late _FakePushNotificationService pushNotificationService;
   late TokenStorage tokenStorage;
   late LoginBloc bloc;
@@ -29,12 +33,15 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     repository = _FakeAuthRepository();
     googleSignInService = _FakeGoogleSignInService();
+    facebookSignInService = _FakeFacebookSignInService();
     pushNotificationService = _FakePushNotificationService();
     tokenStorage = TokenStorage();
     bloc = LoginBloc(
       LoginUseCase(repository),
       GoogleLoginUseCase(repository),
       googleSignInService,
+      FacebookLoginUseCase(repository),
+      facebookSignInService,
       RegisterUseCase(repository),
       ResendOtpUseCase(repository),
       VerifyEmailUseCase(repository),
@@ -101,6 +108,72 @@ void main() {
     expect(repository.receivedGoogleIdToken, isNull);
     expect(tokenStorage.hasToken, isFalse);
   });
+
+  test('sends Facebook Limited Login token and nonce to backend', () async {
+    facebookSignInService.token = const FacebookLoginToken(
+      accessToken: 'facebook-limited-token',
+      type: FacebookTokenType.limited,
+      nonce: 'facebook-nonce',
+    );
+    repository.facebookTokens = const AuthTokens(
+      accessToken: 'facebook-app-access-token',
+      refreshToken: 'facebook-app-refresh-token',
+    );
+
+    final expectation = expectLater(
+      bloc.stream,
+      emitsInOrder([
+        isA<LoginState>().having(
+          (state) => state.status,
+          'status',
+          LoginStatus.loading,
+        ),
+        isA<LoginState>().having(
+          (state) => state.status,
+          'status',
+          LoginStatus.success,
+        ),
+      ]),
+    );
+
+    bloc.add(const FacebookLoginSubmitted());
+    await expectation;
+
+    expect(
+      repository.receivedFacebookToken?.accessToken,
+      'facebook-limited-token',
+    );
+    expect(repository.receivedFacebookToken?.type, FacebookTokenType.limited);
+    expect(repository.receivedFacebookToken?.nonce, 'facebook-nonce');
+    expect(tokenStorage.accessToken, 'facebook-app-access-token');
+    expect(tokenStorage.refreshToken, 'facebook-app-refresh-token');
+  });
+
+  test('returns to initial state when Facebook login is canceled', () async {
+    facebookSignInService.token = null;
+
+    final expectation = expectLater(
+      bloc.stream,
+      emitsInOrder([
+        isA<LoginState>().having(
+          (state) => state.status,
+          'status',
+          LoginStatus.loading,
+        ),
+        isA<LoginState>().having(
+          (state) => state.status,
+          'status',
+          LoginStatus.initial,
+        ),
+      ]),
+    );
+
+    bloc.add(const FacebookLoginSubmitted());
+    await expectation;
+
+    expect(repository.receivedFacebookToken, isNull);
+    expect(tokenStorage.hasToken, isFalse);
+  });
 }
 
 class _FakeGoogleSignInService implements GoogleSignInService {
@@ -108,6 +181,16 @@ class _FakeGoogleSignInService implements GoogleSignInService {
 
   @override
   Future<String?> signIn() async => idToken;
+
+  @override
+  Future<void> signOut() async {}
+}
+
+class _FakeFacebookSignInService implements FacebookSignInService {
+  FacebookLoginToken? token;
+
+  @override
+  Future<FacebookLoginToken?> signIn() async => token;
 
   @override
   Future<void> signOut() async {}
@@ -133,7 +216,17 @@ class _FakePushNotificationService implements PushNotificationService {
 
 class _FakeAuthRepository implements AuthRepository {
   AuthTokens googleTokens = const AuthTokens();
+  AuthTokens facebookTokens = const AuthTokens();
   String? receivedGoogleIdToken;
+  FacebookLoginToken? receivedFacebookToken;
+
+  @override
+  Future<AppResult<AuthTokens>> facebookLogin({
+    required FacebookLoginToken token,
+  }) async {
+    receivedFacebookToken = token;
+    return AppSuccess(facebookTokens);
+  }
 
   @override
   Future<AppResult<AuthTokens>> googleLogin({required String idToken}) async {

@@ -370,7 +370,7 @@ Schema: `ApiErrorResponseDto` (xem `common.md`)
 
 **Đăng nhập Facebook (mobile)**
 
-Mobile gửi `accessToken` từ Facebook Login SDK. Server xác minh token qua Graph API và trả JWT (access + refresh).
+Mobile gửi token từ Facebook Login SDK. Server hỗ trợ access token truyền thống và Limited Login OIDC token trên iOS, sau đó trả JWT (access + refresh).
 
 ### Request Body
 
@@ -381,6 +381,8 @@ Content-Type: `application/json`
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `accessToken` | string | Yes | Access token từ Facebook Login SDK (Android/iOS) |
+| `tokenType` | enum: classic, limited | No | `classic` cho OAuth access token; `limited` cho Facebook Limited Login OIDC token trên iOS. Mặc định: `classic` |
+| `nonce` | string | No | Nonce đã gửi vào Facebook SDK; bắt buộc khi `tokenType` là `limited`. |
 
 
 ### Responses
@@ -524,4 +526,5 @@ Schema: `ApiErrorResponseDto` (xem `common.md`)
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `accessToken` | string | Yes | Access token từ Facebook Login SDK (Android/iOS) |
-
+| `tokenType` | enum: classic, limited | No | `classic` cho OAuth access token; `limited` cho Facebook Limited Login OIDC token trên iOS. Mặc định: `classic` |
+| `nonce` | string | No | Nonce đã gửi vào Facebook SDK; bắt buộc khi `tokenType` là `limited`. |

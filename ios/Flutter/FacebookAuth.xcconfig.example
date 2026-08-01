@@ -1,0 +1,5 @@
+// Copy this file to FacebookAuth.xcconfig and fill values from Meta Developer Dashboard.
+// App Secret must never be placed in this mobile file.
+FACEBOOK_APP_ID=YOUR_FACEBOOK_APP_ID
+FACEBOOK_CLIENT_TOKEN=YOUR_FACEBOOK_CLIENT_TOKEN
+FACEBOOK_DISPLAY_NAME=Talk First

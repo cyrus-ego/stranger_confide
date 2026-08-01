@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../core/push_notification_service.dart';
 import '../../../core/token_storage.dart';
+import '../../../domain/services/facebook_sign_in_service.dart';
 import '../../../domain/services/google_sign_in_service.dart';
 import '../../../domain/usecases/create_profile_usecase.dart';
 import '../../../domain/usecases/get_current_user_usecase.dart';
@@ -23,6 +24,7 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
     this._patchProfileUseCase,
     this._tokenStorage,
     this._googleSignInService,
+    this._facebookSignInService,
     this._pushNotificationService,
   ) : super(const ProfileState()) {
     on<ProfileLoad>(_onLoad);
@@ -40,6 +42,7 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
   final PatchProfileUseCase _patchProfileUseCase;
   final TokenStorage _tokenStorage;
   final GoogleSignInService _googleSignInService;
+  final FacebookSignInService _facebookSignInService;
   final PushNotificationService _pushNotificationService;
 
   Future<void> _onLoad(ProfileLoad event, Emitter<ProfileState> emit) =>
@@ -132,6 +135,11 @@ class ProfileBloc extends AppBloc<ProfileEvent, ProfileState> {
     } catch (_) {
       // The app session is already cleared; a provider sign-out failure must
       // not prevent the user from logging out locally.
+    }
+    try {
+      await _facebookSignInService.signOut();
+    } catch (_) {
+      // Same rule as Google: provider cleanup cannot block local logout.
     }
     emit(state.copyWith(loggedOut: true));
   }

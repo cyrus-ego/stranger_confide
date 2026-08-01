@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:stranger_confide/data/models/request/facebook_auth_request.dart';
 import 'package:stranger_confide/data/models/request/login_request.dart';
 import 'package:stranger_confide/data/models/request/google_auth_request.dart';
 import 'package:stranger_confide/data/models/request/register_request.dart';
@@ -20,6 +21,9 @@ abstract class AuthRemoteDatasource {
 
   @POST('/auth/google')
   Future<AuthTokens> googleLogin(@Body() GoogleAuthRequest body);
+
+  @POST('/auth/facebook')
+  Future<AuthTokens> facebookLogin(@Body() FacebookAuthRequest body);
 
   @POST('/auth/refresh')
   Future<AuthTokens> refresh(@Body() Map<String, dynamic> body);

@@ -19,6 +19,8 @@ import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
 import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart'
     as _i1068;
+import 'package:stranger_confide/data/datasources/facebook_sign_in_service.dart'
+    as _i720;
 import 'package:stranger_confide/data/datasources/google_sign_in_service.dart'
     as _i370;
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart'
@@ -61,10 +63,14 @@ import 'package:stranger_confide/domain/repositories/room_repository.dart'
     as _i133;
 import 'package:stranger_confide/domain/repositories/user_repository.dart'
     as _i687;
+import 'package:stranger_confide/domain/services/facebook_sign_in_service.dart'
+    as _i925;
 import 'package:stranger_confide/domain/services/google_sign_in_service.dart'
     as _i942;
 import 'package:stranger_confide/domain/usecases/create_profile_usecase.dart'
     as _i115;
+import 'package:stranger_confide/domain/usecases/facebook_login_usecase.dart'
+    as _i875;
 import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
     as _i990;
 import 'package:stranger_confide/domain/usecases/get_chat_messages_usecase.dart'
@@ -119,6 +125,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i942.GoogleSignInService>(
       () => _i370.GoogleSignInServiceImpl(),
+    );
+    gh.lazySingleton<_i925.FacebookSignInService>(
+      () => _i720.FacebookSignInServiceImpl(),
     );
     gh.lazySingleton<_i999.AuthRemoteDatasource>(
       () => registerModule.authRemoteDatasource(gh<_i361.Dio>()),
@@ -200,6 +209,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i708.ModerationRemoteDatasource>(),
       ),
     );
+    gh.factory<_i875.FacebookLoginUseCase>(
+      () => _i875.FacebookLoginUseCase(gh<_i982.AuthRepository>()),
+    );
     gh.factory<_i762.GoogleLoginUseCase>(
       () => _i762.GoogleLoginUseCase(gh<_i982.AuthRepository>()),
     );
@@ -217,18 +229,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i691.ReportUserUseCase>(
       () => _i691.ReportUserUseCase(gh<_i396.ModerationRepository>()),
-    );
-    gh.factory<_i209.LoginBloc>(
-      () => _i209.LoginBloc(
-        gh<_i878.LoginUseCase>(),
-        gh<_i762.GoogleLoginUseCase>(),
-        gh<_i942.GoogleSignInService>(),
-        gh<_i419.RegisterUseCase>(),
-        gh<_i225.ResendOtpUseCase>(),
-        gh<_i29.VerifyEmailUseCase>(),
-        gh<_i670.TokenStorage>(),
-        gh<_i65.PushNotificationService>(),
-      ),
     );
     gh.factory<_i720.GetChatMessagesUseCase>(
       () => _i720.GetChatMessagesUseCase(gh<_i926.ChatRepository>()),
@@ -250,15 +250,17 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i910.MatchmakingSocketService>(),
       ),
     );
-    gh.factory<_i162.ProfileBloc>(
-      () => _i162.ProfileBloc(
-        gh<_i669.GetProfileUseCase>(),
-        gh<_i1047.GetCurrentUserUseCase>(),
-        gh<_i115.CreateProfileUseCase>(),
-        gh<_i853.UpdateProfileUseCase>(),
-        gh<_i247.PatchProfileUseCase>(),
-        gh<_i670.TokenStorage>(),
+    gh.factory<_i209.LoginBloc>(
+      () => _i209.LoginBloc(
+        gh<_i878.LoginUseCase>(),
+        gh<_i762.GoogleLoginUseCase>(),
         gh<_i942.GoogleSignInService>(),
+        gh<_i875.FacebookLoginUseCase>(),
+        gh<_i925.FacebookSignInService>(),
+        gh<_i419.RegisterUseCase>(),
+        gh<_i225.ResendOtpUseCase>(),
+        gh<_i29.VerifyEmailUseCase>(),
+        gh<_i670.TokenStorage>(),
         gh<_i65.PushNotificationService>(),
       ),
     );
@@ -270,6 +272,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i691.ReportUserUseCase>(),
         gh<_i720.GetChatMessagesUseCase>(),
         gh<_i167.UploadChatImageUseCase>(),
+      ),
+    );
+    gh.factory<_i162.ProfileBloc>(
+      () => _i162.ProfileBloc(
+        gh<_i669.GetProfileUseCase>(),
+        gh<_i1047.GetCurrentUserUseCase>(),
+        gh<_i115.CreateProfileUseCase>(),
+        gh<_i853.UpdateProfileUseCase>(),
+        gh<_i247.PatchProfileUseCase>(),
+        gh<_i670.TokenStorage>(),
+        gh<_i942.GoogleSignInService>(),
+        gh<_i925.FacebookSignInService>(),
+        gh<_i65.PushNotificationService>(),
       ),
     );
     return this;

@@ -4,7 +4,10 @@ import 'package:injectable/injectable.dart';
 
 import '../../../core/token_storage.dart';
 import '../../../core/push_notification_service.dart';
+import '../../../domain/models/facebook_login_token.dart';
+import '../../../domain/services/facebook_sign_in_service.dart';
 import '../../../domain/services/google_sign_in_service.dart';
+import '../../../domain/usecases/facebook_login_usecase.dart';
 import '../../../domain/usecases/google_login_usecase.dart';
 import '../../../domain/usecases/login_usecase.dart';
 import '../../../domain/usecases/register_usecase.dart';
@@ -19,6 +22,8 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
     this._loginUseCase,
     this._googleLoginUseCase,
     this._googleSignInService,
+    this._facebookLoginUseCase,
+    this._facebookSignInService,
     this._registerUseCase,
     this._resendOtpUseCase,
     this._verifyEmailUseCase,
@@ -27,6 +32,7 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   ) : super(const LoginState()) {
     on<LoginSubmitted>(_onSubmitted);
     on<GoogleLoginSubmitted>(_onGoogleSubmitted);
+    on<FacebookLoginSubmitted>(_onFacebookSubmitted);
     on<RegisterSubmitted>(_onRegisterSubmitted);
     on<OtpSubmitted>(_onOtpSubmitted);
     on<ResendOtpSubmitted>(_onResendOtpSubmitted);
@@ -35,6 +41,8 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
   final LoginUseCase _loginUseCase;
   final GoogleLoginUseCase _googleLoginUseCase;
   final GoogleSignInService _googleSignInService;
+  final FacebookLoginUseCase _facebookLoginUseCase;
+  final FacebookSignInService _facebookSignInService;
   final RegisterUseCase _registerUseCase;
   final ResendOtpUseCase _resendOtpUseCase;
   final VerifyEmailUseCase _verifyEmailUseCase;
@@ -74,6 +82,33 @@ class LoginBloc extends AppBloc<LoginEvent, LoginState> {
 
     final tokens = (await _googleLoginUseCase(
       idToken,
+    )).orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
+
+    await _saveTokens(tokens.accessToken, tokens.refreshToken);
+    emit(state.copyWith(status: LoginStatus.success));
+  });
+
+  Future<void> _onFacebookSubmitted(
+    FacebookLoginSubmitted event,
+    Emitter<LoginState> emit,
+  ) => guard(() async {
+    emit(state.copyWith(status: LoginStatus.loading));
+
+    FacebookLoginToken? facebookToken;
+    try {
+      facebookToken = await _facebookSignInService.signIn();
+    } catch (_) {
+      emit(state.copyWith(status: LoginStatus.failure));
+      rethrow;
+    }
+
+    if (facebookToken == null) {
+      emit(state.copyWith(status: LoginStatus.initial));
+      return;
+    }
+
+    final tokens = (await _facebookLoginUseCase(
+      facebookToken,
     )).orThrow((_) => emit(state.copyWith(status: LoginStatus.failure)));
 
     await _saveTokens(tokens.accessToken, tokens.refreshToken);

@@ -17,6 +17,17 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val facebookProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    facebookProperties.load(FileInputStream(localPropertiesFile))
+}
+val facebookAppId = facebookProperties.getProperty("facebook.appId", "0")
+val facebookClientToken = facebookProperties.getProperty(
+    "facebook.clientToken",
+    "facebook-client-token-not-configured",
+)
+
 android {
     namespace = "com.cyr.stranger_confide"
     compileSdk = flutter.compileSdkVersion
@@ -46,10 +57,12 @@ android {
     defaultConfig {
         applicationId = "com.cyr.stranger_confide"
         multiDexEnabled = true
-        minSdk = flutter.minSdkVersion
+        minSdk = maxOf(flutter.minSdkVersion, 21)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        resValue("string", "facebook_app_id", facebookAppId)
+        resValue("string", "facebook_client_token", facebookClientToken)
     }
 
     buildTypes {

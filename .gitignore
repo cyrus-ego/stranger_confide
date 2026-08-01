@@ -1,6 +1,7 @@
 # Environment
 .env
 ios/Flutter/GoogleAuth.xcconfig
+ios/Flutter/FacebookAuth.xcconfig
 
 # Miscellaneous
 *.class
