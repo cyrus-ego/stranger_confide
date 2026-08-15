@@ -5,8 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/locale/locale_keys.dart';
 import '../../../router/app_router.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_spacing.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 
 // ── Block confirm dialog ──
 

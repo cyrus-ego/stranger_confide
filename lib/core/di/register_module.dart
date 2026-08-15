@@ -1,4 +1,8 @@
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart';
 import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart';
@@ -38,4 +42,37 @@ abstract class RegisterModule {
   @lazySingleton
   ModerationRemoteDatasource moderationRemoteDatasource(Dio dio) =>
       ModerationRemoteDatasource(dio);
+
+  @lazySingleton
+  PushNotificationService pushNotificationService(
+    TokenStorage tokenStorage,
+    UserRemoteDatasource userDataSource,
+  ) =>
+      PushNotificationService(
+        tokenStorage,
+        PushNotificationHandlers(
+          onTokenRegister: (token, platform) =>
+              userDataSource.registerFcmToken({
+                'token': token,
+                'platform': platform,
+              }),
+          onTokenUnregister: (token) =>
+              userDataSource.unregisterFcmToken({'token': token}),
+          onMessageTap: _handlePushMessageTap,
+        ),
+      );
+}
+
+void _handlePushMessageTap(RemoteMessage message) {
+  final roomId = message.data['roomId']?.toString();
+  if (roomId == null || roomId.isEmpty) return;
+
+  final kind = message.data['kind']?.toString();
+  if (kind != 'chat_message' && kind != 'match_found') return;
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final context = appNavigatorKey.currentContext;
+    if (context == null) return;
+    GoRouter.of(context).go('/chat/$roomId');
+  });
 }

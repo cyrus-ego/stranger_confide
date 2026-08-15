@@ -9,12 +9,11 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:cyr_app_kit/cyr_app_kit.dart' as _i512;
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:stranger_confide/core/di/register_module.dart' as _i661;
-import 'package:stranger_confide/core/push_notification_service.dart' as _i65;
-import 'package:stranger_confide/core/token_storage.dart' as _i670;
 import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
     as _i999;
 import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart'
@@ -119,10 +118,6 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
-    gh.lazySingleton<_i910.MatchmakingSocketService>(
-      () => _i910.MatchmakingSocketService(gh<_i670.TokenStorage>()),
-      dispose: (i) => i.dispose(),
-    );
     gh.lazySingleton<_i942.GoogleSignInService>(
       () => _i370.GoogleSignInServiceImpl(),
     );
@@ -170,12 +165,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i687.UserRepository>(
       () => _i263.UserRepositoryImpl(gh<_i510.UserRemoteDatasource>()),
     );
-    gh.lazySingleton<_i65.PushNotificationService>(
-      () => _i65.PushNotificationService(
-        gh<_i670.TokenStorage>(),
+    gh.lazySingleton<_i910.MatchmakingSocketService>(
+      () => _i910.MatchmakingSocketService(gh<_i512.TokenStorage>()),
+      dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i512.PushNotificationService>(
+      () => registerModule.pushNotificationService(
+        gh<_i512.TokenStorage>(),
         gh<_i510.UserRemoteDatasource>(),
       ),
-      dispose: (i) => i.dispose(),
     );
     gh.factory<_i990.GetActiveRoomUseCase>(
       () => _i990.GetActiveRoomUseCase(gh<_i133.RoomRepository>()),
@@ -239,6 +237,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1047.GetCurrentUserUseCase>(
       () => _i1047.GetCurrentUserUseCase(gh<_i687.UserRepository>()),
     );
+    gh.factory<_i209.LoginBloc>(
+      () => _i209.LoginBloc(
+        gh<_i878.LoginUseCase>(),
+        gh<_i762.GoogleLoginUseCase>(),
+        gh<_i942.GoogleSignInService>(),
+        gh<_i875.FacebookLoginUseCase>(),
+        gh<_i925.FacebookSignInService>(),
+        gh<_i419.RegisterUseCase>(),
+        gh<_i225.ResendOtpUseCase>(),
+        gh<_i29.VerifyEmailUseCase>(),
+        gh<_i512.TokenStorage>(),
+        gh<_i512.PushNotificationService>(),
+      ),
+    );
     gh.factory<_i987.MatchmakingBloc>(
       () => _i987.MatchmakingBloc(
         gh<_i443.JoinQueueUseCase>(),
@@ -250,30 +262,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i910.MatchmakingSocketService>(),
       ),
     );
-    gh.factory<_i209.LoginBloc>(
-      () => _i209.LoginBloc(
-        gh<_i878.LoginUseCase>(),
-        gh<_i762.GoogleLoginUseCase>(),
-        gh<_i942.GoogleSignInService>(),
-        gh<_i875.FacebookLoginUseCase>(),
-        gh<_i925.FacebookSignInService>(),
-        gh<_i419.RegisterUseCase>(),
-        gh<_i225.ResendOtpUseCase>(),
-        gh<_i29.VerifyEmailUseCase>(),
-        gh<_i670.TokenStorage>(),
-        gh<_i65.PushNotificationService>(),
-      ),
-    );
-    gh.factory<_i460.ChatBloc>(
-      () => _i460.ChatBloc(
-        gh<_i670.TokenStorage>(),
-        gh<_i990.GetActiveRoomUseCase>(),
-        gh<_i212.LeaveRoomUseCase>(),
-        gh<_i691.ReportUserUseCase>(),
-        gh<_i720.GetChatMessagesUseCase>(),
-        gh<_i167.UploadChatImageUseCase>(),
-      ),
-    );
     gh.factory<_i162.ProfileBloc>(
       () => _i162.ProfileBloc(
         gh<_i669.GetProfileUseCase>(),
@@ -281,10 +269,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i115.CreateProfileUseCase>(),
         gh<_i853.UpdateProfileUseCase>(),
         gh<_i247.PatchProfileUseCase>(),
-        gh<_i670.TokenStorage>(),
+        gh<_i512.TokenStorage>(),
         gh<_i942.GoogleSignInService>(),
         gh<_i925.FacebookSignInService>(),
-        gh<_i65.PushNotificationService>(),
+        gh<_i512.PushNotificationService>(),
+      ),
+    );
+    gh.factory<_i460.ChatBloc>(
+      () => _i460.ChatBloc(
+        gh<_i512.TokenStorage>(),
+        gh<_i990.GetActiveRoomUseCase>(),
+        gh<_i212.LeaveRoomUseCase>(),
+        gh<_i691.ReportUserUseCase>(),
+        gh<_i720.GetChatMessagesUseCase>(),
+        gh<_i167.UploadChatImageUseCase>(),
       ),
     );
     return this;

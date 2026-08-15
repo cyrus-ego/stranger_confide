@@ -5,11 +5,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
-import '../../core/token_storage.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import '../../domain/usecases/get_active_room_usecase.dart';
 import '../../domain/usecases/get_profile_usecase.dart';
 import '../../router/app_router.dart';
-import '../../theme/app_colors.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({

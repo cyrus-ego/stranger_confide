@@ -12,11 +12,8 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/locale/locale_keys.dart';
-import '../../core/network_inspector.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import '../../router/app_router.dart';
-import '../../shared/widgets/app_snack_bar.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_spacing.dart';
 import 'bloc/chat_bloc.dart';
 import 'bloc/chat_event.dart';
 import 'bloc/chat_state.dart';

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,6 @@ import 'core/app_bootstrap.dart';
 import 'core/di/injection.dart';
 import 'core/push_notification_service.dart';
 import 'router/app_router.dart';
-import 'theme/app_theme.dart';
-import 'theme/theme_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

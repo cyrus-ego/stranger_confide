@@ -266,7 +266,7 @@ return socketDisconnected(_that.reason);case _:
 
 class MatchmakingStarted extends MatchmakingEvent {
   const MatchmakingStarted(): super._();
-
+  
 
 
 
@@ -298,7 +298,7 @@ String toString() {
 
 class MatchmakingJoinQueue extends MatchmakingEvent {
   const MatchmakingJoinQueue(): super._();
-
+  
 
 
 
@@ -330,7 +330,7 @@ String toString() {
 
 class MatchmakingLeaveQueue extends MatchmakingEvent {
   const MatchmakingLeaveQueue(): super._();
-
+  
 
 
 
@@ -362,7 +362,7 @@ String toString() {
 
 class MatchmakingUpdatePreference extends MatchmakingEvent {
   const MatchmakingUpdatePreference(this.preference): super._();
-
+  
 
  final  ChatPreference preference;
 
@@ -428,7 +428,7 @@ as ChatPreference,
 
 class MatchmakingOfflineMatchingChanged extends MatchmakingEvent {
   const MatchmakingOfflineMatchingChanged(this.enabled): super._();
-
+  
 
  final  bool enabled;
 
@@ -494,7 +494,7 @@ as bool,
 
 class MatchmakingRestartSearch extends MatchmakingEvent {
   const MatchmakingRestartSearch(): super._();
-
+  
 
 
 
@@ -526,7 +526,7 @@ String toString() {
 
 class MatchmakingQueueTimerTick extends MatchmakingEvent {
   const MatchmakingQueueTimerTick(): super._();
-
+  
 
 
 
@@ -558,7 +558,7 @@ String toString() {
 
 class MatchmakingAppResumed extends MatchmakingEvent {
   const MatchmakingAppResumed(): super._();
-
+  
 
 
 
@@ -590,7 +590,7 @@ String toString() {
 
 class MatchmakingVisibilityChanged extends MatchmakingEvent {
   const MatchmakingVisibilityChanged(this.visible): super._();
-
+  
 
  final  bool visible;
 
@@ -656,7 +656,7 @@ as bool,
 
 class MatchmakingSocketConnected extends MatchmakingEvent {
   const MatchmakingSocketConnected(): super._();
-
+  
 
 
 
@@ -688,7 +688,7 @@ String toString() {
 
 class MatchmakingQueueJoined extends MatchmakingEvent {
   const MatchmakingQueueJoined(this.data): super._();
-
+  
 
  final  QueueStatusResponse data;
 
@@ -751,7 +751,7 @@ as QueueStatusResponse,
 @override
 @pragma('vm:prefer-inline')
 $QueueStatusResponseCopyWith<$Res> get data {
-
+  
   return $QueueStatusResponseCopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });
@@ -763,7 +763,7 @@ $QueueStatusResponseCopyWith<$Res> get data {
 
 class MatchmakingPositionUpdated extends MatchmakingEvent {
   const MatchmakingPositionUpdated(this.data): super._();
-
+  
 
  final  QueueStatusResponse data;
 
@@ -826,7 +826,7 @@ as QueueStatusResponse,
 @override
 @pragma('vm:prefer-inline')
 $QueueStatusResponseCopyWith<$Res> get data {
-
+  
   return $QueueStatusResponseCopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });
@@ -838,7 +838,7 @@ $QueueStatusResponseCopyWith<$Res> get data {
 
 class MatchmakingMatchFound extends MatchmakingEvent {
   const MatchmakingMatchFound(this.roomId, this.partnerId): super._();
-
+  
 
  final  String roomId;
  final  String? partnerId;
@@ -906,7 +906,7 @@ as String?,
 
 class MatchmakingQueueTimeout extends MatchmakingEvent {
   const MatchmakingQueueTimeout(): super._();
-
+  
 
 
 
@@ -938,7 +938,7 @@ String toString() {
 
 class MatchmakingQueueLeft extends MatchmakingEvent {
   const MatchmakingQueueLeft(): super._();
-
+  
 
 
 
@@ -970,7 +970,7 @@ String toString() {
 
 class MatchmakingSocketError extends MatchmakingEvent {
   const MatchmakingSocketError(this.message): super._();
-
+  
 
  final  String message;
 
@@ -1036,7 +1036,7 @@ as String,
 
 class MatchmakingSocketDisconnected extends MatchmakingEvent {
   const MatchmakingSocketDisconnected(this.reason): super._();
-
+  
 
  final  String reason;
 

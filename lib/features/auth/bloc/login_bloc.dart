@@ -2,8 +2,7 @@ import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../core/token_storage.dart';
-import '../../../core/push_notification_service.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import '../../../domain/models/facebook_login_token.dart';
 import '../../../domain/services/facebook_sign_in_service.dart';
 import '../../../domain/services/google_sign_in_service.dart';

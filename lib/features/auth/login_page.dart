@@ -11,9 +11,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/locale/locale_keys.dart';
 import '../../domain/enums/gender.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/theme_cubit.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import 'bloc/login_bloc.dart';
 import 'bloc/login_event.dart';
 import 'bloc/login_state.dart';

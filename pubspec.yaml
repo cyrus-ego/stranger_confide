@@ -14,6 +14,9 @@ dependencies:
   cyr_flutter_core:
     path: ../../cyr_flutter_core
 
+  cyr_app_kit:
+    path: ../cyr_app_kit
+
   # Navigation
   go_router: ^14.6.3
 
@@ -28,22 +31,17 @@ dependencies:
   dio: ^5.7.0
   retrofit: ^4.9.2
   socket_io_client: ^3.0.2
-  chuck_interceptor: ^2.4.0
 
   # Dependency injection
   get_it: ^9.2.1
   injectable: ^2.5.0
 
   # UI
-  google_fonts: ^6.2.1
   intl: ^0.20.2
-  curl_logger_dio_interceptor: ^1.0.1
   cupertino_icons: ^1.0.8
   flutter_dotenv: ^5.2.1
   flutter_animate: ^4.5.2
-  shimmer: ^3.0.0
   gap: ^3.0.1
-  cached_network_image: ^3.4.1
   shared_preferences: ^2.3.4
   easy_localization: ^3.0.7
   google_sign_in: ^7.2.0
@@ -57,6 +55,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
+dependency_overrides:
+  # permission_handler 13 requires permission_handler_android 14 which needs
+  # AGP 9 / Kotlin 2.3 / compileSdk 37. Pin to the AGP 8-compatible line.
+  permission_handler: 12.0.3
+  permission_handler_android: 13.0.1
 
   # Code generation
   freezed: ^3.2.5

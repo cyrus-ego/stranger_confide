@@ -284,7 +284,7 @@ return accessDenied(_that.message);case _:
 
 class ChatStarted extends ChatEvent {
   const ChatStarted(this.roomId): super._();
-
+  
 
  final  String roomId;
 
@@ -350,7 +350,7 @@ as String,
 
 class ChatSendMessage extends ChatEvent {
   const ChatSendMessage(this.text): super._();
-
+  
 
  final  String text;
 
@@ -416,7 +416,7 @@ as String,
 
 class ChatSendImage extends ChatEvent {
   const ChatSendImage(this.filePath): super._();
-
+  
 
  final  String filePath;
 
@@ -482,7 +482,7 @@ as String,
 
 class ChatLoadOlderMessages extends ChatEvent {
   const ChatLoadOlderMessages({this.limit = 50}): super._();
-
+  
 
 @JsonKey() final  int limit;
 
@@ -548,7 +548,7 @@ as int,
 
 class ChatTyping extends ChatEvent {
   const ChatTyping(): super._();
-
+  
 
 
 
@@ -580,7 +580,7 @@ String toString() {
 
 class ChatAppResumed extends ChatEvent {
   const ChatAppResumed(): super._();
-
+  
 
 
 
@@ -612,7 +612,7 @@ String toString() {
 
 class ChatVisibilityChanged extends ChatEvent {
   const ChatVisibilityChanged(this.visible): super._();
-
+  
 
  final  bool visible;
 
@@ -678,7 +678,7 @@ as bool,
 
 class ChatLeaveRoom extends ChatEvent {
   const ChatLeaveRoom(): super._();
-
+  
 
 
 
@@ -710,7 +710,7 @@ String toString() {
 
 class ChatBlockPartner extends ChatEvent {
   const ChatBlockPartner(): super._();
-
+  
 
 
 
@@ -742,7 +742,7 @@ String toString() {
 
 class ChatReportPartner extends ChatEvent {
   const ChatReportPartner(this.reason, this.description): super._();
-
+  
 
  final  String reason;
  final  String? description;
@@ -810,7 +810,7 @@ as String?,
 
 class ChatMessageReceived extends ChatEvent {
   const ChatMessageReceived(final  Map<String, dynamic> data): _data = data,super._();
-
+  
 
  final  Map<String, dynamic> _data;
  Map<String, dynamic> get data {
@@ -882,7 +882,7 @@ as Map<String, dynamic>,
 
 class ChatPartnerTyping extends ChatEvent {
   const ChatPartnerTyping(this.isTyping): super._();
-
+  
 
  final  bool isTyping;
 
@@ -948,7 +948,7 @@ as bool,
 
 class ChatRoomClosed extends ChatEvent {
   const ChatRoomClosed(this.reason): super._();
-
+  
 
  final  String reason;
 
@@ -1014,7 +1014,7 @@ as String,
 
 class ChatSocketConnected extends ChatEvent {
   const ChatSocketConnected(): super._();
-
+  
 
 
 
@@ -1046,7 +1046,7 @@ String toString() {
 
 class ChatSocketDisconnected extends ChatEvent {
   const ChatSocketDisconnected(this.reason): super._();
-
+  
 
  final  String reason;
 
@@ -1112,7 +1112,7 @@ as String,
 
 class ChatSocketError extends ChatEvent {
   const ChatSocketError(this.message, {this.code}): super._();
-
+  
 
  final  String message;
  final  String? code;
@@ -1180,7 +1180,7 @@ as String?,
 
 class ChatErrorCleared extends ChatEvent {
   const ChatErrorCleared(): super._();
-
+  
 
 
 
@@ -1212,7 +1212,7 @@ String toString() {
 
 class ChatRoomJoined extends ChatEvent {
   const ChatRoomJoined(final  Map<String, dynamic> data): _data = data,super._();
-
+  
 
  final  Map<String, dynamic> _data;
  Map<String, dynamic> get data {
@@ -1284,7 +1284,7 @@ as Map<String, dynamic>,
 
 class ChatPartnerOnlineChanged extends ChatEvent {
   const ChatPartnerOnlineChanged(this.online, {this.userId}): super._();
-
+  
 
  final  bool online;
  final  String? userId;
@@ -1352,7 +1352,7 @@ as String?,
 
 class ChatAccessDenied extends ChatEvent {
   const ChatAccessDenied(this.message): super._();
-
+  
 
  final  String message;
 

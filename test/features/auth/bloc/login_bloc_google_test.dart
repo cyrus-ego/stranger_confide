@@ -1,8 +1,7 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stranger_confide/core/push_notification_service.dart';
-import 'package:stranger_confide/core/token_storage.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import 'package:stranger_confide/data/models/response/auth_tokens.dart';
 import 'package:stranger_confide/data/models/response/register_response.dart';
 import 'package:stranger_confide/domain/models/facebook_login_token.dart';
@@ -198,6 +197,12 @@ class _FakeFacebookSignInService implements FacebookSignInService {
 
 class _FakePushNotificationService implements PushNotificationService {
   int syncTokenCount = 0;
+
+  @override
+  final PushNotificationHandlers handlers = PushNotificationHandlers(
+    onTokenRegister: (token, platform) async {},
+    onTokenUnregister: (token) async {},
+  );
 
   @override
   Future<void> initialize() async {}

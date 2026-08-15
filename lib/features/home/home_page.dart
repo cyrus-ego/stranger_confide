@@ -5,10 +5,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/locale/locale_keys.dart';
-import '../../core/network_inspector.dart';
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import '../../router/app_router.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_spacing.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

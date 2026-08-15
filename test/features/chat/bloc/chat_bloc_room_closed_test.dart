@@ -1,6 +1,6 @@
+import 'package:cyr_app_kit/cyr_app_kit.dart';
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stranger_confide/core/token_storage.dart';
 import 'package:stranger_confide/data/models/response/active_room_response.dart';
 import 'package:stranger_confide/data/models/response/chat_message_dto.dart';
 import 'package:stranger_confide/data/models/response/chat_image_upload_response.dart';
