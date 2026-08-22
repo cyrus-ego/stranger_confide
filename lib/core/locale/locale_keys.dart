@@ -66,6 +66,17 @@ abstract final class LocaleKeys {
   static const profileUpdateSuccess = 'profile.update_success';
   static const profileLogout = 'profile.logout';
   static const profileLogoutConfirm = 'profile.logout_confirm';
+  static const profileDeleteAccount = 'profile.delete_account';
+  static const profileDeleteAccountConfirmTitle =
+      'profile.delete_account_confirm_title';
+  static const profileDeleteAccountConfirmBody =
+      'profile.delete_account_confirm_body';
+  static const profileDeleteAccountSubmit = 'profile.delete_account_submit';
+  static const profileDeleteAccountSubmittedTitle =
+      'profile.delete_account_submitted_title';
+  static const profileDeleteAccountSubmittedBody =
+      'profile.delete_account_submitted_body';
+  static const profileDeleteAccountStatus = 'profile.delete_account_status';
   static const profileOpposite = 'profile.opposite';
   static const profileSame = 'profile.same';
   static const profileAny = 'profile.any';

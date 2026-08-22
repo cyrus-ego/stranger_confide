@@ -100,16 +100,23 @@ class _ProfileShimmer extends StatelessWidget {
   }
 }
 
-class _ProfileContent extends StatelessWidget {
+class _ProfileContent extends StatefulWidget {
   const _ProfileContent({required this.data, required this.isUpdating});
 
   final ProfileResponse data;
   final bool isUpdating;
 
   @override
+  State<_ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends State<_ProfileContent> {
+  bool _deleteRequestSubmitted = false;
+
+  @override
   Widget build(BuildContext context) {
-    final user = data.user;
-    final profile = data.profile;
+    final user = widget.data.user;
+    final profile = widget.data.profile;
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -135,7 +142,7 @@ class _ProfileContent extends StatelessWidget {
               color: theme.colorScheme.onSurface.withAlpha(153),
             ),
           ),
-          if (isUpdating) ...[
+          if (widget.isUpdating) ...[
             const Gap(AppSpacing.sm),
             const SizedBox(
               width: 16,
@@ -189,7 +196,7 @@ class _ProfileContent extends StatelessWidget {
                     label: tr(LocaleKeys.profileOfflineMatching),
                     description: tr(LocaleKeys.profileOfflineMatchingHint),
                     value: profile?.offlineMatchingEnabled ?? true,
-                    enabled: !isUpdating,
+                    enabled: !widget.isUpdating,
                     onChanged: (value) => context.read<ProfileBloc>().add(
                       ProfilePatchField({'offlineMatchingEnabled': value}),
                     ),
@@ -250,9 +257,32 @@ class _ProfileContent extends StatelessWidget {
             ],
           ),
           const Gap(AppSpacing.lg),
+          if (_deleteRequestSubmitted) ...[
+            _DeletionRequestStatus(
+              message: tr(LocaleKeys.profileDeleteAccountStatus),
+            ),
+            const Gap(AppSpacing.md),
+          ],
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
+              onPressed: _deleteRequestSubmitted
+                  ? null
+                  : () => _confirmDeleteAccount(context),
+              icon: const Icon(Icons.delete_outline, color: AppColors.error),
+              label: Text(
+                tr(LocaleKeys.profileDeleteAccount),
+                style: const TextStyle(color: AppColors.error),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.error),
+              ),
+            ),
+          ),
+          const Gap(AppSpacing.md),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton.icon(
               onPressed: () => _confirmLogout(context),
               icon: const Icon(Icons.logout, color: AppColors.error),
               label: Text(
@@ -415,6 +445,47 @@ class _ProfileContent extends StatelessWidget {
     );
   }
 
+  void _confirmDeleteAccount(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr(LocaleKeys.profileDeleteAccountConfirmTitle)),
+        content: Text(tr(LocaleKeys.profileDeleteAccountConfirmBody)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(tr(LocaleKeys.profileCancel)),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              setState(() => _deleteRequestSubmitted = true);
+              _showDeleteRequestSubmitted(context);
+            },
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            child: Text(tr(LocaleKeys.profileDeleteAccountSubmit)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void _showDeleteRequestSubmitted(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr(LocaleKeys.profileDeleteAccountSubmittedTitle)),
+        content: Text(tr(LocaleKeys.profileDeleteAccountSubmittedBody)),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(tr(LocaleKeys.commonClose)),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ── Label helpers ──
 
   static String _genderLabel(String gender) {
@@ -427,6 +498,42 @@ class _ProfileContent extends StatelessWidget {
       if (p.value == value) return tr(p.labelKey);
     }
     return value;
+  }
+}
+
+class _DeletionRequestStatus extends StatelessWidget {
+  const _DeletionRequestStatus({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.error.withAlpha(18),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(color: AppColors.error.withAlpha(80)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.schedule_outlined, color: AppColors.error, size: 20),
+          const Gap(AppSpacing.sm),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
