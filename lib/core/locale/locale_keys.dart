@@ -94,6 +94,13 @@ abstract final class LocaleKeys {
   static const matchmakingTitle = 'matchmaking.title';
   static const matchmakingSubtitle = 'matchmaking.subtitle';
   static const matchmakingPreferenceTitle = 'matchmaking.preference_title';
+  static const matchmakingTopicTitle = 'matchmaking.topic_title';
+  static const matchmakingTopicLove = 'matchmaking.topic_love';
+  static const matchmakingTopicWork = 'matchmaking.topic_work';
+  static const matchmakingTopicLateNight = 'matchmaking.topic_late_night';
+  static const matchmakingTopicGame = 'matchmaking.topic_game';
+  static const matchmakingTopicMusic = 'matchmaking.topic_music';
+  static const matchmakingTopicCasual = 'matchmaking.topic_casual';
   static const matchmakingFind = 'matchmaking.find';
   static const matchmakingCancel = 'matchmaking.cancel';
   static const matchmakingSearching = 'matchmaking.searching';

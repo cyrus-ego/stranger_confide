@@ -80,7 +80,7 @@ class MatchmakingBloc extends AppBloc<MatchmakingEvent, MatchmakingState> {
       ),
     );
 
-    add(const MatchmakingJoinQueue());
+    emit(state.copyWith(status: MatchmakingStatus.idle));
   });
 
   Future<void> _onAppResumed(

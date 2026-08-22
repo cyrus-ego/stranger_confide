@@ -23,6 +23,8 @@ class MatchmakingPage extends BlocHostPage {
 
 class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage>
     with WidgetsBindingObserver {
+  bool _topicPromptShown = false;
+
   @override
   Stream<String> get errorStream => context.read<MatchmakingBloc>().errorStream;
 
@@ -110,6 +112,24 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage>
         BlocListener<MatchmakingBloc, MatchmakingState>(
           listenWhen: (prev, curr) =>
               curr.status == MatchmakingStatus.idle &&
+              prev.status != MatchmakingStatus.idle,
+          listener: (context, state) {
+            if (_topicPromptShown) return;
+            _topicPromptShown = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              _showTopicPicker(
+                context,
+                onSelected: (_) => context.read<MatchmakingBloc>().add(
+                  const MatchmakingJoinQueue(),
+                ),
+              );
+            });
+          },
+        ),
+        BlocListener<MatchmakingBloc, MatchmakingState>(
+          listenWhen: (prev, curr) =>
+              curr.status == MatchmakingStatus.idle &&
               prev.status == MatchmakingStatus.searching,
           listener: (context, state) {
             context.go(AppRoutes.home);
@@ -131,9 +151,16 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage>
                 return switch (state.status) {
                   MatchmakingStatus.initial ||
                   MatchmakingStatus.loadingProfile ||
-                  MatchmakingStatus.idle ||
                   MatchmakingStatus.joining => const Center(
                     child: CircularProgressIndicator(),
+                  ),
+                  MatchmakingStatus.idle => _ReadyView(
+                    onConnect: () => _showTopicPicker(
+                      context,
+                      onSelected: (_) => context.read<MatchmakingBloc>().add(
+                        const MatchmakingJoinQueue(),
+                      ),
+                    ),
                   ),
                   MatchmakingStatus.searching => _SearchingView(state: state),
                   MatchmakingStatus.matched => _MatchedView(state: state),
@@ -148,6 +175,120 @@ class _MatchmakingPageState extends BlocHostPageState<MatchmakingPage>
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ConversationTopic {
+  const _ConversationTopic(this.labelKey);
+
+  final String labelKey;
+}
+
+const _conversationTopics = [
+  _ConversationTopic(LocaleKeys.matchmakingTopicLove),
+  _ConversationTopic(LocaleKeys.matchmakingTopicWork),
+  _ConversationTopic(LocaleKeys.matchmakingTopicLateNight),
+  _ConversationTopic(LocaleKeys.matchmakingTopicGame),
+  _ConversationTopic(LocaleKeys.matchmakingTopicMusic),
+  _ConversationTopic(LocaleKeys.matchmakingTopicCasual),
+];
+
+void _showTopicPicker(
+  BuildContext context, {
+  required ValueChanged<_ConversationTopic> onSelected,
+}) {
+  showDialog(
+    context: context,
+    builder: (ctx) => SimpleDialog(
+      title: Text(tr(LocaleKeys.matchmakingTopicTitle)),
+      children: _conversationTopics.map((topic) {
+        return SimpleDialogOption(
+          onPressed: () {
+            Navigator.of(ctx).pop();
+            onSelected(topic);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+            child: Text(
+              tr(topic.labelKey),
+              style: Theme.of(ctx).textTheme.titleMedium,
+            ),
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+class _ReadyView extends StatelessWidget {
+  const _ReadyView({required this.onConnect});
+
+  final VoidCallback onConnect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth < 420
+            ? constraints.maxWidth
+            : 420.0;
+
+        return Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpacing.xxl),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.forum_rounded,
+                    size: 72,
+                    color: theme.colorScheme.primary.withAlpha(150),
+                  ),
+                  const Gap(AppSpacing.lg),
+                  Text(
+                    tr(LocaleKeys.matchmakingTitle),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Gap(AppSpacing.sm),
+                  Text(
+                    tr(LocaleKeys.matchmakingSubtitle),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withAlpha(153),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Gap(AppSpacing.xxl),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: FilledButton.icon(
+                      onPressed: onConnect,
+                      icon: const Icon(Icons.person_search_rounded),
+                      label: Text(tr(LocaleKeys.matchmakingFind)),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusLg,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -311,8 +452,10 @@ class _SearchingView extends StatelessWidget {
           top: Radius.circular(AppSpacing.radiusXl),
         ),
       ),
-      builder: (_) =>
-          BlocProvider.value(value: bloc, child: const _PreferenceSheet()),
+      builder: (_) => BlocProvider.value(
+        value: bloc,
+        child: _PreferenceSheet(matchmakingContext: context),
+      ),
     );
   }
 
@@ -578,8 +721,11 @@ class _TimedOutView extends StatelessWidget {
                       width: double.infinity,
                       height: 48,
                       child: FilledButton.icon(
-                        onPressed: () => context.read<MatchmakingBloc>().add(
-                          const MatchmakingJoinQueue(),
+                        onPressed: () => _showTopicPicker(
+                          context,
+                          onSelected: (_) => context
+                              .read<MatchmakingBloc>()
+                              .add(const MatchmakingJoinQueue()),
                         ),
                         icon: const Icon(Icons.refresh_rounded),
                         label: Text(tr(LocaleKeys.matchmakingRetry)),
@@ -606,7 +752,9 @@ class _TimedOutView extends StatelessWidget {
 // ── Preference bottom sheet ──
 
 class _PreferenceSheet extends StatelessWidget {
-  const _PreferenceSheet();
+  const _PreferenceSheet({required this.matchmakingContext});
+
+  final BuildContext matchmakingContext;
 
   @override
   Widget build(BuildContext context) {
@@ -684,9 +832,12 @@ class _PreferenceSheet extends StatelessWidget {
                 height: 48,
                 child: FilledButton(
                   onPressed: () {
+                    final bloc = context.read<MatchmakingBloc>();
                     Navigator.pop(context);
-                    context.read<MatchmakingBloc>().add(
-                      const MatchmakingRestartSearch(),
+                    _showTopicPicker(
+                      matchmakingContext,
+                      onSelected: (_) =>
+                          bloc.add(const MatchmakingRestartSearch()),
                     );
                   },
                   style: FilledButton.styleFrom(
