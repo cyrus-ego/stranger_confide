@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:stranger_confide/data/models/request/update_profile_request.dart';
-import 'package:stranger_confide/data/models/response/profile_response.dart';
+import 'package:talk_first/data/models/request/update_profile_request.dart';
+import 'package:talk_first/data/models/response/profile_response.dart';
 
 part 'profile_remote_datasource.g.dart';
 

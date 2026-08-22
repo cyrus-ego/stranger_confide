@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:610348462005:android:172917f7d46ce4785833fc",
+        "mobilesdk_app_id": "1:610348462005:android:12488ec432af04885833fc",
         "android_client_info": {
-          "package_name": "com.cyr.stranger_confide"
+          "package_name": "com.cyr.talkfirst"
         }
       },
       "oauth_client": [],

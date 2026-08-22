@@ -16,6 +16,14 @@ val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
+val isReleaseBuildRequested = gradle.startParameter.taskNames.any {
+    it.contains("release", ignoreCase = true)
+}
+if (isReleaseBuildRequested && !keystorePropertiesFile.exists()) {
+    throw GradleException(
+        "Release signing is not configured. Copy android/key.properties and configure the upload keystore.",
+    )
+}
 
 val facebookProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -29,7 +37,7 @@ val facebookClientToken = facebookProperties.getProperty(
 )
 
 android {
-    namespace = "com.cyr.stranger_confide"
+    namespace = "com.cyr.talkfirst"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -55,7 +63,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.cyr.stranger_confide"
+        applicationId = "com.cyr.talkfirst"
         multiDexEnabled = true
         minSdk = maxOf(flutter.minSdkVersion, 21)
         targetSdk = flutter.targetSdkVersion
@@ -66,16 +74,9 @@ android {
     }
 
     buildTypes {
-        debug {
-            if (keystorePropertiesFile.exists()) {
-                signingConfig = signingConfigs.getByName("upload")
-            }
-        }
         release {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("upload")
-            } else {
-                signingConfig = signingConfigs.getByName("debug")
             }
         }
     }

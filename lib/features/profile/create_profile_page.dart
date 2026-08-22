@@ -6,8 +6,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:stranger_confide/data/models/request/update_profile_request.dart';
-import 'package:stranger_confide/data/models/response/user_dto.dart';
+import 'package:talk_first/data/models/request/update_profile_request.dart';
+import 'package:talk_first/data/models/response/user_dto.dart';
 
 import '../../core/locale/locale_keys.dart';
 import '../../domain/enums/chat_preference.dart';
@@ -69,16 +69,16 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
       return;
     }
     context.read<ProfileBloc>().add(
-          ProfileCreate(
-            UpdateProfileRequest(
-              displayName: _displayName,
-              gender: _gender!.value,
-              age: int.parse(_ageController.text.trim()),
-              bio: _bioController.text.trim(),
-              chatPreference: _chatPreference.value,
-            ),
-          ),
-        );
+      ProfileCreate(
+        UpdateProfileRequest(
+          displayName: _displayName,
+          gender: _gender!.value,
+          age: int.parse(_ageController.text.trim()),
+          bio: _bioController.text.trim(),
+          chatPreference: _chatPreference.value,
+        ),
+      ),
+    );
   }
 
   @override
@@ -97,8 +97,7 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
         setState(() => _applyUser(state.currentUser!));
       },
       child: BlocListener<ProfileBloc, ProfileState>(
-        listenWhen: (prev, curr) =>
-            curr.createSuccess && !prev.createSuccess,
+        listenWhen: (prev, curr) => curr.createSuccess && !prev.createSuccess,
         listener: (context, state) {
           AppSnackBar.show(
             context,
@@ -121,9 +120,7 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (context.mounted) context.go(AppRoutes.login);
                     });
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   return Center(
@@ -137,42 +134,40 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.person_add_rounded,
-                              size: 56,
-                              color: colors.primary,
-                            )
+                                  Icons.person_add_rounded,
+                                  size: 56,
+                                  color: colors.primary,
+                                )
                                 .animate()
                                 .fadeIn(duration: 600.ms)
                                 .scale(begin: const Offset(0.5, 0.5)),
                             const Gap(AppSpacing.lg),
                             Text(
-                              tr(LocaleKeys.profileCreateTitle),
-                              style:
-                                  theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -0.5,
-                              ),
-                            )
+                                  tr(LocaleKeys.profileCreateTitle),
+                                  style: theme.textTheme.headlineMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: -0.5,
+                                      ),
+                                )
                                 .animate()
                                 .fadeIn(duration: 500.ms, delay: 200.ms)
                                 .slideY(begin: 0.3),
                             const Gap(AppSpacing.sm),
                             Text(
-                              tr(LocaleKeys.profileCreateSubtitle),
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color: colors.onSurface.withAlpha(153),
-                              ),
-                            )
+                                  tr(LocaleKeys.profileCreateSubtitle),
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: colors.onSurface.withAlpha(153),
+                                  ),
+                                )
                                 .animate()
                                 .fadeIn(duration: 500.ms, delay: 300.ms)
                                 .slideY(begin: 0.3),
                             const Gap(AppSpacing.xxxl),
 
                             // Gender
-                            _SectionLabel(
-                              label: tr(LocaleKeys.profileGender),
-                            ),
+                            _SectionLabel(label: tr(LocaleKeys.profileGender)),
                             const Gap(AppSpacing.sm),
                             SegmentedButton<Gender>(
                               segments: [
@@ -180,14 +175,11 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                                   ButtonSegment(
                                     value: g,
                                     label: Text(tr(g.labelKey)),
-                                    icon: Icon(
-                                      switch (g) {
-                                        Gender.male => Icons.male_rounded,
-                                        Gender.female => Icons.female_rounded,
-                                        Gender.other =>
-                                          Icons.transgender_rounded,
-                                      },
-                                    ),
+                                    icon: Icon(switch (g) {
+                                      Gender.male => Icons.male_rounded,
+                                      Gender.female => Icons.female_rounded,
+                                      Gender.other => Icons.transgender_rounded,
+                                    }),
                                   ),
                               ],
                               selected: _gender != null ? {_gender!} : {},
@@ -217,19 +209,20 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
                               decoration: InputDecoration(
-                                labelText:
-                                    tr(LocaleKeys.profileCreateAgeHint),
+                                labelText: tr(LocaleKeys.profileCreateAgeHint),
                                 prefixIcon: const Icon(Icons.cake_outlined),
                               ),
                               validator: (v) {
                                 if (v == null || v.isEmpty) {
                                   return tr(
-                                      LocaleKeys.profileCreateAgeRequired);
+                                    LocaleKeys.profileCreateAgeRequired,
+                                  );
                                 }
                                 final age = int.tryParse(v);
                                 if (age == null || age < 1 || age > 150) {
                                   return tr(
-                                      LocaleKeys.profileCreateAgeRequired);
+                                    LocaleKeys.profileCreateAgeRequired,
+                                  );
                                 }
                                 return null;
                               },
@@ -242,8 +235,7 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                               maxLines: 3,
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
-                                labelText:
-                                    tr(LocaleKeys.profileCreateBioHint),
+                                labelText: tr(LocaleKeys.profileCreateBioHint),
                                 prefixIcon: const Icon(Icons.info_outline),
                                 alignLabelWithHint: true,
                               ),
@@ -252,8 +244,7 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
 
                             // Chat Preference
                             _SectionLabel(
-                              label: tr(
-                                  LocaleKeys.profileCreateChatPreference),
+                              label: tr(LocaleKeys.profileCreateChatPreference),
                             ),
                             const Gap(AppSpacing.sm),
                             SegmentedButton<ChatPreference>(
@@ -267,7 +258,8 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                               selected: {_chatPreference},
                               onSelectionChanged: (selected) {
                                 setState(
-                                    () => _chatPreference = selected.first);
+                                  () => _chatPreference = selected.first,
+                                );
                               },
                               style: const ButtonStyle(
                                 visualDensity: VisualDensity.compact,
@@ -278,8 +270,8 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                             // Submit
                             Builder(
                               builder: (context) {
-                                final isLoading = state.status ==
-                                    ProfileStatus.updating;
+                                final isLoading =
+                                    state.status == ProfileStatus.updating;
                                 return SizedBox(
                                   width: double.infinity,
                                   height: 52,
@@ -294,8 +286,9 @@ class _CreateProfilePageState extends BlocHostPageState<CreateProfilePage> {
                                               color: Colors.white,
                                             ),
                                           )
-                                        : Text(tr(
-                                            LocaleKeys.profileCreateSubmit)),
+                                        : Text(
+                                            tr(LocaleKeys.profileCreateSubmit),
+                                          ),
                                   ),
                                 );
                               },
@@ -328,8 +321,8 @@ class _SectionLabel extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(178),
-            ),
+          color: Theme.of(context).colorScheme.onSurface.withAlpha(178),
+        ),
       ),
     );
   }

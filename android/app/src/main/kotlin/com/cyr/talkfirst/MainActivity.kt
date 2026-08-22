@@ -1,4 +1,4 @@
-package com.cyr.stranger_confide
+package com.cyr.talkfirst
 
 import io.flutter.embedding.android.FlutterActivity
 

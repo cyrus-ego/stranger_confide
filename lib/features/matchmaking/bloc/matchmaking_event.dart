@@ -1,6 +1,6 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:stranger_confide/domain/enums/chat_preference.dart';
+import 'package:talk_first/domain/enums/chat_preference.dart';
 
 import '../../../data/models/response/queue_status_response.dart';
 

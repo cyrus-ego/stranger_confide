@@ -1,6 +1,6 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
-import 'package:stranger_confide/data/models/response/auth_tokens.dart';
-import 'package:stranger_confide/data/models/response/register_response.dart';
+import 'package:talk_first/data/models/response/auth_tokens.dart';
+import 'package:talk_first/data/models/response/register_response.dart';
 
 import '../models/facebook_login_token.dart';
 
@@ -28,7 +28,5 @@ abstract class AuthRepository {
     required String otp,
   });
 
-  Future<AppResult<RegisterResponse>> resendOtp({
-    required String email,
-  });
+  Future<AppResult<RegisterResponse>> resendOtp({required String email});
 }

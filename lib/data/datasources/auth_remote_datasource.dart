@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:stranger_confide/data/models/request/facebook_auth_request.dart';
-import 'package:stranger_confide/data/models/request/login_request.dart';
-import 'package:stranger_confide/data/models/request/google_auth_request.dart';
-import 'package:stranger_confide/data/models/request/register_request.dart';
-import 'package:stranger_confide/data/models/request/resend_otp_request.dart';
-import 'package:stranger_confide/data/models/request/verify_email_request.dart';
-import 'package:stranger_confide/data/models/response/auth_tokens.dart';
-import 'package:stranger_confide/data/models/response/register_response.dart';
+import 'package:talk_first/data/models/request/facebook_auth_request.dart';
+import 'package:talk_first/data/models/request/login_request.dart';
+import 'package:talk_first/data/models/request/google_auth_request.dart';
+import 'package:talk_first/data/models/request/register_request.dart';
+import 'package:talk_first/data/models/request/resend_otp_request.dart';
+import 'package:talk_first/data/models/request/verify_email_request.dart';
+import 'package:talk_first/data/models/response/auth_tokens.dart';
+import 'package:talk_first/data/models/response/register_response.dart';
 
 part 'auth_remote_datasource.g.dart';
 

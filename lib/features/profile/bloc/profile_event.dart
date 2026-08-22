@@ -1,6 +1,6 @@
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:stranger_confide/data/models/request/update_profile_request.dart';
+import 'package:talk_first/data/models/request/update_profile_request.dart';
 
 part 'profile_event.freezed.dart';
 

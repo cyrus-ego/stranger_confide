@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:stranger_confide/data/models/response/queue_status_response.dart';
-import 'package:stranger_confide/domain/enums/chat_preference.dart';
+import 'package:talk_first/data/models/response/queue_status_response.dart';
+import 'package:talk_first/domain/enums/chat_preference.dart';
 
 part 'matchmaking_state.freezed.dart';
 

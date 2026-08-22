@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:stranger_confide/data/models/response/active_room_response.dart';
+import 'package:talk_first/data/models/response/active_room_response.dart';
 
 part 'room_remote_datasource.g.dart';
 

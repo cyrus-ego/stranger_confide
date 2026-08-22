@@ -1,21 +1,21 @@
 import 'package:cyr_app_kit/cyr_app_kit.dart';
 import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stranger_confide/data/models/response/active_room_response.dart';
-import 'package:stranger_confide/data/models/response/chat_message_dto.dart';
-import 'package:stranger_confide/data/models/response/chat_image_upload_response.dart';
-import 'package:stranger_confide/data/models/response/chat_messages_response.dart';
-import 'package:stranger_confide/domain/repositories/chat_repository.dart';
-import 'package:stranger_confide/domain/repositories/moderation_repository.dart';
-import 'package:stranger_confide/domain/repositories/room_repository.dart';
-import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart';
-import 'package:stranger_confide/domain/usecases/get_chat_messages_usecase.dart';
-import 'package:stranger_confide/domain/usecases/leave_room_usecase.dart';
-import 'package:stranger_confide/domain/usecases/report_user_usecase.dart';
-import 'package:stranger_confide/domain/usecases/upload_chat_image_usecase.dart';
-import 'package:stranger_confide/features/chat/bloc/chat_bloc.dart';
-import 'package:stranger_confide/features/chat/bloc/chat_event.dart';
-import 'package:stranger_confide/features/chat/bloc/chat_state.dart';
+import 'package:talk_first/data/models/response/active_room_response.dart';
+import 'package:talk_first/data/models/response/chat_message_dto.dart';
+import 'package:talk_first/data/models/response/chat_image_upload_response.dart';
+import 'package:talk_first/data/models/response/chat_messages_response.dart';
+import 'package:talk_first/domain/repositories/chat_repository.dart';
+import 'package:talk_first/domain/repositories/moderation_repository.dart';
+import 'package:talk_first/domain/repositories/room_repository.dart';
+import 'package:talk_first/domain/usecases/get_active_room_usecase.dart';
+import 'package:talk_first/domain/usecases/get_chat_messages_usecase.dart';
+import 'package:talk_first/domain/usecases/leave_room_usecase.dart';
+import 'package:talk_first/domain/usecases/report_user_usecase.dart';
+import 'package:talk_first/domain/usecases/upload_chat_image_usecase.dart';
+import 'package:talk_first/features/chat/bloc/chat_bloc.dart';
+import 'package:talk_first/features/chat/bloc/chat_event.dart';
+import 'package:talk_first/features/chat/bloc/chat_state.dart';
 
 void main() {
   late ChatBloc bloc;

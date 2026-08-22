@@ -48,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyABnBhUyIlHu7fH7JfaTg8M5vDfgRrugjg',
-    appId: '1:610348462005:web:94c5279540274ae15833fc',
+    appId: '1:610348462005:web:f779509912290c8c5833fc',
     messagingSenderId: '610348462005',
     projectId: 'stranger-confide',
     authDomain: 'stranger-confide.firebaseapp.com',
     storageBucket: 'stranger-confide.firebasestorage.app',
-    measurementId: 'G-PLPGJJ4M6P',
+    measurementId: 'G-XGYRRZY9V2',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBhfKx9TRuwHrPnMM7fUMPZIylTQc7WFhY',
-    appId: '1:610348462005:android:172917f7d46ce4785833fc',
+    appId: '1:610348462005:android:12488ec432af04885833fc',
     messagingSenderId: '610348462005',
     projectId: 'stranger-confide',
     storageBucket: 'stranger-confide.firebasestorage.app',
@@ -66,10 +66,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA9akv-YJM6A64rIO3u1j5mGB44YHvPejI',
-    appId: '1:610348462005:ios:661db8c6a87b2e635833fc',
+    appId: '1:610348462005:ios:64aed1d73460edcb5833fc',
     messagingSenderId: '610348462005',
     projectId: 'stranger-confide',
     storageBucket: 'stranger-confide.firebasestorage.app',
-    iosBundleId: 'com.cyr.strangerConfide',
+    iosBundleId: 'com.cyr.talkfirst',
   );
 }

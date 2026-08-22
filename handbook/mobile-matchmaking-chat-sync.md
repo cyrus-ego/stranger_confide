@@ -356,9 +356,9 @@ Thứ tự bắt buộc:
 {
   "session": {
     "roomId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "myAlias": "Stranger#7482",
+    "myAlias": "Member#7482",
     "myAvatar": "https://...",
-    "partnerAlias": "Stranger#2910",
+    "partnerAlias": "Member#2910",
     "partnerAvatar": "https://...",
     "partnerOnline": true,
     "isAnonymous": true
@@ -413,7 +413,7 @@ Content-Type: multipart/form-data
 ```json
 {
   "id": "665a1b2c3d4e5f6789012348",
-  "senderAlias": "Stranger#7482",
+  "senderAlias": "Member#7482",
   "type": "text",
   "content": "Xin chào",
   "createdAt": "2026-07-27T10:00:00.000Z"
@@ -675,4 +675,3 @@ Các payload REST được mô tả trong tài liệu này đều nằm trong fi
 - `src/modules/chat/dto/chat-response.dto.ts`
 - `src/modules/room/room.controller.ts`
 - `src/modules/room/room.service.ts`
-

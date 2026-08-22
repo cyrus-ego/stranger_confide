@@ -7,11 +7,11 @@
 
 ## 1. Tổng quan
 
-App "Tâm sự với người lạ" — chat ẩn danh 1:1 real-time.  
+App "Talk First" — kết nối trò chuyện riêng tư 1:1 real-time.
 Sau matchmaking thành công, cả 2 user vào phòng chat qua `roomId`.
 
 **Nguyên tắc bất biến:**
-- Ẩn danh hoàn toàn — UI chỉ hiện `senderAlias` (Stranger#XXXX) + avatar DiceBear
+- Dùng bí danh — UI chỉ hiện `senderAlias` (Member#XXXX) + avatar DiceBear
 - Phòng chỉ đóng khi chủ động rời/block — mất mạng/background KHÔNG đóng phòng
 - Tin nhắn tạm — server xoá khi phòng đóng
 - Socket ưu tiên, REST fallback — gửi tin qua socket; rời/block dùng REST nếu socket chết
@@ -64,9 +64,9 @@ JWT verify lúc handshake. Token invalid/expired → server disconnect ngay.
 {
   "session": {
     "roomId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "myAlias": "Stranger#7482",
+    "myAlias": "Member#7482",
     "myAvatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=abc",
-    "partnerAlias": "Stranger#1234",
+    "partnerAlias": "Member#1234",
     "partnerAvatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=xyz",
     "partnerOnline": true,
     "isAnonymous": true
@@ -84,7 +84,7 @@ JWT verify lúc handshake. Token invalid/expired → server disconnect ngay.
 ```json
 {
   "id": "665a1b2c3d4e5f6789012348",
-  "senderAlias": "Stranger#7482",
+  "senderAlias": "Member#7482",
   "type": "text | image | system",
   "content": "Xin chào!",
   "imageUrl": "http://host:3000/uploads/chat/abc.jpg",
@@ -155,7 +155,7 @@ Vì tin nhắn phải qua moderation. Nếu vi phạm, server emit `error` thay 
 ```
 1. User bắt đầu gõ → emit "chat:typing" { roomId, isTyping: true }
 2. Debounce 2 giây: nếu ngừng gõ → emit { isTyping: false }
-3. Nhận "chat:typing" { isTyping: true } → hiện "Stranger#1234 đang nhập..."
+3. Nhận "chat:typing" { isTyping: true } → hiện "Member#1234 đang nhập..."
 4. Nhận { isTyping: false } → ẩn indicator
 ```
 
@@ -279,7 +279,7 @@ Tất cả cần header `Authorization: Bearer <accessToken>`.
 
 ```
 ┌─────────────────────────────────────────┐
-│ [←]  (●) Stranger#1234    [online]  [⋮]│
+│ [←]  (●) Member#1234      [online]  [⋮]│
 └─────────────────────────────────────────┘
 ```
 
@@ -301,7 +301,7 @@ Tất cả cần header `Authorization: Bearer <accessToken>`.
 │    mình →     │ Chào bạn :)  │         │
 │                └──────────────┘         │
 │                                         │
-│      --- Stranger#1234 đang nhập... --- │
+│      --- Member#1234 đang nhập... ---   │
 │                                         │
 └─────────────────────────────────────────┘
 ```
@@ -330,14 +330,14 @@ Tất cả cần header `Authorization: Bearer <accessToken>`.
 
 **Block confirm:**
 ```
-"Chặn Stranger#1234?"
+"Chặn Member#1234?"
 "Phòng sẽ bị đóng. Bạn sẽ không ghép lại với người này."
 [Huỷ]  [Chặn]
 ```
 
 **Report bottom sheet:**
 ```
-"Báo cáo Stranger#1234"
+"Báo cáo Member#1234"
 ○ Spam
 ○ Quấy rối
 ○ Nội dung không phù hợp

@@ -36,7 +36,7 @@ sealed class ChatState with _$ChatState {
     @Default('') String roomId,
     @Default('') String myAlias,
     @Default('') String myAvatar,
-    @Default('Stranger') String partnerAlias,
+    @Default('Member') String partnerAlias,
     @Default('') String partnerAvatar,
     @Default('') String partnerUserId,
     @Default(false) bool partnerOnline,

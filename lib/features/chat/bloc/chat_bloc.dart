@@ -373,7 +373,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
 
     final myAlias = session['myAlias']?.toString() ?? '';
     final myAvatar = session['myAvatar']?.toString() ?? '';
-    final partnerAlias = session['partnerAlias']?.toString() ?? 'Stranger';
+    final partnerAlias = session['partnerAlias']?.toString() ?? 'Member';
     final partnerAvatar = session['partnerAvatar']?.toString() ?? '';
     final partnerOnline = session['partnerOnline'] == true;
 
@@ -696,7 +696,7 @@ class ChatBloc extends AppBloc<ChatEvent, ChatState> {
       roomId: '',
       myAlias: '',
       myAvatar: '',
-      partnerAlias: 'Stranger',
+      partnerAlias: 'Member',
       partnerAvatar: '',
       partnerUserId: '',
       partnerOnline: false,

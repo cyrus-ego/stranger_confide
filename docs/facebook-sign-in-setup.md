@@ -12,8 +12,8 @@ mobile platforms:
 
 ### Android
 
-- Package name: `com.cyr.stranger_confide`
-- Default activity: `com.cyr.stranger_confide.MainActivity`
+- Package name: `com.cyr.talkfirst`
+- Default activity: `com.cyr.talkfirst.MainActivity`
 - Add key hashes for every signing identity used by debug, release, CI and
   Google Play App Signing.
 
@@ -28,14 +28,13 @@ keytool -exportcert \
   | openssl base64
 ```
 
-When `android/key.properties` exists, this project also uses that upload key for
-debug builds; generate and register its hash as well. If Google Play App Signing
-is enabled, also register the key hash derived from the Play Console app-signing
-certificate.
+Generate and register hashes for the local debug key, the upload key, and the
+Google Play App Signing certificate. Builds installed from Google Play are
+signed with the app-signing certificate rather than the upload certificate.
 
 ### iOS
 
-- Bundle ID: `com.cyr.strangerConfide`
+- Bundle ID: `com.cyr.talkfirst`
 - Enable Facebook Login for this iOS app.
 - Minimum deployment target: iOS 15 (required by the current Firebase SDK in
   this project).

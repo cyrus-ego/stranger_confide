@@ -5,53 +5,70 @@ import 'package:cyr_flutter_core/cyr_flutter_core.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart';
-import 'package:stranger_confide/data/repositories/auth_repository_impl.dart';
+import 'package:talk_first/data/datasources/auth_remote_datasource.dart';
+import 'package:talk_first/data/repositories/auth_repository_impl.dart';
 
 /// Integration test gọi API login thật qua Retrofit + envelope interceptor.
 ///
 /// Cần backend chạy tại URL cấu hình. Chạy:
 /// ```bash
+/// INTEGRATION_API_BASE_URL=https://api.example.com/api \
+/// INTEGRATION_TEST_EMAIL=user@example.com \
+/// INTEGRATION_TEST_PASSWORD=secret \
 /// flutter test test/integration/auth_login_integration_test.dart
 /// ```
 void main() {
-  test('POST /auth/login trả AuthTokens khi credentials đúng', () async {
-    HttpOverrides.global = null;
+  final baseUrl = Platform.environment['INTEGRATION_API_BASE_URL'];
+  final email = Platform.environment['INTEGRATION_TEST_EMAIL'];
+  final password = Platform.environment['INTEGRATION_TEST_PASSWORD'];
+  final missingConfiguration = [
+    baseUrl,
+    email,
+    password,
+  ].any((value) => value == null || value.trim().isEmpty);
 
-    final dio = Dio(BaseOptions(
-      baseUrl: 'https://c44e-1-54-23-149.ngrok-free.app/api',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-      },
-    ));
+  test(
+    'POST /auth/login trả AuthTokens khi credentials đúng',
+    () async {
+      HttpOverrides.global = null;
 
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () => HttpClient(),
-    );
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl!,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+        ),
+      );
 
-    dio.interceptors.add(const ApiEnvelopeInterceptor());
+      dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () => HttpClient(),
+      );
 
-    final api = AuthRemoteDatasource(dio);
-    final repo = AuthRepositoryImpl(api);
+      dio.interceptors.add(const ApiEnvelopeInterceptor());
 
-    final result = await repo.login(
-      email: 'boy1@gmail.com',
-      password: '123123',
-    );
+      final api = AuthRemoteDatasource(dio);
+      final repo = AuthRepositoryImpl(api);
 
-    switch (result) {
-      case AppSuccess(:final value):
-        expect(value.accessToken, isNotEmpty);
-        expect(value.refreshToken, isNotEmpty);
-        expect(value.user?.email, 'boy1@gmail.com');
+      final result = await repo.login(email: email!, password: password!);
 
-        print('PASS — accessToken: ${value.accessToken?.substring(0, 20)}...');
-        print('PASS — user: ${value.user}');
+      switch (result) {
+        case AppSuccess(:final value):
+          expect(value.accessToken, isNotEmpty);
+          expect(value.refreshToken, isNotEmpty);
+          expect(value.user?.email, email);
 
-      case AppFailure(:final error):
-        fail('Login thất bại: ${error.code} — ${error.message}');
-    }
-  });
+          print('PASS — user: ${value.user}');
+
+        case AppFailure(:final error):
+          fail('Login thất bại: ${error.code} — ${error.message}');
+      }
+    },
+    skip: missingConfiguration
+        ? 'Set INTEGRATION_API_BASE_URL, INTEGRATION_TEST_EMAIL, and '
+              'INTEGRATION_TEST_PASSWORD to run this live API test.'
+        : false,
+  );
 }

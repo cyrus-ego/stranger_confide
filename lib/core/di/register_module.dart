@@ -4,11 +4,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
-import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart';
-import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart';
-import 'package:stranger_confide/data/datasources/moderation_remote_datasource.dart';
-import 'package:stranger_confide/data/datasources/room_remote_datasource.dart';
-import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart';
+import 'package:talk_first/data/datasources/chat_remote_datasource.dart';
+import 'package:talk_first/data/datasources/matchmaking_remote_datasource.dart';
+import 'package:talk_first/data/datasources/moderation_remote_datasource.dart';
+import 'package:talk_first/data/datasources/room_remote_datasource.dart';
+import 'package:talk_first/data/datasources/profile_remote_datasource.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/user_remote_datasource.dart';
@@ -47,20 +47,18 @@ abstract class RegisterModule {
   PushNotificationService pushNotificationService(
     TokenStorage tokenStorage,
     UserRemoteDatasource userDataSource,
-  ) =>
-      PushNotificationService(
-        tokenStorage,
-        PushNotificationHandlers(
-          onTokenRegister: (token, platform) =>
-              userDataSource.registerFcmToken({
-                'token': token,
-                'platform': platform,
-              }),
-          onTokenUnregister: (token) =>
-              userDataSource.unregisterFcmToken({'token': token}),
-          onMessageTap: _handlePushMessageTap,
-        ),
-      );
+  ) => PushNotificationService(
+    tokenStorage,
+    PushNotificationHandlers(
+      onTokenRegister: (token, platform) => userDataSource.registerFcmToken({
+        'token': token,
+        'platform': platform,
+      }),
+      onTokenUnregister: (token) =>
+          userDataSource.unregisterFcmToken({'token': token}),
+      onMessageTap: _handlePushMessageTap,
+    ),
+  );
 }
 
 void _handlePushMessageTap(RemoteMessage message) {

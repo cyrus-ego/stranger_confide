@@ -19,6 +19,15 @@ import 'bloc/chat_event.dart';
 import 'bloc/chat_state.dart';
 import 'widgets/chat_dialogs.dart';
 
+String _displayAlias(String alias) {
+  const legacyAlias = 'Stranger';
+  if (alias == legacyAlias) return 'Member';
+  if (alias.startsWith('$legacyAlias#')) {
+    return alias.replaceFirst(legacyAlias, 'Member');
+  }
+  return alias;
+}
+
 class ChatPage extends BlocHostPage {
   const ChatPage({super.key, required this.roomId});
 
@@ -194,7 +203,7 @@ class _ChatScaffold extends StatelessWidget {
           return Row(
             children: [
               _PartnerAvatar(
-                alias: state.partnerAlias,
+                alias: _displayAlias(state.partnerAlias),
                 avatarUrl: state.partnerAvatar,
               ),
               const Gap(AppSpacing.md),
@@ -203,7 +212,7 @@ class _ChatScaffold extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      state.partnerAlias,
+                      _displayAlias(state.partnerAlias),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -856,7 +865,7 @@ class _TypingIndicator extends StatelessWidget {
               Text(
                 tr(
                   LocaleKeys.chatTyping,
-                  namedArgs: {'name': state.partnerAlias},
+                  namedArgs: {'name': _displayAlias(state.partnerAlias)},
                 ),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface.withAlpha(120),

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:stranger_confide/data/models/request/join_queue_request.dart';
-import 'package:stranger_confide/data/models/response/queue_status_response.dart';
+import 'package:talk_first/data/models/request/join_queue_request.dart';
+import 'package:talk_first/data/models/response/queue_status_response.dart';
 
 part 'matchmaking_remote_datasource.g.dart';
 

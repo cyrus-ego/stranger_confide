@@ -1,6 +1,6 @@
-# StrangerConfide
+# Talk First
 
-Flutter mobile app — anonymous chat with strangers.
+Flutter mobile app for private one-to-one social conversations.
 
 ## Tech Stack
 

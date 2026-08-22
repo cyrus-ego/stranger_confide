@@ -13,102 +13,86 @@ import 'package:cyr_app_kit/cyr_app_kit.dart' as _i512;
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
-import 'package:stranger_confide/core/di/register_module.dart' as _i661;
-import 'package:stranger_confide/data/datasources/auth_remote_datasource.dart'
+import 'package:talk_first/core/di/register_module.dart' as _i661;
+import 'package:talk_first/data/datasources/auth_remote_datasource.dart'
     as _i999;
-import 'package:stranger_confide/data/datasources/chat_remote_datasource.dart'
+import 'package:talk_first/data/datasources/chat_remote_datasource.dart'
     as _i1068;
-import 'package:stranger_confide/data/datasources/facebook_sign_in_service.dart'
+import 'package:talk_first/data/datasources/facebook_sign_in_service.dart'
     as _i720;
-import 'package:stranger_confide/data/datasources/google_sign_in_service.dart'
+import 'package:talk_first/data/datasources/google_sign_in_service.dart'
     as _i370;
-import 'package:stranger_confide/data/datasources/matchmaking_remote_datasource.dart'
+import 'package:talk_first/data/datasources/matchmaking_remote_datasource.dart'
     as _i854;
-import 'package:stranger_confide/data/datasources/matchmaking_socket_service.dart'
+import 'package:talk_first/data/datasources/matchmaking_socket_service.dart'
     as _i910;
-import 'package:stranger_confide/data/datasources/moderation_remote_datasource.dart'
+import 'package:talk_first/data/datasources/moderation_remote_datasource.dart'
     as _i708;
-import 'package:stranger_confide/data/datasources/profile_remote_datasource.dart'
+import 'package:talk_first/data/datasources/profile_remote_datasource.dart'
     as _i962;
-import 'package:stranger_confide/data/datasources/room_remote_datasource.dart'
+import 'package:talk_first/data/datasources/room_remote_datasource.dart'
     as _i916;
-import 'package:stranger_confide/data/datasources/user_remote_datasource.dart'
+import 'package:talk_first/data/datasources/user_remote_datasource.dart'
     as _i510;
-import 'package:stranger_confide/data/repositories/auth_repository_impl.dart'
+import 'package:talk_first/data/repositories/auth_repository_impl.dart'
     as _i1019;
-import 'package:stranger_confide/data/repositories/chat_repository_impl.dart'
+import 'package:talk_first/data/repositories/chat_repository_impl.dart'
     as _i236;
-import 'package:stranger_confide/data/repositories/matchmaking_repository_impl.dart'
+import 'package:talk_first/data/repositories/matchmaking_repository_impl.dart'
     as _i433;
-import 'package:stranger_confide/data/repositories/moderation_repository_impl.dart'
+import 'package:talk_first/data/repositories/moderation_repository_impl.dart'
     as _i807;
-import 'package:stranger_confide/data/repositories/profile_repository_impl.dart'
+import 'package:talk_first/data/repositories/profile_repository_impl.dart'
     as _i412;
-import 'package:stranger_confide/data/repositories/room_repository_impl.dart'
+import 'package:talk_first/data/repositories/room_repository_impl.dart'
     as _i836;
-import 'package:stranger_confide/data/repositories/user_repository_impl.dart'
+import 'package:talk_first/data/repositories/user_repository_impl.dart'
     as _i263;
-import 'package:stranger_confide/domain/repositories/auth_repository.dart'
-    as _i982;
-import 'package:stranger_confide/domain/repositories/chat_repository.dart'
-    as _i926;
-import 'package:stranger_confide/domain/repositories/matchmaking_repository.dart'
+import 'package:talk_first/domain/repositories/auth_repository.dart' as _i982;
+import 'package:talk_first/domain/repositories/chat_repository.dart' as _i926;
+import 'package:talk_first/domain/repositories/matchmaking_repository.dart'
     as _i304;
-import 'package:stranger_confide/domain/repositories/moderation_repository.dart'
+import 'package:talk_first/domain/repositories/moderation_repository.dart'
     as _i396;
-import 'package:stranger_confide/domain/repositories/profile_repository.dart'
-    as _i34;
-import 'package:stranger_confide/domain/repositories/room_repository.dart'
-    as _i133;
-import 'package:stranger_confide/domain/repositories/user_repository.dart'
-    as _i687;
-import 'package:stranger_confide/domain/services/facebook_sign_in_service.dart'
+import 'package:talk_first/domain/repositories/profile_repository.dart' as _i34;
+import 'package:talk_first/domain/repositories/room_repository.dart' as _i133;
+import 'package:talk_first/domain/repositories/user_repository.dart' as _i687;
+import 'package:talk_first/domain/services/facebook_sign_in_service.dart'
     as _i925;
-import 'package:stranger_confide/domain/services/google_sign_in_service.dart'
+import 'package:talk_first/domain/services/google_sign_in_service.dart'
     as _i942;
-import 'package:stranger_confide/domain/usecases/create_profile_usecase.dart'
+import 'package:talk_first/domain/usecases/create_profile_usecase.dart'
     as _i115;
-import 'package:stranger_confide/domain/usecases/facebook_login_usecase.dart'
+import 'package:talk_first/domain/usecases/facebook_login_usecase.dart'
     as _i875;
-import 'package:stranger_confide/domain/usecases/get_active_room_usecase.dart'
+import 'package:talk_first/domain/usecases/get_active_room_usecase.dart'
     as _i990;
-import 'package:stranger_confide/domain/usecases/get_chat_messages_usecase.dart'
+import 'package:talk_first/domain/usecases/get_chat_messages_usecase.dart'
     as _i720;
-import 'package:stranger_confide/domain/usecases/get_current_user_usecase.dart'
+import 'package:talk_first/domain/usecases/get_current_user_usecase.dart'
     as _i1047;
-import 'package:stranger_confide/domain/usecases/get_profile_usecase.dart'
-    as _i669;
-import 'package:stranger_confide/domain/usecases/get_queue_status_usecase.dart'
+import 'package:talk_first/domain/usecases/get_profile_usecase.dart' as _i669;
+import 'package:talk_first/domain/usecases/get_queue_status_usecase.dart'
     as _i438;
-import 'package:stranger_confide/domain/usecases/google_login_usecase.dart'
-    as _i762;
-import 'package:stranger_confide/domain/usecases/join_queue_usecase.dart'
-    as _i443;
-import 'package:stranger_confide/domain/usecases/leave_queue_usecase.dart'
-    as _i569;
-import 'package:stranger_confide/domain/usecases/leave_room_usecase.dart'
-    as _i212;
-import 'package:stranger_confide/domain/usecases/login_usecase.dart' as _i878;
-import 'package:stranger_confide/domain/usecases/patch_profile_usecase.dart'
-    as _i247;
-import 'package:stranger_confide/domain/usecases/register_usecase.dart'
-    as _i419;
-import 'package:stranger_confide/domain/usecases/report_user_usecase.dart'
-    as _i691;
-import 'package:stranger_confide/domain/usecases/resend_otp_usecase.dart'
-    as _i225;
-import 'package:stranger_confide/domain/usecases/update_profile_usecase.dart'
+import 'package:talk_first/domain/usecases/google_login_usecase.dart' as _i762;
+import 'package:talk_first/domain/usecases/join_queue_usecase.dart' as _i443;
+import 'package:talk_first/domain/usecases/leave_queue_usecase.dart' as _i569;
+import 'package:talk_first/domain/usecases/leave_room_usecase.dart' as _i212;
+import 'package:talk_first/domain/usecases/login_usecase.dart' as _i878;
+import 'package:talk_first/domain/usecases/patch_profile_usecase.dart' as _i247;
+import 'package:talk_first/domain/usecases/register_usecase.dart' as _i419;
+import 'package:talk_first/domain/usecases/report_user_usecase.dart' as _i691;
+import 'package:talk_first/domain/usecases/resend_otp_usecase.dart' as _i225;
+import 'package:talk_first/domain/usecases/update_profile_usecase.dart'
     as _i853;
-import 'package:stranger_confide/domain/usecases/upload_chat_image_usecase.dart'
+import 'package:talk_first/domain/usecases/upload_chat_image_usecase.dart'
     as _i167;
-import 'package:stranger_confide/domain/usecases/verify_email_usecase.dart'
-    as _i29;
-import 'package:stranger_confide/features/auth/bloc/login_bloc.dart' as _i209;
-import 'package:stranger_confide/features/chat/bloc/chat_bloc.dart' as _i460;
-import 'package:stranger_confide/features/matchmaking/bloc/matchmaking_bloc.dart'
+import 'package:talk_first/domain/usecases/verify_email_usecase.dart' as _i29;
+import 'package:talk_first/features/auth/bloc/login_bloc.dart' as _i209;
+import 'package:talk_first/features/chat/bloc/chat_bloc.dart' as _i460;
+import 'package:talk_first/features/matchmaking/bloc/matchmaking_bloc.dart'
     as _i987;
-import 'package:stranger_confide/features/profile/bloc/profile_bloc.dart'
-    as _i162;
+import 'package:talk_first/features/profile/bloc/profile_bloc.dart' as _i162;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt

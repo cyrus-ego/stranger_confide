@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = stranger_confide
+PRODUCT_NAME = talk_first
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.cyr.strangerConfide
+PRODUCT_BUNDLE_IDENTIFIER = com.cyr.talkfirst
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.cyr. All rights reserved.

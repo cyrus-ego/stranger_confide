@@ -18,7 +18,7 @@ Giá trị `GOOGLE_SERVER_CLIENT_ID` phải là Web Client ID mà backend sử d
 
 ## Android
 
-Tạo một Android OAuth client cho application ID `com.cyr.stranger_confide`.
+Tạo một Android OAuth client cho application ID `com.cyr.talkfirst`.
 Đăng ký SHA-1 của tất cả signing key được dùng để chạy hoặc phát hành ứng dụng,
 bao gồm debug, upload và release nếu có.
 
@@ -27,7 +27,7 @@ Client ID vào biến này.
 
 ## iOS
 
-Tạo một iOS OAuth client cho bundle ID `com.cyr.strangerConfide`, sau đó:
+Tạo một iOS OAuth client cho bundle ID `com.cyr.talkfirst`, sau đó:
 
 1. Điền iOS Client ID vào biến `GOOGLE_IOS_CLIENT_ID` trong `.env`.
 2. Sao chép `ios/Flutter/GoogleAuth.xcconfig.example` thành

@@ -5,7 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:stranger_confide/data/models/response/profile_response.dart';
+import 'package:talk_first/data/models/response/profile_response.dart';
 
 import '../../core/locale/locale_keys.dart';
 import '../../domain/enums/chat_preference.dart';

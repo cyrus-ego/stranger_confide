@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:stranger_confide/data/models/response/chat_messages_response.dart';
+import 'package:talk_first/data/models/response/chat_messages_response.dart';
 
 import '../models/response/chat_image_upload_response.dart';
 

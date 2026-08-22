@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.cyr" "\0"
-            VALUE "FileDescription", "stranger_confide" "\0"
+            VALUE "FileDescription", "Talk First" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "stranger_confide" "\0"
+            VALUE "InternalName", "talk_first" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.cyr. All rights reserved." "\0"
-            VALUE "OriginalFilename", "stranger_confide.exe" "\0"
-            VALUE "ProductName", "stranger_confide" "\0"
+            VALUE "OriginalFilename", "talk_first.exe" "\0"
+            VALUE "ProductName", "Talk First" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
